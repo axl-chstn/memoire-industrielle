@@ -1,0 +1,83 @@
+[
+  {
+    "question": "Quelle intervention pour les vibrations sur C01_RA ?",
+    "expected_sources": [
+      "RAP05"
+    ]
+  },
+  {
+    "question": "L’incident INC07 est-il résolu ?",
+    "expected_sources": [
+      "RAP07"
+    ]
+  },
+  {
+    "question": "Quelle intervention a été réalisée sur M01_RA ?",
+    "expected_sources": [
+      "RAP03"
+    ]
+  },
+  {
+    "question": "Quel diagnostic pour la fuite de C02_J ?",
+    "expected_sources": [
+      "RAP06"
+    ]
+  },
+  {
+    "question": "Quel incident de M02_ROT reste non résolu ?",
+    "expected_sources": [
+      "RAP04"
+    ]
+  },
+  {
+    "question": "Que sait-on de la surchauffe du capteur C02_CAP ?",
+    "expected_sources": [
+      "RAP12"
+    ]
+  },
+  {
+    "question": "Combien de minutes a duré le remplacement sur P02_J ?",
+    "expected_sources": [
+      "RAP02"
+    ]
+  },
+  {
+    "question": "Quel diagnostic sur le rotor M01_ROT ?",
+    "expected_sources": [
+      "RAP08"
+    ]
+  },
+  {
+    "question": "Les vibrations de P02_RA ont-elles été résolues ?",
+    "expected_sources": [
+      "RAP10"
+    ]
+  },
+  {
+    "question": "Quelle action pour le bruit sur C01_RB ?",
+    "expected_sources": [
+      "RAP09"
+    ]
+  },
+  {
+    "question": "Quels rapports décrivent une lubrification pour un bruit ?",
+    "expected_sources": [
+      "RAP03",
+      "RAP09"
+    ]
+  },
+  {
+    "question": "Quel capteur de compresseur présente une surchauffe ?",
+    "expected_sources": [
+      "RAP12"
+    ]
+  },
+  {
+    "question": "Quelle panne sur P999 ?",
+    "expected_sources": []
+  },
+  {
+    "question": "Quel est le budget publicitaire annuel ?",
+    "expected_sources": []
+  }
+]

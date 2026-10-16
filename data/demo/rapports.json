@@ -1,0 +1,50 @@
+[
+  {
+    "filename": "RAP01_P01.md",
+    "text": "# RAP01 — Pompe P01\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Pompe P01. Composant : Roulement A (P01_RA).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC01. Sur P01_RA, observations : Vibration, Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 95 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP02_P02.md",
+    "text": "# RAP02 — Pompe P02\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Pompe P02. Composant : Joint (P02_J).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC02. Sur P02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Elevee. Remplacement par Sam, durée 55 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP03_M01.md",
+    "text": "# RAP03 — Moteur M01\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Moteur M01. Composant : Roulement A (M01_RA).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC03. Sur M01_RA, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 20 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP04_M02.md",
+    "text": "# RAP04 — Moteur M02\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Moteur M02. Composant : Rotor (M02_ROT).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC04. Sur M02_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 40 minutes. Épisode explicitement non résolu à la date de l’instantané.\n"
+  },
+  {
+    "filename": "RAP05_C01.md",
+    "text": "# RAP05 — Compresseur C01\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Compresseur C01. Composant : Roulement A (C01_RA).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC05. Sur C01_RA, observations : Vibration, Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 120 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP06_C02.md",
+    "text": "# RAP06 — Compresseur C02\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Compresseur C02. Composant : Joint (C02_J).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC06. Sur C02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Sam, durée 65 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP07_P01.md",
+    "text": "# RAP07 — Pompe P01\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Pompe P01. Composant : Rotor (P01_ROT).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC07. Sur P01_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 35 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.\n"
+  },
+  {
+    "filename": "RAP08_M01.md",
+    "text": "# RAP08 — Moteur M01\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Moteur M01. Composant : Rotor (M01_ROT).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC08. Sur M01_ROT, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Alex, durée 110 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP09_C01.md",
+    "text": "# RAP09 — Compresseur C01\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Compresseur C01. Composant : Roulement B (C01_RB).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC09. Sur C01_RB, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 25 minutes. Résolution confirmée après contrôle dans ce scénario.\n"
+  },
+  {
+    "filename": "RAP10_P02.md",
+    "text": "# RAP10 — Pompe P02\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Pompe P02. Composant : Roulement A (P02_RA).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC10. Sur P02_RA, observations : Vibration. Liste des symptômes non déclarée exhaustive. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 30 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.\n"
+  },
+  {
+    "filename": "RAP11_M02.md",
+    "text": "# RAP11 — Moteur M02\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Moteur M02. Composant : Roulement A (M02_RA).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC11. Sur M02_RA, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 25 minutes. Épisode explicitement non résolu à la date de l’instantané.\n"
+  },
+  {
+    "filename": "RAP12_C02.md",
+    "text": "# RAP12 — Compresseur C02\n\nDOCUMENT FICTIF DU TD — usage de démonstration uniquement.\nÉquipement : Compresseur C02. Composant : Capteur (C02_CAP).\nDate : non renseignée dans le scénario.\n\nDONNÉES FICTIVES - INC12. Sur C02_CAP, observations : Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Elevee. Inspection par Noor, durée 45 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.\n"
+  }
+]
