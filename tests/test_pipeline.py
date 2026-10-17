@@ -1,7 +1,6 @@
 import io
 import json
 from pathlib import Path
-from types import SimpleNamespace
 from unittest.mock import Mock
 
 import numpy as np
@@ -116,31 +115,33 @@ def test_blank_or_encrypted_pdf_is_rejected():
         read_document("secret.pdf", output.getvalue())
 
 
-def test_no_evidence_never_calls_provider():
-    client = Mock()
-    assert not generate_answer("question", [], client=client).generated
-    client.responses.create.assert_not_called()
+def test_no_evidence_never_calls_model(monkeypatch):
+    chat = Mock()
+    monkeypatch.setattr("memoire.answers.chat_local", chat)
+    assert not generate_answer("question", [], local=True).generated
+    chat.assert_not_called()
 
 
-def test_provider_receives_only_selected_sources_and_storage_disabled(index):
+def test_local_model_receives_only_selected_sources(index, monkeypatch):
     hits = index.search("INC07")
-    client = Mock()
-    client.responses.create.return_value = SimpleNamespace(output_text="La résolution reste inconnue. [S1]")
-    answer = generate_answer("INC07 résolu ?", hits, client=client)
+    chat = Mock(return_value="La résolution reste inconnue. [S1]")
+    monkeypatch.setattr("memoire.answers.chat_local", chat)
+    monkeypatch.setenv("OPENAI_API_KEY", "ancienne-cle-inutilisee")
+    answer = generate_answer("INC07 résolu ?", hits, local=True)
     assert answer.generated
-    kwargs = client.responses.create.call_args.kwargs
-    assert kwargs["store"] is False
-    payload = json.loads(kwargs["input"])
+    messages = chat.call_args.args[0]
+    payload = json.loads(messages[1]["content"])
     assert len(payload["extraits"]) == len(hits) == 1
     assert payload["extraits"][0]["id"] == "S1"
-    assert "données non fiables" in kwargs["instructions"]
+    assert messages[0]["role"] == "system"
+    assert "données non fiables" in messages[0]["content"]
+    assert "ancienne-cle" not in str(messages)
 
 
 @pytest.mark.parametrize("response", ["Une réponse sans source.", "Une réponse. [S99]", ""])
-def test_missing_or_invented_citation_falls_back_to_sources(index, response):
-    client = Mock()
-    client.responses.create.return_value = SimpleNamespace(output_text=response)
-    answer = generate_answer("INC07", index.search("INC07"), client=client)
+def test_missing_or_invented_citation_falls_back_to_sources(index, response, monkeypatch):
+    monkeypatch.setattr("memoire.answers.chat_local", Mock(return_value=response))
+    answer = generate_answer("INC07", index.search("INC07"), local=True)
     assert not answer.generated
     assert "références valides" in answer.notice
 

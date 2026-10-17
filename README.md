@@ -1,102 +1,109 @@
 # Mémoire Industrielle
 
-Une maquette pour retrouver l'expérience de maintenance dans des rapports : importer des documents, poser une question et consulter les passages qui justifient le résultat.
+Une maquette RAG pour retrouver l'expérience de maintenance dans des rapports : importer des documents, poser une question et consulter les passages qui justifient la réponse.
 
-**Démarrage immédiat sans clé API**, avec 12 rapports fictifs issus du TD sur les pompes, moteurs et compresseurs. Le mode sans clé affiche les extraits : il ne simule pas une réponse générée par un LLM.
+**Aucune clé API, aucun abonnement au modèle et aucun frais d'API.** La recherche et la rédaction des réponses s'exécutent sur la machine qui lance l'application. Le branchement OpenAI de la première version a été retiré ; une ancienne clé configurée dans l'environnement est ignorée.
 
-## Ce que fait cette version
+## Démarrage sur Mac
 
-- Import de PDF contenant du texte, de fichiers TXT et Markdown.
-- Découpage en passages avec conservation du document et de la page ou du numéro de passage.
-- Recherche par mots-clés BM25, filtres par équipement et respect des références explicites.
-- Recherche hybride facultative avec embeddings multilingues calculés localement.
-- Synthèse RAG facultative avec OpenAI et références `[S1]`, `[S2]`.
-- Consultation des sources, export d'un résultat en Markdown et retrait des documents.
-- Tests automatiques et jeu d'évaluation reproductible.
+Python **3.11 ou supérieur** est nécessaire, avec une version disposant des filtres de sécurité de `tarfile` pour le téléchargement automatique (Python 3.12 convient). Sur un Mac Apple Silicon avec 8 Go de mémoire, le modèle choisi est `qwen3:4b-instruct`, environ 2,5 Go sur disque. Le premier lancement nécessite Internet pour télécharger Ollama et les poids publics. Ensuite, la génération fonctionne sans service distant. Prévoir plusieurs Go de disque disponibles ; la vitesse dépend de la machine.
 
-## Lancer sur son ordinateur
+Depuis le dossier du projet :
 
-Python **3.11 ou supérieur** est nécessaire. Depuis le dossier du projet :
+```bash
+chmod +x Lancer.command
+./Lancer.command
+```
+
+Le lanceur prépare l'environnement Python, télécharge Ollama si nécessaire, démarre le moteur en mode local et prépare le modèle. Il ouvre ensuite l'application sur **http://127.0.0.1:8501**. Les téléchargements initiaux sont réutilisés lors des lancements suivants.
+
+Si le modèle ne peut pas être préparé, la recherche et la lecture des extraits restent disponibles. Il n'existe aucun basculement vers un service payant.
+
+### Lancement manuel
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
+python -m scripts.local_runtime
 python -m streamlit run app.py --server.address 127.0.0.1
 ```
 
-Ouvrir ensuite **http://localhost:8501**. Sur Windows, remplacer la commande d'activation par `.venv\Scripts\activate`.
+Sur Windows, l'activation est `.venv\Scripts\activate`. Sur Windows et Linux, installer d'abord [Ollama depuis son site officiel](https://ollama.com/download) ; le téléchargement automatique du moteur concerne macOS.
 
-Sur Mac, le fichier **Lancer.command** automatise la création de l'environnement et le lancement. S'il n'est pas exécutable après téléchargement : `chmod +x Lancer.command`, puis `./Lancer.command`.
+## Essayer en deux minutes
 
-### Essayer la maquette en deux minutes
+Les **12 rapports fictifs du TD** sur les pompes, moteurs et compresseurs sont chargés au démarrage.
 
-1. Les 12 rapports fictifs sont chargés au démarrage.
-2. Cliquer sur « L'incident INC07 sur la pompe P01 est-il résolu ? ».
-3. Ouvrir la source RAP07 : le résultat de l'intervention est **inconnu**. Ce cas ne doit pas devenir « résolu » ou « non résolu ».
-4. Essayer « Quelle intervention a été réalisée sur M01_RA ? » : RAP03 documente une lubrification.
+1. Vérifier le message **Modèle local prêt · aucun frais d'API** dans la colonne de gauche.
+2. Laisser **Rédiger les réponses sur cet ordinateur** activé.
+3. Demander : « L'incident INC07 sur la pompe P01 est-il résolu ? ».
+4. Ouvrir RAP07 pour vérifier que la réponse conserve un **résultat inconnu**, sans le transformer en résolution ou en non-résolution.
 5. Essayer « Quelle panne sur P999 ? » : aucune machine connue ne doit être substituée.
-6. Importer un document personnel dans la colonne de gauche ; retirer les documents fictifs dans l'onglet Documents si nécessaire.
+6. Importer ses documents dans la colonne de gauche et retirer les exemples dans l'onglet Documents si nécessaire.
 
-### Activer la recherche par embeddings
+La première génération peut être plus lente pendant le chargement du modèle. Décoche la rédaction locale pour afficher uniquement les extraits. Une synthèse sans références valides est remplacée par les sources.
+
+## Fonctionnalités
+
+- Import de PDF contenant du texte, TXT et Markdown.
+- Découpage avec conservation du document, de la page et du numéro de passage.
+- Recherche BM25, filtres par équipement et respect des références explicites.
+- Recherche hybride facultative avec embeddings multilingues calculés localement.
+- Réponses rédigées par le modèle local avec citations `[S1]`, `[S2]`.
+- Consultation des sources, export Markdown et retrait des documents.
+- Tests automatiques et jeu d'évaluation reproductible.
+
+### Recherche par embeddings
 
 ```bash
 python -m pip install -r requirements-semantic.txt
 ```
 
-Dans « Réglages de recherche », cocher **Chercher aussi par le sens**. Le premier usage télécharge le modèle public `intfloat/multilingual-e5-small` depuis Hugging Face. Prévoir plusieurs centaines de Mo et une connexion Internet. Ensuite, les embeddings des rapports sont calculés sur la machine qui exécute l'application, sur CPU. En cas d'indisponibilité, l'application indique qu'elle utilise les mots-clés.
+Cocher **Chercher aussi par le sens** dans les réglages de recherche. Le premier usage télécharge le modèle public `intfloat/multilingual-e5-small` depuis Hugging Face. Les rapports sont encodés sur la machine qui exécute l'application. Cette recherche n'utilise pas d'API facturée.
 
-### Activer les réponses rédigées par un LLM
+## Fonctionnement local et données
 
-Dans « Rédiger les réponses avec une IA », saisir une **clé API OpenAI** dans le champ masqué, puis cocher **Activer les synthèses OpenAI**. Le modèle proposé est `gpt-4.1-mini` ; son accès dépend du compte API et le nom reste modifiable.
+- Ollama écoute uniquement sur `127.0.0.1:11435`, un port réservé à cette maquette.
+- Le lanceur définit `OLLAMA_NO_CLOUD=1` et ne demande ni connexion à un compte ni clé.
+- L'application utilise une adresse locale fixe, ne suit aucune redirection et n'utilise pas les proxys HTTP pour les questions.
+- Le modèle est fixé à `qwen3:4b-instruct`. Avant chaque génération, ses métadonnées doivent décrire des poids GGUF locaux ; un modèle distant est refusé.
+- Les documents et l'historique restent en mémoire dans la session. Ils ne sont pas envoyés sur GitHub et peuvent être perdus à la fermeture de la session.
+- `.local/` contient le moteur et `.cache/` les modèles publics et les journaux techniques du moteur. Ils sont exclus de Git. L'installation d'Ollama peut aussi créer ses fichiers de fonctionnement dans `~/.ollama`.
+- Le modèle peut rester chargé cinq minutes après une réponse, puis libérer sa mémoire. Le serveur local peut rester en arrière-plan pour les prochains essais.
 
-Alternative pour une configuration locale : copier `.env.example` vers `.env`, puis renseigner `OPENAI_API_KEY`. Sur un hébergement Streamlit, utiliser les secrets de l'application. Ne jamais ajouter une clé au dépôt. Un abonnement ChatGPT ne fournit pas de crédits API ; la génération utilise la facturation du compte API.
+Le coût de fonctionnement correspond aux ressources habituelles de l'ordinateur et aux téléchargements initiaux ; aucun fournisseur ne facture les questions. Un hébergement externe éventuel aurait ses propres coûts : la version documentée ici se lance sur son ordinateur.
 
-Seuls la question et les passages sélectionnés sont envoyés au fournisseur pour une synthèse. La requête fixe `store=False`, ce qui désactive le stockage de la réponse pour récupération via l'API, sans constituer une garantie d'absence de toute rétention technique par le fournisseur.
-
-## Utiliser GitHub
-
-GitHub héberge le **code**. Ce dépôt ne constitue pas, à lui seul, une application en ligne ; GitHub Pages n'exécute pas Streamlit/Python.
-
-Pour lancer sans installation locale, utiliser éventuellement **Code → Codespaces → Create codespace on main**. La configuration prépare les dépendances, puis exécuter :
-
-```bash
-python -m streamlit run app.py --server.address 0.0.0.0
-```
-
-Ouvrir le port 8501 dans l'onglet Ports, en conservant sa visibilité privée. Codespaces peut consommer un quota ou des crédits selon le compte. La création et l'arrêt de cet environnement restent à la main de l'utilisateur.
-
-## Vérifier le projet
+## Vérifications
 
 ```bash
 python -m pip install -r requirements-dev.txt
 ruff check .
 pytest -q
 python -m scripts.evaluate
-# Après installation des dépendances sémantiques :
+# Après installation du modèle d'embeddings :
 python -m scripts.evaluate --semantic
+# Après préparation du LLM local :
+python -m scripts.validate_local
 ```
 
-Les tests couvrent l'extraction PDF et sa provenance, les imports invalides, le découpage, les filtres, une référence absente, les citations inventées, l'interface et le contrat d'appel au LLM. Les tests du fournisseur utilisent un double de test : ils ne prouvent pas qu'une clé dispose de crédits ni que les synthèses réelles sont correctes.
+Voir [les vérifications réalisées](docs/VERIFICATION.md), [la fiche technique](docs/ARCHITECTURE.md), [le protocole d'essai](docs/VALIDATION.md) et [la prochaine étape](docs/ROADMAP.md).
 
-Le corpus étant fictif et très petit, les résultats ne constituent pas une mesure de fiabilité industrielle. Voir [la fiche technique](docs/ARCHITECTURE.md), [le protocole d'essai](docs/VALIDATION.md) et [la prochaine étape](docs/ROADMAP.md).
+## Limites
 
-## Données et limites
+Cette maquette ne constitue pas une validation industrielle. Un modèle local peut se tromper et les citations doivent être relues. Le contrôle vérifie les identifiants des sources, pas l'appui de chaque affirmation.
 
-- Les rapports importés, leurs embeddings et l'historique restent dans la mémoire de la session ; ils ne sont pas enregistrés dans le dépôt. Une session interrompue peut les perdre.
-- Le modèle public est mis en cache sur disque dans `.cache/`, mais aucun contenu de rapport n'est placé dans un cache global partagé.
-- Limites : 10 Mo et 100 pages par fichier PDF, 30 fichiers/30 Mo par import et 50 documents par session. Pas d'OCR pour les scans.
-- Les noms d'équipement sont repérés par des motifs simples. Les alias et les références inhabituelles nécessitent une adaptation.
-- Le classement n'est pas une confiance statistique. Le contrôle des citations valide leurs identifiants, pas la véracité de chaque phrase.
-- Pas de connexion GMAO, d'authentification propre, de stockage persistant ou de raisonnement OWL dans cette V1. Ne pas exposer cette maquette sur Internet avec des documents confidentiels sans ajouter les protections adaptées.
-- Les questions sont indépendantes. L'historique affiché n'est pas envoyé au LLM ; rappeler l'équipement dans chaque question.
+Limites : 10 Mo et 100 pages par PDF, 30 fichiers/30 Mo par import, 50 documents par session. Pas d'OCR, de GMAO, de stockage persistant, d'authentification propre ni de raisonnement OWL. Les références sont repérées par des motifs simples. Les questions sont indépendantes : rappeler l'équipement à chaque fois.
+
+GitHub héberge le code et ne fait pas tourner cette application Python. En cas de déploiement partagé, ajouter les protections et la séparation des espaces appropriées.
 
 ## Sources techniques
 
+- [Ollama : génération locale](https://docs.ollama.com/api/chat)
+- [Ollama : désactivation des fonctions cloud](https://docs.ollama.com/faq#how-do-i-disable-ollamas-cloud-features)
+- [Qwen3 4B Instruct : modèle choisi](https://ollama.com/library/qwen3:4b-instruct)
 - [Sentence Transformers : recherche sémantique](https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html)
-- [Modèle E5 multilingue : consignes et limites](https://huggingface.co/intfloat/multilingual-e5-small)
-- [OpenAI Docs : génération de texte](https://developers.openai.com/api/docs/guides/text)
-- [OpenAI Docs : données de l'API](https://developers.openai.com/api/docs/guides/your-data)
-- [Streamlit : documentation](https://docs.streamlit.io/)
+- [Modèle E5 multilingue](https://huggingface.co/intfloat/multilingual-e5-small)
+- [Streamlit](https://docs.streamlit.io/)
 
 Les exemples de maintenance sont des scénarios pédagogiques, pas des procédures opérationnelles.

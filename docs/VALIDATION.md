@@ -8,7 +8,7 @@ Le même jeu peut être exécuté avec `--semantic`. Ne pas considérer une amé
 
 ## Vérifications humaines des réponses
 
-Activer le LLM et contrôler chaque réponse par rapport aux extraits. Noter pour chaque question la bonne machine, la source exacte, l'exactitude et les inconnues conservées.
+Lancer le modèle local avec `python -m scripts.local_runtime`, puis contrôler chaque réponse par rapport aux extraits. Noter pour chaque question la bonne machine, la source exacte, l'exactitude et les inconnues conservées. Aucun compte API n'est requis.
 
 | Question | Ce que la réponse doit respecter |
 |---|---|

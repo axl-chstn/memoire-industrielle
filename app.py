@@ -7,15 +7,14 @@ import os
 from pathlib import Path
 
 import streamlit as st
-from dotenv import load_dotenv
 
 from memoire.answers import Answer, generate_answer, source_extracts
 from memoire.demo import load_demo
 from memoire.documents import chunk_document, read_document
+from memoire.local_llm import LOCAL_MODEL, model_status
 from memoire.retrieval import MODEL_NAME, SearchIndex
 
 ROOT = Path(__file__).resolve().parent
-load_dotenv(ROOT / ".env")
 os.environ.setdefault("HF_HOME", str(ROOT / ".cache" / "huggingface"))
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
@@ -41,16 +40,6 @@ def load_encoder():
     from sentence_transformers import SentenceTransformer
 
     return SentenceTransformer(MODEL_NAME, device="cpu", trust_remote_code=False)
-
-
-def configured_key() -> str:
-    key = os.getenv("OPENAI_API_KEY", "")
-    if not key:
-        try:
-            key = st.secrets.get("OPENAI_API_KEY", "")
-        except (FileNotFoundError, st.errors.StreamlitSecretNotFoundError):
-            pass
-    return key
 
 
 def invalidate():
@@ -131,15 +120,15 @@ with st.sidebar:
                 st.info("Aucun nouveau document ajouté ; les doublons sont ignorés.")
 
     st.divider()
-    with st.expander("Rédiger les réponses avec une IA"):
-        st.caption("La recherche fonctionne déjà sans clé. Pour une synthèse, la question et les extraits sélectionnés seront envoyés à OpenAI.")
-        user_key = st.text_input("Clé API OpenAI", type="password", key="user_api_key",
-                                 placeholder="Facultative")
-        api_key = user_key.strip() or configured_key()
-        llm_enabled = st.checkbox("Activer les synthèses OpenAI", value=False)
-        model_name = st.text_input("Modèle", value=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"))
-        if llm_enabled and not api_key:
-            st.info("Ajoute une clé API pour activer les synthèses. Un abonnement ChatGPT ne fournit pas de crédits API.")
+    with st.expander("IA locale · sans frais d'API", expanded=True):
+        local_ready, local_notice = model_status()
+        if local_ready:
+            st.success(local_notice)
+        else:
+            st.info(local_notice)
+        llm_enabled = st.checkbox("Rédiger les réponses sur cet ordinateur",
+            value=local_ready, disabled=not local_ready, key="local_summaries_enabled")
+        st.caption(f"{LOCAL_MODEL} · aucune clé nécessaire. La question et les extraits restent sur la machine qui exécute la maquette.")
     with st.expander("Réglages de recherche"):
         semantic_enabled = st.checkbox("Chercher aussi par le sens", value=False,
             help="Nécessite requirements-semantic.txt. Le modèle public est téléchargé au premier usage ; les rapports restent sur la machine qui exécute l'application.")
@@ -195,7 +184,7 @@ with guide_tab:
     st.write("1. Utilise les exemples ou ajoute tes rapports dans la colonne de gauche.")
     st.write("2. Pose une question précise : équipement, symptôme, intervention ou résultat.")
     st.write("3. Ouvre les sources, vérifie les faits et exporte le résultat si nécessaire.")
-    st.info("Sans clé API, tu consultes les extraits retrouvés. Avec les synthèses activées, une IA rédige une réponse à partir de ces extraits.")
+    st.info("Le modèle installé sur ton ordinateur rédige les réponses sans frais d'API. Tu peux désactiver la rédaction pour consulter uniquement les extraits.")
     st.write("Une intervention réalisée ne prouve pas qu'une panne est résolue. Une information absente reste inconnue.")
     st.caption("Maquette documentaire : pas d'OCR, de connexion à une GMAO ni de diagnostic automatique. Les questions sont indépendantes : reformule l'équipement à chaque fois.")
 
@@ -248,11 +237,10 @@ with search_tab:
             engine = "Mots-clés"
         with st.spinner("Lecture des passages…"):
             try:
-                answer = generate_answer(question, hits,
-                    api_key=api_key if llm_enabled else "", model=model_name.strip())
+                answer = generate_answer(question, hits, local=llm_enabled and local_ready)
             except Exception:
                 answer = Answer(source_extracts(hits), notice=(
-                    "La synthèse IA est indisponible. Vérifie la clé API, les crédits, le modèle et la connexion. Les sources restent consultables."))
+                    "La synthèse locale est indisponible. Relance Lancer.command pour démarrer le modèle. Les sources restent consultables ; aucun service payant n'est utilisé."))
         exchange = (question, answer, hits, engine)
         st.session_state.history.append(exchange)
         st.session_state.history = st.session_state.history[-10:]

@@ -16,7 +16,10 @@ if [ ! -x .venv/bin/python ]; then
   fi
   "$task_python" -m venv .venv
 fi
-if ! .venv/bin/python -c 'import streamlit, numpy, pypdf, openai, dotenv' >/dev/null 2>&1; then
+if ! .venv/bin/python -c 'import streamlit, numpy, pypdf' >/dev/null 2>&1; then
   .venv/bin/python -m pip install -r requirements.txt
+fi
+if ! .venv/bin/python -m scripts.local_runtime; then
+  echo "Le modèle local n'est pas encore prêt. La recherche et les extraits restent disponibles."
 fi
 exec .venv/bin/python -m streamlit run app.py --server.address 127.0.0.1
