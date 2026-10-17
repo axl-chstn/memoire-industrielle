@@ -1,14 +1,22 @@
-# Mémoire Industrielle · V2 Atelier
+# Mémoire industrielle
 
-Une maquette RAG pour retrouver l'expérience de maintenance dans des rapports : importer des documents, poser une question et consulter les passages qui justifient la réponse.
+Ce dépôt contient la maquette du projet Mémoire industrielle. L'objectif est de retrouver ce qui a déjà été observé et tenté sur un équipement à partir des rapports de maintenance.
 
-La V2 propose un atelier fictif complet : **10 équipements, 30 rapports et 22 incidents**, dont plusieurs suivis d'un même épisode. Elle comporte six écrans : vue d'ensemble, fiches équipements, incidents, cas similaires, questions et bibliothèque. Les données personnelles sont isolées dans un espace distinct des scénarios fictifs.
+Par exemple, lorsqu'une pompe vibre, on peut consulter les incidents précédents, voir les interventions réalisées et vérifier si elles ont résolu le problème. Chaque réponse renvoie aux passages des rapports utilisés.
 
-**Aucune clé API, aucun abonnement au modèle et aucun frais d'API.** La recherche et la rédaction des réponses s'exécutent sur la machine qui lance l'application. Le branchement OpenAI de la première version a été retiré ; une ancienne clé configurée dans l'environnement est ignorée.
+L'application fonctionne en local avec Python et Streamlit. La recherche et le modèle de langage tournent sur l'ordinateur, sans clé API ni frais d'API.
 
-## Démarrage sur Mac
+## Ce que contient la maquette
 
-Python **3.11 ou supérieur** est nécessaire, avec une version disposant des filtres de sécurité de `tarfile` pour le téléchargement automatique (Python 3.12 convient). Sur un Mac Apple Silicon avec 8 Go de mémoire, le modèle choisi est `qwen3:4b-instruct`, environ 2,5 Go sur disque. Le premier lancement nécessite Internet pour télécharger Ollama et les poids publics. Ensuite, la génération fonctionne sans service distant. Prévoir plusieurs Go de disque disponibles ; la vitesse dépend de la machine.
+Un atelier fictif sert de terrain d'essai : 10 équipements, 30 rapports et 22 incidents. Certains incidents ont plusieurs rapports de suivi, ce qui permet de distinguer une première intervention sans succès d'une résolution plus tardive.
+
+Les écrans permettent de consulter les équipements, suivre les incidents, chercher des cas similaires et poser des questions aux rapports. La bibliothèque donne accès aux textes et aux informations extraites, que l'on peut corriger et valider.
+
+L'espace **Mes documents** permet d'ajouter ses propres rapports, séparément du scénario fictif. Les données de démonstration ne sont pas des données industrielles réelles.
+
+## Installation et lancement
+
+Sur Mac, utiliser Python 3.12 et prévoir plusieurs Go de disque disponibles. Le modèle choisi, `qwen3:4b-instruct`, occupe environ 2,5 Go. La maquette a été testée sur un Mac Apple Silicon avec 8 Go de mémoire.
 
 Depuis le dossier du projet :
 
@@ -17,11 +25,11 @@ chmod +x Lancer.command
 ./Lancer.command
 ```
 
-Le lanceur prépare l'environnement Python, télécharge Ollama si nécessaire, démarre le moteur en mode local et prépare le modèle. Il ouvre ensuite l'application sur **http://127.0.0.1:8501**. Les téléchargements initiaux sont réutilisés lors des lancements suivants.
+Le premier lancement télécharge les dépendances, Ollama et le modèle. Il faut donc une connexion Internet et un peu de temps. Les téléchargements sont conservés pour les lancements suivants.
 
-Si le modèle ne peut pas être préparé, la recherche et la lecture des extraits restent disponibles. Il n'existe aucun basculement vers un service payant.
+L'application est ensuite accessible sur [http://127.0.0.1:8501](http://127.0.0.1:8501). Cette adresse correspond à l'application qui tourne sur l'ordinateur ; GitHub héberge uniquement le code.
 
-### Lancement manuel
+Pour lancer les étapes manuellement :
 
 ```bash
 python3 -m venv .venv
@@ -31,87 +39,55 @@ python -m scripts.local_runtime
 python -m streamlit run app.py --server.address 127.0.0.1
 ```
 
-Sur Windows, l'activation est `.venv\Scripts\activate`. Sur Windows et Linux, installer d'abord [Ollama depuis son site officiel](https://ollama.com/download) ; le téléchargement automatique du moteur concerne macOS.
+Sur Windows, la commande d'activation est `.venv\Scripts\activate`. Sur Windows et Linux, installer d'abord [Ollama](https://ollama.com/download). Le téléchargement automatique du moteur est prévu pour macOS.
 
-## Essayer en deux minutes
+Si le modèle n'est pas disponible, la recherche et la consultation des extraits restent utilisables.
 
-Les **30 rapports fictifs de l'atelier Horizon** sont chargés au démarrage. Les 12 fiches historiques du TD sont conservées séparément pour les tests de non-régression.
+## Quelques essais
 
-1. Vérifier le message **Modèle local prêt · aucun frais d'API** dans la colonne de gauche.
-2. Laisser **Rédiger les réponses sur cet ordinateur** activé.
-3. Dans **Incidents**, ouvrir INC114 : la lubrification n'a pas résolu les vibrations ; un réalignement ultérieur a permis une résolution confirmée. Les deux rapports restent visibles.
-4. Dans **Questions**, demander « L'incident INC104 est-il résolu ? » : le statut doit provenir du suivi daté du 8 mars 2026, avec ses sources, et non du premier rapport non résolu.
-5. Essayer « Quelle panne sur P999 ? » : aucune machine connue ne doit être substituée.
-6. Passer à **Mes documents**, puis importer ses rapports dans la colonne de gauche. Les informations détectées restent à vérifier dans **Documents** et sont exclues des vues métier par défaut.
+Dans **Incidents**, ouvrir **INC114** : une lubrification n'a pas résolu les vibrations, puis un réalignement a permis de résoudre le problème. Les deux étapes doivent rester visibles.
 
-### Parcours de démonstration
+Dans **Questions**, essayer :
 
-| Écran | Ce qu'il permet de vérifier |
-|---|---|
-| Vue d'ensemble | 30 rapports, 10 équipements, 22 incidents et leur dernier état documenté |
-| Équipements | Composition, appellations et incidents associés à une machine |
-| Incidents | Étapes successives, évolution du diagnostic, actions et résultats avec preuves |
-| Cas similaires | Recherche par symptôme, catégorie de composant, type de machine et résultat ; comparaison entre équipements |
-| Questions | Réponse sourcée, faits observés, diagnostic, actions, résultats et informations manquantes |
-| Documents | Lecture intégrale, recherche, export d'inventaire, corrections sourcées et validation humaine |
+- « L'incident INC104 est-il résolu ? »
+- « Qu'a-t-on essayé pour les vibrations sur C03 ? »
+- « Quels rapports parlent de la pompe d'alimentation ? »
 
-Pour essayer les cas similaires, partir d'INC116, sélectionner **Vibration** et **Roulement**, puis consulter les incidents d'autres équipements. Une ressemblance n'est pas une preuve de cause commune.
+Pour comparer des cas, partir d'**INC116** dans **Cas similaires**, puis sélectionner **Vibration** et **Roulement**. Les résultats indiquent les points communs entre incidents. Cela ne suffit pas à conclure qu'ils ont la même cause.
 
-### Corriger les informations d'un import
+## Ajouter ses rapports
 
-Dans **Documents**, choisir un rapport, ouvrir **Corriger une information et vérifier sa source**, sélectionner le champ et copier une valeur avec l'extrait qui la contient. La valeur doit être présente dans l'extrait et l'extrait dans la page sélectionnée. Une correction remet la fiche à vérifier. Le bouton **Valider les informations présentes** permet ensuite son inclusion dans les vues métier.
+Dans **Mes documents**, importer des PDF contenant du texte, des fichiers TXT ou Markdown. Les PDF scannés nécessitent un OCR préalable, qui n'est pas inclus.
 
-L'extraction est conservatrice : elle reconnaît les rubriques explicites (Incident, Équipement, Date, Composant, Symptômes, Diagnostic, Statut du diagnostic, Intervention, Durée, Résultat, Constat de contrôle) et les identifiants non ambigus. Un rapport libre sans ces rubriques peut nécessiter une saisie manuelle sourcée. Aucun diagnostic n'est déduit d'un symptôme. Les validations et les corrections sont sauvegardées sur l'ordinateur après chaque modification, sans modifier le fichier original.
+L'application repère les identifiants et les rubriques explicites, comme l'incident, l'équipement, la date, les symptômes, le diagnostic, l'intervention et le résultat. Un rapport rédigé librement peut demander davantage de corrections manuelles.
 
-### Retrouver son travail et restaurer une sauvegarde
+Les fiches importées sont à vérifier dans **Documents** avant d'apparaître dans les vues d'incidents. Pour corriger une information, fournir la valeur et l'extrait du rapport qui la justifie, puis valider la fiche. Une nouvelle correction annule la validation précédente.
 
-Les textes extraits, les repères de page, les corrections, les validations et les retraits sont conservés automatiquement dans `data/private/espaces.sqlite3`. Ils sont rechargés après la fermeture du navigateur ou le redémarrage de l'application. Les PDF originaux ne sont pas copiés : conserve-les séparément. Le dossier privé est exclu de GitHub ; l'historique des questions reste dans la session.
+Les limites actuelles sont de 10 Mo et 100 pages par PDF, 30 fichiers et 30 Mo par import, puis 100 documents et 100 Mo sauvegardés par espace.
 
-Dans la colonne de gauche, ouvrir **Sauvegarde de cet espace** :
+## Sauvegarde et données locales
 
-1. **Exporter cet espace** télécharge une sauvegarde JSON de l'espace actif, avec ses textes et corrections.
-2. Pour la récupérer sur une autre installation, choisir le même espace, puis ajouter le JSON dans **Restaurer une sauvegarde JSON**.
-3. Vérifier le nombre de rapports proposés, puis cliquer sur **Fusionner la sauvegarde**. Les documents déjà présents et leurs fiches restent inchangés ; seuls les documents absents sont ajoutés. Pour restaurer une ancienne correction d'un rapport existant, exporter d'abord l'état actuel, retirer ce rapport dans Documents, puis restaurer la sauvegarde souhaitée.
-4. Vérifier les fiches ajoutées dans **Documents** : une validation indiquée par un fichier importé n'est pas reprise automatiquement. Les validations conservées directement sur cet ordinateur restent actives après redémarrage.
+Les textes extraits, les corrections et les validations sont enregistrés automatiquement dans `data/private/espaces.sqlite3`. Ils restent disponibles après un redémarrage. Ce dossier est exclu de Git et les rapports ne sont pas envoyés sur GitHub. Les PDF originaux sont à conserver séparément ; l'historique des questions reste dans la session.
 
-Les sauvegardes contiennent les textes des rapports : conserve-les dans un emplacement approprié. Le stockage local n'est pas chiffré par l'application. Une limite de 100 Mo s'applique à chaque espace sauvegardé et à chaque fichier de restauration. Si deux onglets modifient le même espace, une écriture périmée est refusée et la version enregistrée est rechargée ; recommencer la modification après rechargement de la page.
+Le menu **Sauvegarde de cet espace**, dans la colonne de gauche, permet de télécharger un export JSON et de le restaurer sur une autre installation. La restauration ajoute les documents absents et conserve ceux qui sont déjà présents, avec leurs fiches. Les fiches ajoutées doivent être vérifiées à nouveau.
 
-La première génération peut être plus lente pendant le chargement du modèle. Décoche la rédaction locale pour afficher uniquement les extraits. Une synthèse sans références valides est remplacée par les sources.
+Les exports contiennent le texte des rapports. Le stockage local n'est pas chiffré par l'application et les espaces ne sont pas conçus pour séparer plusieurs utilisateurs.
 
-## Fonctionnalités
+## Recherche et modèle local
 
-- Import de PDF contenant du texte, TXT et Markdown.
-- Découpage avec conservation du document, de la page et du numéro de passage.
-- Recherche BM25, filtres par équipement et respect des références explicites.
-- Recherche hybride facultative avec embeddings multilingues calculés localement.
-- Synthèses du modèle local et réponses structurées à partir des fiches vérifiées, avec citations `[S1]`, `[S2]`.
-- Réponses de statut établies par les dates et les résultats vérifiés, sans laisser le LLM choisir arbitrairement le dernier état.
-- Relations entre équipements, composants, incidents, diagnostics et interventions ; vocabulaire commun inspiré du TD, sans raisonneur OWL dans cette V2.
-- Consultation des sources, export Markdown et retrait des documents.
-- Sauvegarde locale automatique et export/restauration JSON de chaque espace.
-- Tests automatiques et jeu d'évaluation reproductible.
-
-### Recherche par embeddings
+Les rapports sont découpés en passages en conservant leur document et leur page d'origine. La recherche utilise BM25 pour retrouver les termes et les références demandés. Elle peut être complétée par des embeddings multilingues calculés localement :
 
 ```bash
 python -m pip install -r requirements-semantic.txt
 ```
 
-Cocher **Chercher aussi par le sens** dans les réglages de recherche. Le premier usage télécharge le modèle public `intfloat/multilingual-e5-small` depuis Hugging Face. Les rapports sont encodés sur la machine qui exécute l'application. Cette recherche n'utilise pas d'API facturée.
+Activer ensuite **Chercher aussi par le sens** dans les réglages. Le premier usage télécharge le modèle `intfloat/multilingual-e5-small` depuis Hugging Face. Cette option concerne la recherche dans **Questions**.
 
-## Fonctionnement local et données
+Ollama exécute le modèle de langage sur `127.0.0.1:11435`, avec les fonctions cloud désactivées. Il rédige une synthèse à partir des passages retrouvés. Les questions explicites sur le statut d'un incident utilisent les dates et résultats des fiches vérifiées pour établir le dernier état connu.
 
-- Ollama écoute uniquement sur `127.0.0.1:11435`, un port réservé à cette maquette.
-- Le lanceur définit `OLLAMA_NO_CLOUD=1` et ne demande ni connexion à un compte ni clé.
-- L'application utilise une adresse locale fixe, ne suit aucune redirection et n'utilise pas les proxys HTTP pour les questions.
-- Le modèle est fixé à `qwen3:4b-instruct`. Avant chaque génération, ses métadonnées doivent décrire des poids GGUF locaux ; un modèle distant est refusé.
-- Les textes extraits, corrections et validations restent sur cet ordinateur dans `data/private/`, exclu de Git. Aucun rapport n'est envoyé sur GitHub. L'historique des questions reste en mémoire dans la session.
-- `.local/` contient le moteur et `.cache/` les modèles publics et les journaux techniques du moteur. Ils sont exclus de Git. L'installation d'Ollama peut aussi créer ses fichiers de fonctionnement dans `~/.ollama`.
-- Le modèle peut rester chargé cinq minutes après une réponse, puis libérer sa mémoire. Le serveur local peut rester en arrière-plan pour les prochains essais.
+Les modèles sont conservés dans `.cache/` et le moteur dans `.local/`, tous deux exclus de Git. Les détails de fonctionnement sont décrits dans [l'architecture](docs/ARCHITECTURE.md).
 
-Le coût de fonctionnement correspond aux ressources habituelles de l'ordinateur et aux téléchargements initiaux ; aucun fournisseur ne facture les questions. Un hébergement externe éventuel aurait ses propres coûts : la version documentée ici se lance sur son ordinateur.
-
-## Vérifications
+## Tests
 
 ```bash
 python -m pip install -r requirements-dev.txt
@@ -119,30 +95,20 @@ ruff check .
 pytest -q
 python -m scripts.evaluate
 python -m scripts.evaluate_workshop
-# Après installation du modèle d'embeddings :
-python -m scripts.evaluate --semantic
-python -m scripts.evaluate_workshop --semantic
-# Après préparation du LLM local :
+```
+
+Après installation des embeddings, les deux scripts d'évaluation acceptent l'option `--semantic`. Pour tester le modèle de langage installé :
+
+```bash
 python -m scripts.validate_local
 ```
 
-Voir [les vérifications réalisées](docs/VERIFICATION.md), [la fiche technique](docs/ARCHITECTURE.md), [le protocole d'essai](docs/VALIDATION.md) et [la prochaine étape](docs/ROADMAP.md).
+Les résultats obtenus et la portée des essais sont détaillés dans [les vérifications](docs/VERIFICATION.md). Les 12 fiches historiques du TD sont conservées pour vérifier que les évolutions ne cassent pas les premiers exemples.
 
-## Limites
+## Ce qu'il reste à faire
 
-Cette maquette ne constitue pas une validation industrielle. Un modèle local peut se tromper et les citations doivent être relues. Le contrôle vérifie les identifiants des sources, pas l'appui de chaque affirmation.
+La maquette permet de tester le parcours sur des exemples préparés. Il reste à l'évaluer sur des rapports indépendants et à la faire essayer par des personnes du métier. Un modèle local peut se tromper : les références permettent de revenir aux rapports, mais ne garantissent pas que chaque phrase de la réponse est correcte.
 
-Limites : 10 Mo et 100 pages par PDF, 30 fichiers/30 Mo par import, 100 documents et 100 Mo sauvegardés par espace. Pas d'OCR, de GMAO, d'authentification propre, de journal détaillé des validations ni de raisonnement OWL. Les espaces locaux ne constituent pas une séparation entre plusieurs utilisateurs. Les références sont repérées par des motifs simples. Les questions sont indépendantes : rappeler l'équipement à chaque fois. La recherche de cas similaires utilise un vocabulaire de symptômes et de composants et des termes communs ; les embeddings facultatifs concernent la recherche documentaire dans Questions.
+Les concepts de l'ontologie servent à organiser les équipements, composants, incidents et interventions. Le raisonneur OWL n'est pas intégré. La maquette ne comporte pas non plus de connexion à une GMAO ni d'authentification pour un usage partagé.
 
-GitHub héberge le code et ne fait pas tourner cette application Python. En cas de déploiement partagé, ajouter les protections et la séparation des espaces appropriées.
-
-## Sources techniques
-
-- [Ollama : génération locale](https://docs.ollama.com/api/chat)
-- [Ollama : désactivation des fonctions cloud](https://docs.ollama.com/faq#how-do-i-disable-ollamas-cloud-features)
-- [Qwen3 4B Instruct : modèle choisi](https://ollama.com/library/qwen3:4b-instruct)
-- [Sentence Transformers : recherche sémantique](https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html)
-- [Modèle E5 multilingue](https://huggingface.co/intfloat/multilingual-e5-small)
-- [Streamlit](https://docs.streamlit.io/)
-
-Les exemples de maintenance sont des scénarios pédagogiques, pas des procédures opérationnelles.
+La prochaine étape prévue est de réunir 5 à 10 rapports autorisés et anonymisés, puis de préparer des questions avec les réponses attendues. Voir le [protocole d'essai](docs/VALIDATION.md) et la [suite du projet](docs/ROADMAP.md).
