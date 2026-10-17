@@ -8,7 +8,7 @@ Diaporama de quatre captures réelles, sans audio. Le scénario à reproduire et
 
 ![Aperçu animé du parcours](assets/demo.gif)
 
-## 0:00 — Le contexte
+## 0:00 - Le contexte
 
 « Une pompe vibre à nouveau. Avant de chercher une nouvelle intervention, je veux retrouver les actions déjà réalisées et leurs résultats. »
 
@@ -29,7 +29,7 @@ Montrer que la résolution ultérieure ne masque pas la première tentative. Les
 
 ![Suivi de l'incident](assets/02-incident.png)
 
-## 0:50 — Poser une question et vérifier les sources
+## 0:50 - Poser une question et vérifier les sources
 
 Dans **Questions**, saisir : **« Quelles interventions sont documentées pour INC114 ? »**
 
@@ -37,7 +37,7 @@ Vérifier que les deux actions et leurs résultats restent distincts. Ouvrir les
 
 ![Réponse sourcée](assets/03-question.png)
 
-## 1:25 — Montrer une limite utile
+## 1:25 - Montrer une limite utile
 
 Demander : **« L'incident INC117 est-il résolu ? »**
 
@@ -45,7 +45,7 @@ Le résultat attendu est **inconnu**. L'absence de résultat documenté ne devie
 
 ![Information manquante conservée](assets/04-inconnu.png)
 
-## 1:50 — Expliquer le rôle de l'IA
+## 1:50 - Expliquer le rôle de l'IA
 
 « BM25 retrouve les mots et les références. L'option E5 ajoute la recherche par le sens, avec une fusion des classements. Pour les questions libres, Qwen tourne sur l'ordinateur et sélectionne des passages ; l'application affiche ces textes avec leur source. J'ai limité sa liberté de rédaction après avoir constaté des erreurs sur la chronologie et les informations absentes. »
 
