@@ -16,7 +16,7 @@ Montrer les 30 rapports, 10 équipements et 22 incidents de l'atelier fictif.
 
 ![Vue d'ensemble](assets/01-atelier.png)
 
-## 0:20 — Garder les deux étapes de l'incident
+## 0:20 - Garder les deux étapes de l'incident
 
 Dans **Incidents**, ouvrir **INC114 · P04** et les rapports RAP114 et RAP127.
 
