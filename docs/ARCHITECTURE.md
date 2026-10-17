@@ -22,7 +22,11 @@ flowchart LR
 
 L'atelier fictif contient 30 rapports, 10 équipements et 22 incidents. Il est distinct de l'espace personnel. Chaque espace possède ses documents et ses corrections. Le registre de l'atelier et ses alias ne sont jamais appliqués aux documents personnels : une référence P01 personnelle ne devient pas automatiquement la pompe fictive P01.
 
-Les documents sont identifiés par SHA-256, découpés en passages de 160 mots avec chevauchement de 30 mots, sans traverser les pages PDF. Le texte importé n'est pas persisté sur disque. La limite de la maquette est de 100 documents par espace, 10 Mo et 100 pages par PDF, avec 30 fichiers et 30 Mo par import. Seuls les modèles publics et les journaux techniques du moteur sont conservés sous `.cache/` et `.local/`.
+Les documents sont identifiés par SHA-256, découpés en passages de 160 mots avec chevauchement de 30 mots, sans traverser les pages PDF. La limite de la maquette est de 100 documents et 100 Mo sauvegardés par espace, 10 Mo et 100 pages par PDF, avec 30 fichiers et 30 Mo par import. Les modèles publics et les journaux techniques du moteur sont conservés sous `.cache/` et `.local/`.
+
+Les textes extraits et leurs repères de page, les corrections et leurs extraits, les validations et les retraits sont sauvegardés après chaque mutation dans SQLite, sous `data/private/espaces.sqlite3`, exclu de Git. Les PDF originaux et les questions ne sont pas stockés dans cette base. Un espace vide enregistré reste vide au redémarrage, y compris le scénario fictif. Une transaction SQLite assure l'atomicité de chaque écriture ; une révision attendue empêche un onglet périmé d'écraser les modifications d'un autre. En cas d'échec de sauvegarde, aucun message de succès n'est affiché et la version durable est rechargée si elle est lisible. Une base illisible n'est pas effacée ni remplacée automatiquement.
+
+Les exports JSON portent un format et une version. Leur import vérifie les types, limites, identifiants, pages et preuves de chaque valeur. L'espace fictif n'accepte que les documents du scénario officiel. Une restauration fusionne seulement les documents absents, sans modifier les fiches des documents déjà présents. Toutes les fiches ajoutées sont remises à vérifier ; les validations d'un fichier importé ne font pas autorité. Le chargement direct de la base locale conserve les validations, après contrôle de leurs preuves. `MEMOIRE_DATA_DIR` permet de choisir un autre dossier local, notamment pour isoler les tests. Le dossier est créé avec des droits privés et la base avec des droits `0600` sur les systèmes qui les prennent en charge ; il n'y a pas de chiffrement applicatif ni d'authentification multiutilisateur.
 
 ## Faits et validation
 
@@ -71,6 +75,8 @@ Le contexte est de 4096 tokens et la sortie limitée à 700 tokens. Une réponse
 | `app.py` | Espaces, navigation et parcours de questions |
 | `memoire/views.py` | Équipements, incidents, bibliothèque, corrections et cas similaires |
 | `memoire/knowledge.py` | Faits, provenance, validation et chronologie |
+| `memoire/storage.py` | SQLite, révisions, validation JSON et fusion des sauvegardes |
+| `memoire/workspace_ui.py` | Export et restauration de l'espace actif |
 | `memoire/qa.py` | Alias et sélection des rapports de suivi |
 | `memoire/documents.py` | Extraction et découpage |
 | `memoire/retrieval.py` | BM25 et embeddings |

@@ -5,7 +5,7 @@ Exécutées le 17 octobre 2026 sur un Mac Apple Silicon disposant de 8 Go de mé
 | Vérification | Résultat |
 |---|---|
 | Analyse statique Ruff | Réussie |
-| Tests automatiques | 57 réussis |
+| Tests automatiques | 82 réussis |
 | Atelier fictif | 30 rapports, 10 équipements, 22 incidents |
 | Provenance de toutes les valeurs du scénario | Chaque valeur est présente dans son extrait et l'extrait dans le document |
 | Recherche et statuts documentés V2, BM25 | 13/13 cas réussis |
@@ -17,6 +17,12 @@ Exécutées le 17 octobre 2026 sur un Mac Apple Silicon disposant de 8 Go de mé
 | Correction d'une fiche dans l'interface | Correction sourcée, retour à vérifier et nouvelle validation nécessaires |
 | Espaces personnel et fictif | Documents et fiches distincts ; pas d'application des alias fictifs aux imports |
 | API payante | Aucun branchement utilisé ; transport uniquement vers le modèle local |
+| Nouvelle session et redémarrage du stockage | Textes, pages, corrections et validations conservés |
+| Retrait de documents | Persistant, sans rechargement automatique des documents retirés |
+| Deux onglets modifiant un espace | Écriture périmée refusée, version sauvegardée rechargée |
+| Sauvegarde JSON | Fusion additive ; documents existants et corrections conservés |
+| Fichier de sauvegarde importé | Fiches remises à vérifier ; preuves invalides et faux documents fictifs refusés |
+| Écriture invalide ou base illisible | Version précédente conservée ; aucune remise à zéro automatique |
 
 ## Essais réels du LLM local sur la V2
 
@@ -34,4 +40,6 @@ Les contrôles automatiques couvrent l'extraction PDF et sa page, les imports in
 
 Les 13 cas de recherche V2 portent sur les documents retrouvés et les statuts déterminés à partir des fiches. Ils ne mesurent pas la fidélité de toutes les synthèses libres. Les scénarios sont fictifs et préparés pour cette démonstration : des essais sur des rapports indépendants et auprès d'utilisateurs métier restent nécessaires.
 
-Les documents, corrections et validations sont en mémoire dans la session, sans sauvegarde persistante. Les exports d'inventaire et de résultats sont disponibles. Le suivi des changements de fichiers de Streamlit est désactivé : redémarrer l'application après une modification du code.
+Les tests de sauvegarde utilisent des dossiers temporaires distincts des données personnelles. Les textes extraits, corrections et validations sont conservés localement ; les PDF originaux et l'historique des questions ne sont pas inclus. Les exports d'inventaire, de résultats et d'espace restent disponibles. Le suivi des changements de fichiers de Streamlit est désactivé : redémarrer l'application après une modification du code.
+
+Un essai dans le navigateur a également été effectué sur une instance locale avec un stockage temporaire isolé : restauration d'un rapport fictif JSON, correction sourcée de l'intervention, validation humaine, téléchargement de l'export, puis arrêt complet et redémarrage du serveur. Le rapport, la correction et sa validation étaient présents dans la nouvelle session. Le contenu du fichier téléchargé a été comparé à la fiche enregistrée. Les données personnelles de l'application principale n'ont pas été utilisées pour cet essai.

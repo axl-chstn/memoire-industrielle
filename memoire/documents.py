@@ -52,7 +52,7 @@ class Passage:
 
 
 def read_document(name: str, data: bytes, *, demo: bool = False) -> Document:
-    """Ne persiste jamais le contenu d'un document sur disque."""
+    """Extrait le texte en mémoire ; l'application sauvegarde ensuite son espace local."""
     safe_name = PurePosixPath(name.replace("\\", "/")).name
     if not data or len(data) > MAX_FILE_BYTES:
         raise ValueError("Le fichier doit contenir entre 1 octet et 10 Mo.")

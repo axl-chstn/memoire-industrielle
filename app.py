@@ -15,6 +15,7 @@ from memoire.knowledge import extract_record, incidents
 from memoire.local_llm import model_status
 from memoire.qa import expand_aliases, search_reports
 from memoire.retrieval import MODEL_NAME, SearchIndex
+from memoire.storage import SPACES, Snapshot, StorageError, WorkspaceStore
 from memoire.views import (
     ROUTES,
     equipment_view,
@@ -23,6 +24,7 @@ from memoire.views import (
     overview,
     similar_view,
 )
+from memoire.workspace_ui import backup_view
 
 ROOT = Path(__file__).resolve().parent
 os.environ.setdefault("HF_HOME", str(ROOT / ".cache" / "huggingface"))
@@ -54,10 +56,28 @@ def load_encoder():
     return SentenceTransformer(MODEL_NAME, device="cpu", trust_remote_code=False)
 
 
-def invalidate():
+def invalidate(*, save=True):
     for key in ("search_index", "index_signature", "similar_result"):
         st.session_state.pop(key, None)
     st.session_state.history = []
+    if save:
+        name = st.session_state.workspace
+        try:
+            revision = store.save(Snapshot(name, st.session_state.workspaces[name],
+                st.session_state.overrides[name], st.session_state.storage_revisions[name]))
+            st.session_state.storage_revisions[name] = revision
+        except StorageError as exc:
+            # Recharger l'état durable empêche d'afficher une modification non sauvegardée.
+            try:
+                saved = store.load(name, defaults.get(name))
+                st.session_state.workspaces[name] = saved.documents
+                st.session_state.overrides[name] = saved.overrides
+                st.session_state.storage_revisions[name] = saved.revision
+            except StorageError:
+                pass
+            st.error(str(exc))
+            st.caption("La modification n'a pas été enregistrée. Recharge la page avant de réessayer.")
+            st.stop()
 
 
 def personal_workspace():
@@ -103,13 +123,22 @@ def render_exchange(exchange, position):
                            "recherche-maintenance.md", "text/markdown", key=f"export_{position}")
 
 
-if "workspaces" not in st.session_state:
+store = WorkspaceStore()
+defaults = {"Atelier fictif": {d.id: d for d in load_workshop()}, "Mes documents": {}}
+if "storage_revisions" not in st.session_state:
     # Une éventuelle session V1 est conservée dans l'espace personnel.
     previous = st.session_state.get("documents", {})
     personal = {key: doc for key, doc in previous.items() if not doc.demo}
-    st.session_state.workspaces = {
-        "Atelier fictif": {d.id: d for d in load_workshop()}, "Mes documents": personal}
-    st.session_state.overrides = {"Atelier fictif": {}, "Mes documents": {}}
+    defaults["Mes documents"] = personal
+    try:
+        saved_spaces = {name: store.load(name, defaults[name]) for name in SPACES}
+    except StorageError as exc:
+        st.error(str(exc))
+        st.info("Les données locales ont été conservées. Ne supprime pas data/private : conserve-en une copie pour récupérer tes données.")
+        st.stop()
+    st.session_state.workspaces = {name: s.documents for name, s in saved_spaces.items()}
+    st.session_state.overrides = {name: s.overrides for name, s in saved_spaces.items()}
+    st.session_state.storage_revisions = {name: s.revision for name, s in saved_spaces.items()}
     st.session_state.history = []
     st.session_state.route = "Vue d'ensemble"
 
@@ -118,7 +147,7 @@ with st.sidebar:
                 '<div class="brand-sub">Atelier · Version 2</div>', unsafe_allow_html=True)
     workspace = st.selectbox("Espace de travail", ["Atelier fictif", "Mes documents"], key="workspace")
     if st.session_state.get("previous_workspace") != workspace:
-        invalidate()
+        invalidate(save=False)
         st.session_state.previous_workspace = workspace
     documents = st.session_state.workspaces[workspace]
     overrides = st.session_state.overrides[workspace]
@@ -167,7 +196,9 @@ with st.sidebar:
             help="Utilise le modèle d'embeddings local. Le premier chargement peut nécessiter un téléchargement public.")
         top_k = st.slider("Passages pour une réponse", 1, 8, 4)
         include_drafts = st.checkbox("Inclure les fiches à vérifier dans les vues métier", value=False)
-    st.caption("Documents, corrections et validations restent dans cette session. Les modèles publics sont conservés sur le Mac.")
+    with st.expander("Sauvegarde de cet espace"):
+        backup_view(documents, overrides, invalidate)
+    st.caption("Textes extraits, corrections et validations sauvegardés sur ce Mac, dans data/private. Aucun envoi sur GitHub. Les échanges de questions restent dans la session.")
 
 records = [overrides.get(doc.id) or extract_record(doc) for doc in documents.values()]
 items = incidents(records, include_drafts=include_drafts)

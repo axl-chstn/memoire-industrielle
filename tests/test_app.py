@@ -9,7 +9,8 @@ APP = Path(__file__).resolve().parents[1] / "app.py"
 
 
 @pytest.fixture(autouse=True)
-def offline_model_status(monkeypatch):
+def offline_model_status(monkeypatch, tmp_path):
+    monkeypatch.setenv("MEMOIRE_DATA_DIR", str(tmp_path / "private"))
     monkeypatch.setattr("memoire.local_llm.model_status", lambda: (False, "Modèle local absent"))
 
 
@@ -115,3 +116,36 @@ def test_correction_flow_requires_validation_again():
     next(b for b in app.button if b.label == "Valider les informations présentes").click().run()
     assert not app.exception
     assert app.metric[2].value == "22"
+
+
+def test_personal_validation_survives_a_new_browser_session():
+    app = AppTest.from_file(str(APP), default_timeout=20).run()
+    document = read_document("personnel.md", "Incident : INC900\nÉquipement : P01\nIntervention : Inspection".encode())
+    app.session_state.workspaces["Mes documents"][document.id] = document
+    app.selectbox(key="workspace").set_value("Mes documents").run()
+    open_page(app, "Documents")
+    next(b for b in app.button if b.label == "Valider les informations présentes").click().run()
+    restarted = AppTest.from_file(str(APP), default_timeout=20).run()
+    restarted.selectbox(key="workspace").set_value("Mes documents").run()
+    assert not restarted.exception
+    assert restarted.metric[0].value == "1"
+    assert restarted.metric[2].value == "1"
+    assert restarted.session_state.overrides["Mes documents"][document.id].validated
+    open_page(restarted, "Documents")
+    next(s for s in restarted.multiselect if s.label == "Documents à retirer").set_value([document.id]).run()
+    next(b for b in restarted.button if b.label == "Retirer la sélection").click().run()
+    again = AppTest.from_file(str(APP), default_timeout=20).run()
+    again.selectbox(key="workspace").set_value("Mes documents").run()
+    assert again.metric[0].value == "0"
+
+
+def test_stale_session_edit_reloads_the_saved_version():
+    first = AppTest.from_file(str(APP), default_timeout=20).run()
+    second = AppTest.from_file(str(APP), default_timeout=20).run()
+    open_page(first, "Documents")
+    next(b for b in first.button if b.label == "Remettre à vérifier").click().run()
+    open_page(second, "Documents")
+    next(b for b in second.button if b.label == "Remettre à vérifier").click().run()
+    assert not second.exception
+    assert any("autre onglet" in e.value for e in second.error)
+    assert second.session_state.storage_revisions["Atelier fictif"] == 1

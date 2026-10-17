@@ -279,7 +279,7 @@ def library_view(documents, records, overrides, invalidate):
             overrides[selected] = replace(record, validated=False, origin="Vérification demandée")
             invalidate()
             st.rerun()
-    st.caption("La validation humaine porte sur les informations présentes et leurs extraits. Elle ne complète pas les données absentes. Les corrections restent dans cette session.")
+    st.caption("La validation humaine porte sur les informations présentes et leurs extraits. Elle ne complète pas les données absentes. Les corrections et validations sont sauvegardées sur ce Mac.")
     with st.expander("Retirer des documents de cet espace"):
         removals = st.multiselect("Documents à retirer", list(documents), format_func=lambda key: documents[key].name)
         if st.button("Retirer la sélection", disabled=not removals):

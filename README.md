@@ -61,7 +61,20 @@ Pour essayer les cas similaires, partir d'INC116, sélectionner **Vibration** et
 
 Dans **Documents**, choisir un rapport, ouvrir **Corriger une information et vérifier sa source**, sélectionner le champ et copier une valeur avec l'extrait qui la contient. La valeur doit être présente dans l'extrait et l'extrait dans la page sélectionnée. Une correction remet la fiche à vérifier. Le bouton **Valider les informations présentes** permet ensuite son inclusion dans les vues métier.
 
-L'extraction est conservatrice : elle reconnaît les rubriques explicites (Incident, Équipement, Date, Composant, Symptômes, Diagnostic, Statut du diagnostic, Intervention, Durée, Résultat, Constat de contrôle) et les identifiants non ambigus. Un rapport libre sans ces rubriques peut nécessiter une saisie manuelle sourcée. Aucun diagnostic n'est déduit d'un symptôme. Les validations et les corrections sont conservées dans la session, sans modifier le fichier original.
+L'extraction est conservatrice : elle reconnaît les rubriques explicites (Incident, Équipement, Date, Composant, Symptômes, Diagnostic, Statut du diagnostic, Intervention, Durée, Résultat, Constat de contrôle) et les identifiants non ambigus. Un rapport libre sans ces rubriques peut nécessiter une saisie manuelle sourcée. Aucun diagnostic n'est déduit d'un symptôme. Les validations et les corrections sont sauvegardées sur l'ordinateur après chaque modification, sans modifier le fichier original.
+
+### Retrouver son travail et restaurer une sauvegarde
+
+Les textes extraits, les repères de page, les corrections, les validations et les retraits sont conservés automatiquement dans `data/private/espaces.sqlite3`. Ils sont rechargés après la fermeture du navigateur ou le redémarrage de l'application. Les PDF originaux ne sont pas copiés : conserve-les séparément. Le dossier privé est exclu de GitHub ; l'historique des questions reste dans la session.
+
+Dans la colonne de gauche, ouvrir **Sauvegarde de cet espace** :
+
+1. **Exporter cet espace** télécharge une sauvegarde JSON de l'espace actif, avec ses textes et corrections.
+2. Pour la récupérer sur une autre installation, choisir le même espace, puis ajouter le JSON dans **Restaurer une sauvegarde JSON**.
+3. Vérifier le nombre de rapports proposés, puis cliquer sur **Fusionner la sauvegarde**. Les documents déjà présents et leurs fiches restent inchangés ; seuls les documents absents sont ajoutés. Pour restaurer une ancienne correction d'un rapport existant, exporter d'abord l'état actuel, retirer ce rapport dans Documents, puis restaurer la sauvegarde souhaitée.
+4. Vérifier les fiches ajoutées dans **Documents** : une validation indiquée par un fichier importé n'est pas reprise automatiquement. Les validations conservées directement sur cet ordinateur restent actives après redémarrage.
+
+Les sauvegardes contiennent les textes des rapports : conserve-les dans un emplacement approprié. Le stockage local n'est pas chiffré par l'application. Une limite de 100 Mo s'applique à chaque espace sauvegardé et à chaque fichier de restauration. Si deux onglets modifient le même espace, une écriture périmée est refusée et la version enregistrée est rechargée ; recommencer la modification après rechargement de la page.
 
 La première génération peut être plus lente pendant le chargement du modèle. Décoche la rédaction locale pour afficher uniquement les extraits. Une synthèse sans références valides est remplacée par les sources.
 
@@ -75,6 +88,7 @@ La première génération peut être plus lente pendant le chargement du modèle
 - Réponses de statut établies par les dates et les résultats vérifiés, sans laisser le LLM choisir arbitrairement le dernier état.
 - Relations entre équipements, composants, incidents, diagnostics et interventions ; vocabulaire commun inspiré du TD, sans raisonneur OWL dans cette V2.
 - Consultation des sources, export Markdown et retrait des documents.
+- Sauvegarde locale automatique et export/restauration JSON de chaque espace.
 - Tests automatiques et jeu d'évaluation reproductible.
 
 ### Recherche par embeddings
@@ -91,7 +105,7 @@ Cocher **Chercher aussi par le sens** dans les réglages de recherche. Le premie
 - Le lanceur définit `OLLAMA_NO_CLOUD=1` et ne demande ni connexion à un compte ni clé.
 - L'application utilise une adresse locale fixe, ne suit aucune redirection et n'utilise pas les proxys HTTP pour les questions.
 - Le modèle est fixé à `qwen3:4b-instruct`. Avant chaque génération, ses métadonnées doivent décrire des poids GGUF locaux ; un modèle distant est refusé.
-- Les documents et l'historique restent en mémoire dans la session. Ils ne sont pas envoyés sur GitHub et peuvent être perdus à la fermeture de la session.
+- Les textes extraits, corrections et validations restent sur cet ordinateur dans `data/private/`, exclu de Git. Aucun rapport n'est envoyé sur GitHub. L'historique des questions reste en mémoire dans la session.
 - `.local/` contient le moteur et `.cache/` les modèles publics et les journaux techniques du moteur. Ils sont exclus de Git. L'installation d'Ollama peut aussi créer ses fichiers de fonctionnement dans `~/.ollama`.
 - Le modèle peut rester chargé cinq minutes après une réponse, puis libérer sa mémoire. Le serveur local peut rester en arrière-plan pour les prochains essais.
 
@@ -118,7 +132,7 @@ Voir [les vérifications réalisées](docs/VERIFICATION.md), [la fiche technique
 
 Cette maquette ne constitue pas une validation industrielle. Un modèle local peut se tromper et les citations doivent être relues. Le contrôle vérifie les identifiants des sources, pas l'appui de chaque affirmation.
 
-Limites : 10 Mo et 100 pages par PDF, 30 fichiers/30 Mo par import, 100 documents par espace. Pas d'OCR, de GMAO, de stockage persistant, d'authentification propre ni de raisonnement OWL. Les références sont repérées par des motifs simples. Les questions sont indépendantes : rappeler l'équipement à chaque fois. La recherche de cas similaires utilise un vocabulaire de symptômes et de composants et des termes communs ; les embeddings facultatifs concernent la recherche documentaire dans Questions.
+Limites : 10 Mo et 100 pages par PDF, 30 fichiers/30 Mo par import, 100 documents et 100 Mo sauvegardés par espace. Pas d'OCR, de GMAO, d'authentification propre, de journal détaillé des validations ni de raisonnement OWL. Les espaces locaux ne constituent pas une séparation entre plusieurs utilisateurs. Les références sont repérées par des motifs simples. Les questions sont indépendantes : rappeler l'équipement à chaque fois. La recherche de cas similaires utilise un vocabulaire de symptômes et de composants et des termes communs ; les embeddings facultatifs concernent la recherche documentaire dans Questions.
 
 GitHub héberge le code et ne fait pas tourner cette application Python. En cas de déploiement partagé, ajouter les protections et la séparation des espaces appropriées.
 
