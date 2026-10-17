@@ -59,10 +59,10 @@ def chat_local(messages: list[dict[str, str]]) -> str:
     require_local_model()
     result = local_request("/api/chat", {
         "model": LOCAL_MODEL, "messages": messages, "stream": False,
-        "think": False, "keep_alive": "5m",
+        "think": False, "keep_alive": "5m", "format": "json",
         "options": {"temperature": 0, "num_ctx": 4096, "num_predict": 700},
     })
     text = result.get("message", {}).get("content", "")
     if not result.get("done") or result.get("done_reason") == "length" or not isinstance(text, str):
-        raise LocalModelError("La synthèse locale est incomplète. Consulte les extraits.")
+        raise LocalModelError("La sélection locale est incomplète. Consulte les extraits.")
     return text.strip()

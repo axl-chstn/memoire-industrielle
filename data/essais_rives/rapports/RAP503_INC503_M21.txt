@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Échauffement du moteur de la soufflante
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP503
+Incident : INC503
+Équipement : M21
+Date : 2026-09-04
+Composant : Ventilation du moteur
+Symptômes : Température de carter élevée après un cycle prolongé
+Diagnostic : Débit de refroidissement insuffisant suspecté
+Statut du diagnostic : Hypothèse non confirmée
+Intervention : Nettoyage des grilles et des ailettes de refroidissement
+Durée : 60 minutes
+Résultat : Inconnu
+Constat de contrôle : Pas de relevé après remise en production dans ce rapport
+
+Désignation de l'équipement : Moteur de la soufflante de séchage
+
+Constat au poste
+Une température de carter de 95 °C est relevée après un cycle prolongé. Des dépôts de poussière sont visibles sur les grilles et les ailettes de refroidissement. Ce relevé décrit le cas observé ; aucune limite constructeur ni condition d'acceptation n'est fournie dans le dossier d'essai.
+
+Travail effectué
+Les surfaces de refroidissement accessibles ont été nettoyées. Le temps consigné pour cette opération est de 60 minutes. Le document ne mentionne ni remplacement du ventilateur ni mesure du débit d'air pendant cette visite.
+
+Point laissé ouvert
+La production a repris après le départ de l'équipe de maintenance. Aucun relevé de température après reprise n'est joint. Il n'est donc pas possible de dire, à partir de ce rapport seul, si le nettoyage a résolu le problème. La présence de poussière ne suffit pas non plus à confirmer la cause de l'échauffement.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

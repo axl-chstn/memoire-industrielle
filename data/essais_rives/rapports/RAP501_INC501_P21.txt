@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Baisse de pression sur la pompe de transfert
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP501
+Incident : INC501
+Équipement : P21
+Date : 2026-09-02
+Composant : Circuit d'aspiration
+Symptômes : Pression de refoulement faible et débit irrégulier
+Diagnostic : Réglage de la régulation suspecté
+Statut du diagnostic : Hypothèse non confirmée
+Intervention : Contrôle et ajustement de la régulation
+Durée : 40 minutes
+Résultat : Non résolu
+Constat de contrôle : Pression maintenue à 1,6 bar après l'essai ; référence habituelle du poste : 2,4 bar
+
+Désignation de l'équipement : Pompe de transfert de la cuve de rinçage
+
+Constat au poste
+L'équipe de production signale que le transfert depuis la cuve de rinçage prend plus de temps que d'habitude. Le manomètre de refoulement indique 1,6 bar pendant le cycle observé, contre une valeur habituelle de 2,4 bar consignée pour ce poste. Le débit varie au cours du transfert. Aucune fuite extérieure n'est relevée pendant la visite.
+
+Travail effectué
+La consigne affichée et les paramètres de régulation ont été contrôlés. Un ajustement a été essayé sur le même cycle de production. L'opération, contrôle compris, a duré 40 minutes. Le filtre d'aspiration n'a pas été ouvert lors de cette première intervention.
+
+Suite à donner
+La pression reste à 1,6 bar. L'ajustement n'a donc pas permis de résoudre l'incident. Une inspection du circuit d'aspiration est demandée. À ce stade, l'origine de la baisse de pression n'est pas confirmée.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

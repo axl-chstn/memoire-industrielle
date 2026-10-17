@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Fiche de contrôle du moteur, sans date de visite
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP508
+Incident : INC503
+Équipement : M21
+Date : Non renseignée
+Composant : Ventilateur du moteur
+Symptômes : Échauffement du carter moteur
+Diagnostic : Ventilation insuffisante envisagée ; cause non confirmée
+Statut du diagnostic : Hypothèse non confirmée
+Intervention : Remplacement du ventilateur du moteur
+Durée : 55 minutes
+Résultat : Résolu
+Constat de contrôle : Température de carter de 70 °C après 30 minutes ; clôture indiquée sur la fiche non datée
+
+Désignation de l'équipement : Moteur de la soufflante de séchage
+
+Contenu de la fiche
+Cette fiche porte la référence du même incident d'échauffement que le rapport de nettoyage du 4 septembre. Elle indique un remplacement du ventilateur, une durée de 55 minutes et une température de carter de 70 °C après trente minutes de fonctionnement. La mention de clôture figure bien sur le document.
+
+Réserve sur la chronologie
+La date de la visite n'a pas été renseignée. Aucun horaire, bon d'intervention daté ou autre élément joint ne permet de la retrouver. Le numéro de la fiche et son ordre dans le dossier ne doivent pas être utilisés pour inventer cette date.
+
+Portée du constat
+La fiche décrit une amélioration et une résolution lors de son propre contrôle. En revanche, il n'est pas possible de la placer avec certitude avant ou après la visite datée du 4 septembre. Le dernier état chronologique de l'incident reste donc incertain à l'échelle du dossier. Les deux relevés de température proviennent de contrôles dont les conditions ne sont pas détaillées de façon comparable.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

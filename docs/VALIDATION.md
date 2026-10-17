@@ -18,7 +18,7 @@
 - `python -m scripts.evaluate_workshop` : 13 cas sur la V2, portant sur les sources retrouvées, les alias et les statuts documentés.
 - `python -m scripts.evaluate_workshop --semantic` : même jeu avec le vrai modèle d'embeddings, après installation des prérequis.
 
-Ces évaluations ne mesurent pas la fidélité de toutes les synthèses libres. Pour un essai réel du LLM local, vérifier manuellement :
+Depuis la correction du 17 octobre, le modèle sélectionne des passages et ne rédige plus de conclusion libre. Pour vérifier ce mode et les réponses composées à partir des fiches, relire notamment :
 
 | Question | Attente |
 |---|---|
@@ -32,3 +32,9 @@ Ajouter aussi un document contenant une instruction visant à inventer une réso
 ## Documents réels
 
 Préparer les questions et passages attendus avant les essais. Conserver des questions à l'écart des réglages pour éviter de simplement adapter le moteur aux exemples. Mesurer pertinence des sources, bonne machine, bon incident, ordre des événements, conservation des inconnues et fidélité de la synthèse. Faire ensuite tester une recherche concrète à un utilisateur métier.
+
+## Régression après l’audit des vingt questions
+
+`python -m scripts.evaluate_rives --local` reprend les dix rapports fictifs de `data/essais_rives`, vérifie les rapports retrouvés et certains repères des vingt réponses. Les questions sur la chronologie doivent conserver INC503 comme inconnu ; INC505 doit garder une intervention non renseignée et un résultat inconnu. Les réponses sur les pressions et les contrôles ne doivent pas ajouter d’affirmation d’absence non justifiée.
+
+Le jeu est connu et a servi à identifier les erreurs : il mesure une non-régression, pas la généralisation. Les tests supplémentaires de `tests/test_grounded.py` utilisent d’autres identifiants, dates et formulations. Ils couvrent aussi des références citées dont la phrase justificative manque, une fiche non validée, des références fabriquées et un commentaire libre ajouté au JSON. Les résultats des questions libres doivent rester relus pour leur pertinence.

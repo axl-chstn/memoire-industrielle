@@ -5,7 +5,7 @@ Exécutées le 17 octobre 2026 sur un Mac Apple Silicon disposant de 8 Go de mé
 | Vérification | Résultat |
 |---|---|
 | Analyse statique Ruff | Réussie |
-| Tests automatiques | 82 réussis |
+| Tests automatiques après correction de la fiabilité | 108 réussis |
 | Atelier fictif | 30 rapports, 10 équipements, 22 incidents |
 | Provenance de toutes les valeurs du scénario | Chaque valeur est présente dans son extrait et l'extrait dans le document |
 | Recherche et statuts documentés V2, BM25 | 13/13 cas réussis |
@@ -24,7 +24,7 @@ Exécutées le 17 octobre 2026 sur un Mac Apple Silicon disposant de 8 Go de mé
 | Fichier de sauvegarde importé | Fiches remises à vérifier ; preuves invalides et faux documents fictifs refusés |
 | Écriture invalide ou base illisible | Version précédente conservée ; aucune remise à zéro automatique |
 
-## Essais réels du LLM local sur la V2
+## Essais réels avant la correction de la fiabilité
 
 Trois questions libres ont été posées au modèle réellement installé :
 
@@ -43,3 +43,11 @@ Les 13 cas de recherche V2 portent sur les documents retrouvés et les statuts d
 Les tests de sauvegarde utilisent des dossiers temporaires distincts des données personnelles. Les textes extraits, corrections et validations sont conservés localement ; les PDF originaux et l'historique des questions ne sont pas inclus. Les exports d'inventaire, de résultats et d'espace restent disponibles. Le suivi des changements de fichiers de Streamlit est désactivé : redémarrer l'application après une modification du code.
 
 Un essai dans le navigateur a également été effectué sur une instance locale avec un stockage temporaire isolé : restauration d'un rapport fictif JSON, correction sourcée de l'intervention, validation humaine, téléchargement de l'export, puis arrêt complet et redémarrage du serveur. Le rapport, la correction et sa validation étaient présents dans la nouvelle session. Le contenu du fichier téléchargé a été comparé à la fiche enregistrée. Les données personnelles de l'application principale n'ont pas été utilisées pour cet essai.
+
+## Correction de la fiabilité — 17 octobre 2026
+
+L’audit de vingt questions sur l’atelier fictif des Rives avait relevé quinze réponses sans anomalie factuelle, un repli vers des fiches correctes, deux réserves et deux réponses erronées ou contradictoires. Les erreurs concernaient une chronologie sans date, une intervention non renseignée transformée en absence d’intervention, un inconnu transformé en échec et des phrases supplémentaires non justifiées.
+
+La nouvelle version compose les réponses courantes depuis les faits vérifiés et leurs preuves. Pour une question libre, le modèle peut uniquement sélectionner des identifiants de passages ; l’application recopie le texte source. Elle refuse les commentaires ajoutés, les identifiants inventés et les réponses JSON non conformes. Les fiches restent lisibles si le modèle est arrêté ou si sa sélection est refusée.
+
+Les vingt contrôles connus sont rejoués avec `python -m scripts.evaluate_rives --local`, en utilisant le modèle réellement installé pour les questions libres. Les repères automatiques ne suffisent pas à prouver la fidélité : les réponses corrigées doivent aussi être relues. Les cas des Rives sont maintenant un jeu de régression connu, et non une validation indépendante. Des tests sur de nouveaux identifiants, dates et formulations complètent ce contrôle.

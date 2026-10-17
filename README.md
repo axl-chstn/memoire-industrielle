@@ -83,7 +83,9 @@ python -m pip install -r requirements-semantic.txt
 
 Activer ensuite **Chercher aussi par le sens** dans les réglages. Le premier usage télécharge le modèle `intfloat/multilingual-e5-small` depuis Hugging Face. Cette option concerne la recherche dans **Questions**.
 
-Ollama exécute le modèle de langage sur `127.0.0.1:11435`, avec les fonctions cloud désactivées. Il rédige une synthèse à partir des passages retrouvés. Les questions explicites sur le statut d'un incident utilisent les dates et résultats des fiches vérifiées pour établir le dernier état connu.
+Les réponses sur les dates, les interventions, les diagnostics et les résultats sont composées à partir des fiches vérifiées. Un rapport sans date reste à part de la chronologie ; une intervention non renseignée reste une information inconnue.
+
+Ollama tourne sur `127.0.0.1:11435`, avec les fonctions cloud désactivées. Pour les questions libres, il sélectionne des passages que l'application recopie sans reformulation. Le modèle ne rédige plus de conclusions libres. Cela limite les affirmations ajoutées, mais la pertinence des passages choisis et leur contexte restent à vérifier. Si la sélection est inexploitable, les fiches et les sources restent accessibles.
 
 Les modèles sont conservés dans `.cache/` et le moteur dans `.local/`, tous deux exclus de Git. Les détails de fonctionnement sont décrits dans [l'architecture](docs/ARCHITECTURE.md).
 
@@ -95,19 +97,23 @@ ruff check .
 pytest -q
 python -m scripts.evaluate
 python -m scripts.evaluate_workshop
+python -m scripts.evaluate_rives
 ```
 
 Après installation des embeddings, les deux scripts d'évaluation acceptent l'option `--semantic`. Pour tester le modèle de langage installé :
 
 ```bash
 python -m scripts.validate_local
+python -m scripts.evaluate_rives --local
 ```
+
+Les vingt questions de l’atelier des Rives sont conservées comme tests de régression après correction des erreurs observées. Elles ne constituent donc plus un jeu d’essai indépendant.
 
 Les résultats obtenus et la portée des essais sont détaillés dans [les vérifications](docs/VERIFICATION.md). Les 12 fiches historiques du TD sont conservées pour vérifier que les évolutions ne cassent pas les premiers exemples.
 
 ## Ce qu'il reste à faire
 
-La maquette permet de tester le parcours sur des exemples préparés. Il reste à l'évaluer sur des rapports indépendants et à la faire essayer par des personnes du métier. Un modèle local peut se tromper : les références permettent de revenir aux rapports, mais ne garantissent pas que chaque phrase de la réponse est correcte.
+La maquette permet de tester le parcours sur des exemples préparés. Il reste à l'évaluer sur des rapports indépendants et à la faire essayer par des personnes du métier. Le modèle peut sélectionner un passage peu pertinent, et une fiche vérifiée peut encore contenir une erreur humaine. Les références permettent de revenir aux rapports ; elles ne suffisent pas à établir toutes les conclusions.
 
 Les concepts de l'ontologie servent à organiser les équipements, composants, incidents et interventions. Le raisonneur OWL n'est pas intégré. La maquette ne comporte pas non plus de connexion à une GMAO ni d'authentification pour un usage partagé.
 

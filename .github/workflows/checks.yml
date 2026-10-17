@@ -18,3 +18,4 @@ jobs:
       - run: pytest -q
       - run: python -m scripts.evaluate
       - run: python -m scripts.evaluate_workshop
+      - run: python -m scripts.evaluate_rives

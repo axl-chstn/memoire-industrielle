@@ -4,7 +4,7 @@ La V2 fournit un parcours complet sur un atelier fictif : fiches équipements, i
 
 1. Réunir 5 à 10 rapports indépendants du scénario, autorisés et anonymisés.
 2. Écrire 20 questions et leurs preuves avant de régler le moteur ; inclure synonymes, négations, suivis, résultats inconnus et questions sans réponse.
-3. Évaluer séparément extraction, recherche, chronologie et fidélité de la synthèse locale. Le succès sur les exemples fictifs n'est pas une validation industrielle.
+3. Évaluer séparément extraction, recherche, chronologie et pertinence des réponses et de la sélection locale de passages. Le succès sur les exemples fictifs n'est pas une validation industrielle.
 4. Adapter les rubriques et alias aux vrais documents. Mesurer l'apport des relations structurées par rapport au RAG documentaire.
 5. Faire essayer la tâche « retrouver un précédent, ses actions et son résultat » à quelques techniciens ou PME.
 6. Si l'utilité est confirmée : journal des validations, OCR, puis hébergement et authentification adaptés pour un usage partagé.

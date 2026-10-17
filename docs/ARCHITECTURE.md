@@ -14,7 +14,7 @@ flowchart LR
   H --> I[Ajout des suivis de l'incident demandé]
   I --> J[Réponse structurée et citations]
   F --> J
-  I --> K[Synthèse Ollama locale facultative]
+  I --> K[Sélection de passages par Ollama]
   K --> J
 ```
 
@@ -52,9 +52,13 @@ BM25 fonctionne localement, avec retrait des accents, quelques mots vides franç
 
 Les références explicites sont filtrées par catégorie : OU entre identifiants de même nature, ET entre catégories (par exemple une machine et un incident). Le moteur conserve la diversité des documents. Pour un incident explicitement demandé, les rapports de suivi vérifiés sont ajoutés, dans la limite de huit documents, afin de conserver le contexte temporel. Un rapport mentionnant un autre incident pour le distinguer n'est pas rattaché à cet autre incident.
 
-Les réponses structurées exposent les observations, diagnostics, actions, résultats et inconnues. Une valeur n'est associée à une citation que si son extrait justificatif apparaît dans le passage cité. Les questions explicites de statut portant sur un incident utilisent les fiches vérifiées et leur chronologie, sans demander au LLM de choisir le dernier état. Un contexte incomplet ou des fiches non vérifiées empêchent de conclure sur ce statut.
+Les réponses structurées exposent les observations, diagnostics, actions, résultats et inconnues. Une valeur n'est associée à une citation que si son extrait justificatif apparaît dans le passage cité. Les questions de statut, de chronologie, de dates, d’interventions, de durée, de diagnostic et de contrôle sont composées à partir des fiches vérifiées. Plusieurs formulations françaises sont reconnues sans demander au LLM de choisir les faits ou le dernier état. Un contexte incomplet ou des fiches non vérifiées empêchent de conclure sur ce statut.
 
-Pour les autres questions, Ollama peut produire une synthèse courte à partir des passages. Le contrôle exige des identifiants de citation valides et rejette une confusion directe entre inconnu et non résolu dans les formulations couvertes. Cela ne prouve pas la fidélité de chaque phrase du LLM. Les faits structurés restent présentés avec leurs preuves en complément.
+Pour les questions libres, Ollama renvoie uniquement un JSON contenant de zéro à trois identifiants de source. Les identifiants sont contrôlés et l’application recopie les passages entiers, avec leurs négations et réserves. Un champ supplémentaire ou un identifiant inexistant entraîne un repli vers les fiches lisibles. Aucun texte libre produit par le modèle n’est présenté comme conclusion. Le transport demande le mode JSON d’Ollama. Pour les coûts et les intervenants, une correspondance de thème dans le texte est aussi recherchée : ces informations n’ont pas de rubrique dans les fiches, donc leur absence du schéma ne permet pas de conclure à leur absence du rapport.
+
+Une référence d’incident ou d’équipement permet de retrouver les en-têtes des rapports liés, puis de compléter la sélection avec des passages du corps. Une seconde recherche sans la référence sert à retrouver ces passages lorsque le code de l’incident n’apparaît que dans l’en-tête. Elle est limitée aux documents déjà identifiés. Le moteur refuse une conclusion sur un historique incomplet ou non vérifié. Un fait dont la preuve n’est pas présente dans les passages cités n’est pas repris comme valeur vérifiée.
+
+La pertinence d’un passage peut encore être insuffisante et un texte source peut être faux. Le moteur peut aussi ne pas reconnaître une formulation de question. Le mode de lecture des sources reste alors nécessaire. Les tests de régression ne sont pas une preuve de compréhension générale ni une validation industrielle.
 
 ## Cas similaires et ontologie
 
@@ -80,7 +84,8 @@ Le contexte est de 4096 tokens et la sortie limitée à 700 tokens. Une réponse
 | `memoire/qa.py` | Alias et sélection des rapports de suivi |
 | `memoire/documents.py` | Extraction et découpage |
 | `memoire/retrieval.py` | BM25 et embeddings |
-| `memoire/answers.py` | Réponses structurées, statuts documentés et synthèse |
+| `memoire/answers.py` | Fiches lisibles, sélection JSON et copie contrôlée des passages |
+| `memoire/grounded.py` | Dates, chronologie et réponses composées depuis les faits vérifiés |
 | `memoire/local_llm.py` | Transport exclusivement local |
 | `scripts/build_workshop.py` | Génération reproductible de l'atelier fictif |
 | `scripts/evaluate_workshop.py` | Évaluation des sources et statuts documentés de la V2 |

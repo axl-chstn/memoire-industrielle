@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Suivi des oscillations après remplacement du régulateur
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP507
+Incident : INC502
+Équipement : C21
+Date : 2026-09-11
+Composant : Régulateur de pression
+Symptômes : Pression oscillante et cycles de charge-décharge rapprochés
+Diagnostic : Défaillance du régulateur envisagée mais non confirmée
+Statut du diagnostic : Hypothèse non confirmée
+Intervention : Remplacement du régulateur de pression
+Durée : 80 minutes
+Résultat : Non résolu
+Constat de contrôle : Oscillations entre 5,8 et 7,1 bar toujours présentes pendant les 30 minutes de suivi
+
+Désignation de l'équipement : Compresseur du réseau d'air de conditionnement
+
+Objet du suivi
+Le recalibrage du capteur réalisé le 3 septembre n'avait pas supprimé les variations de pression. La visite du 11 septembre porte sur le même incident et le même équipement.
+
+Travail effectué
+Le régulateur de pression a été remplacé dans le cadre du diagnostic. L'intervention consignée a duré 80 minutes. Le document ne contient pas d'expertise de l'ancien régulateur et ne décrit pas de défaut matériel confirmé sur celui-ci.
+
+Résultat du contrôle
+Les variations restent comprises entre 5,8 et 7,1 bar pendant les trente minutes observées. Les passages charge-décharge restent rapprochés. L'incident est toujours non résolu après cette seconde intervention. Le remplacement d'une pièce ne constitue pas ici une preuve de réparation ni une confirmation de la cause. Aucune visite plus récente concernant cet incident n'est fournie dans le corpus.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

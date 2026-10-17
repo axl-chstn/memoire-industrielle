@@ -49,7 +49,7 @@ def main():
                 success &= case["expected_date"] in answer.text
         successes += bool(success)
         print(f"{'OK' if success else 'ÉCHEC'} | {question} | {', '.join(sorted(found)) or 'aucun passage'}")
-    print(f"\n{successes}/{len(cases)} cas V2. Scénarios fictifs ; la synthèse libre du LLM n'est pas évaluée par ce script.")
+    print(f"\n{successes}/{len(cases)} cas V2. Scénarios fictifs ; la sélection libre de passages par le LLM n'est pas évaluée par ce script.")
     raise SystemExit(0 if successes == len(cases) else 1)
 
 

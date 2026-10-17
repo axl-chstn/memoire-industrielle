@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Oscillations de pression du compresseur d'air
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP502
+Incident : INC502
+Équipement : C21
+Date : 2026-09-03
+Composant : Capteur de pression et régulation
+Symptômes : Pression oscillante et cycles de charge-décharge rapprochés
+Diagnostic : Dérive du capteur de pression suspectée
+Statut du diagnostic : Hypothèse non confirmée
+Intervention : Comparaison avec un manomètre de contrôle et recalibrage du capteur
+Durée : 45 minutes
+Résultat : Non résolu
+Constat de contrôle : Oscillations entre 5,9 et 7,0 bar toujours présentes après recalibrage
+
+Désignation de l'équipement : Compresseur du réseau d'air de conditionnement
+
+Constat au poste
+La pression du réseau oscille et le compresseur passe fréquemment de la charge à la décharge. Les opérateurs ne signalent pas de changement de consommation pendant la période observée. Aucun relevé de consommation d'air n'est toutefois joint au rapport.
+
+Travail effectué
+L'indication du capteur a été comparée à celle d'un manomètre de contrôle, puis le capteur a été recalibré. L'intervention a pris 45 minutes. Pendant les vingt minutes d'observation qui suivent, les oscillations restent comprises entre 5,9 et 7,0 bar.
+
+Conclusion de la visite
+Le recalibrage n'a pas supprimé le phénomène. La dérive du capteur reste une hypothèse de départ et ne peut pas être retenue comme cause confirmée. Un contrôle complémentaire de la régulation est demandé. Aucun remplacement de régulateur n'est réalisé pendant cette visite.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

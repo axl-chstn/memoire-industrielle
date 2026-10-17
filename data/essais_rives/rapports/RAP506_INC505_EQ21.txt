@@ -1,0 +1,24 @@
+RAPPORT DE MAINTENANCE — Signalement de dérive latérale d'une bande transporteuse
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP506
+Incident : INC505
+Équipement : EQ21
+Date : 2026-09-09
+Composant : Bande transporteuse
+Symptômes : Dérive latérale intermittente de la bande
+Résultat : Inconnu
+Constat de contrôle : Signalement visuel uniquement ; aucun essai après intervention documenté
+
+Désignation de l'équipement : Convoyeur d'entrée de la ligne de conditionnement
+
+Signalement transmis
+La production indique que la bande se décale par intermittence vers le côté opérateur. Le phénomène est signalé sur plusieurs passages de produits, sans mesure du décalage ni relevé de la charge transportée. Une photographie est mentionnée dans la note initiale, mais elle n'est pas jointe à ce fichier.
+
+État du dossier
+Cette note est un signalement, pas un compte rendu d'intervention achevée. Aucun diagnostic, aucune action de maintenance et aucune durée d'intervention ne sont renseignés. Le document ne permet pas d'affirmer qu'un réglage, une retension ou un remplacement a eu lieu.
+
+Informations manquantes
+Il n'y a pas de contrôle après intervention ni de décision de clôture. Le résultat reste inconnu. Il faut donc conserver la distinction entre une information absente et une action dont on saurait qu'elle n'a pas fonctionné. Le nom d'une personne chargée de l'intervention n'est pas indiqué.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

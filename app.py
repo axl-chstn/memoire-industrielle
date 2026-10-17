@@ -8,7 +8,7 @@ from pathlib import Path
 
 import streamlit as st
 
-from memoire.answers import Answer, generate_answer, source_extracts
+from memoire.answers import generate_answer, readable_fallback
 from memoire.demo import load_workshop, workshop_catalog
 from memoire.documents import chunk_document, read_document
 from memoire.knowledge import extract_record, incidents
@@ -103,7 +103,7 @@ def render_exchange(exchange, position):
     with st.chat_message("user"):
         st.text(question)
     with st.chat_message("assistant"):
-        mode = "Réponse documentée" if answer.documented else "Synthèse locale" if answer.generated else "Lecture des sources"
+        mode = "Réponse documentée" if answer.documented else "Passages sélectionnés par l’IA locale" if answer.generated else "Lecture des sources"
         st.caption(f"{mode} · {engine}")
         if answer.generated or answer.documented or not hits:
             st.text(answer.text)
@@ -188,7 +188,7 @@ with st.sidebar:
             st.success(local_notice)
         else:
             st.info(local_notice)
-        llm_enabled = st.checkbox("Rédiger les réponses sur cet ordinateur", value=local_ready,
+        llm_enabled = st.checkbox("Utiliser l’IA locale pour les questions libres", value=local_ready,
                                  disabled=not local_ready, key="local_summaries_enabled")
         st.caption("Aucune clé nécessaire. La question et les extraits restent sur la machine qui exécute la maquette.")
     with st.expander("Recherche et vérification"):
@@ -236,7 +236,7 @@ elif route == "Documents":
             st.rerun()
 else:
     st.subheader("Interroger les rapports et leurs suivis")
-    st.caption("Les réponses structurées utilisent les fiches vérifiées. La synthèse locale reste à contrôler dans les sources.")
+    st.caption("Dates, actions et résultats proviennent des fiches vérifiées. Pour les questions libres, l’IA sélectionne des passages reproduits sans reformulation.")
     equipment = st.selectbox("Limiter à un équipement", ["Tous"] + equipment_codes)
     if not st.session_state.history:
         examples = ["L'incident INC104 est-il résolu ?", "Qu'a-t-on essayé pour les vibrations sur C03 ?",
@@ -283,7 +283,7 @@ else:
             try:
                 answer = generate_answer(question, hits, local=llm_enabled and local_ready, records=records)
             except Exception:
-                answer = Answer(source_extracts(hits), notice="La synthèse locale est indisponible. Les sources restent consultables ; aucun service payant n'est utilisé.")
+                answer = readable_fallback(hits, records, "La réponse n’a pas pu être établie. Les faits vérifiés et les sources restent disponibles ; aucun service payant n’est utilisé.")
         exchange = (question, answer, hits, engine)
         st.session_state.history.append(exchange)
         st.session_state.history = st.session_state.history[-10:]

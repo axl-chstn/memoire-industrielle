@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Bruit sur le moteur du mélangeur
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP509
+Incident : INC506
+Équipement : M22
+Date : 2026-09-14
+Composant : Roulement côté entraînement
+Symptômes : Bruit intermittent côté entraînement
+Diagnostic : Origine du bruit non confirmée
+Statut du diagnostic : Non confirmé
+Intervention : Remplacement du roulement côté entraînement
+Durée : 90 minutes
+Résultat : Résolu
+Constat de contrôle : Absence du bruit pendant 40 minutes d'essai après remplacement
+
+Désignation de l'équipement : Moteur du mélangeur de préparation
+
+Constat au poste
+Un bruit intermittent est entendu du côté entraînement pendant le brassage. Il n'y a pas de relevé vibratoire joint, ni de mesure acoustique permettant une comparaison avant et après intervention.
+
+Travail effectué
+Le roulement côté entraînement a été remplacé. L'intervention a duré 90 minutes. La pièce déposée n'a pas été conservée pour expertise et aucun défaut de piste, jeu anormal ou manque de lubrifiant n'a été décrit au démontage.
+
+Contrôle et conclusion
+Le bruit n'est plus entendu pendant les quarante minutes de l'essai de reprise. L'incident est déclaré résolu sur ce constat. L'amélioration après remplacement est documentée, mais le mécanisme à l'origine du bruit n'a pas été confirmé. Le rapport ne permet donc pas d'attribuer avec certitude le problème à une usure, à un défaut de lubrification ou à un montage incorrect.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

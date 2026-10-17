@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Nouvel épisode : fuite sur la pompe de transfert
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP510
+Incident : INC507
+Équipement : P21
+Date : 2026-09-18
+Composant : Garniture mécanique
+Symptômes : Fuite visible au passage de l'arbre
+Diagnostic : Défaut d'étanchéité localisé au niveau de la garniture
+Statut du diagnostic : Localisation confirmée ; mécanisme de dégradation non établi
+Intervention : Inspection visuelle et demande d'un kit de garniture
+Durée : 20 minutes
+Résultat : Non résolu
+Constat de contrôle : Fuite toujours présente à la fin de l'inspection ; remplacement non réalisé
+
+Désignation de l'équipement : Pompe de transfert de la cuve de rinçage
+
+Constat au poste
+Une fuite est observée au passage de l'arbre de la pompe de transfert. La localisation est confirmée visuellement. Le document ne comprend pas d'expertise de la garniture et n'établit pas la raison de sa dégradation.
+
+Travail effectué et attente
+La visite d'inspection a duré 20 minutes. Un kit de garniture a été demandé au magasin. Il n'est pas disponible lors de la visite. Aucun remplacement de garniture n'a donc été effectué et la fuite est toujours présente à la fin du constat. La demande de pièce ne doit pas être présentée comme une réparation réalisée.
+
+Distinction avec l'historique
+Ce nouvel incident concerne une fuite. Il est distinct de l'incident INC501, qui concernait la baisse de pression et avait été clôturé après nettoyage du filtre. Le fait que la panne précédente ait été résolue ne permet pas de conclure à la résolution de cette fuite. Aucune date de réparation future n'est indiquée.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Suivi de la baisse de pression : contrôle du filtre d'aspiration
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP505
+Incident : INC501
+Équipement : P21
+Date : 2026-09-07
+Composant : Filtre d'aspiration
+Symptômes : Pression de refoulement faible et débit irrégulier
+Diagnostic : Filtre d'aspiration obstrué par des dépôts
+Statut du diagnostic : Confirmé à l'ouverture et au contrôle après nettoyage
+Intervention : Ouverture et nettoyage du filtre d'aspiration
+Durée : 50 minutes
+Résultat : Résolu
+Constat de contrôle : Pression stable à 2,4 bar pendant 45 minutes après nettoyage
+
+Désignation de l'équipement : Pompe de transfert de la cuve de rinçage
+
+Objet du suivi
+Cette visite poursuit le traitement de la baisse de pression signalée le 2 septembre 2026. L'ajustement de la régulation effectué lors de la première visite n'avait pas modifié la pression relevée à 1,6 bar.
+
+Travail effectué
+Le filtre d'aspiration a été ouvert. Des dépôts occupent une grande partie de sa surface utile. Le filtre a été nettoyé puis remonté. Cette seconde intervention a duré 50 minutes. Aucun remplacement de pompe n'a été réalisé.
+
+Résultat du contrôle
+Après nettoyage, la pression atteint 2,4 bar et reste stable pendant les 45 minutes de suivi. Le transfert s'effectue sans irrégularité signalée durant cette période. L'obstruction du filtre est retenue comme diagnostic confirmé pour cet épisode et l'incident est déclaré résolu. La première tentative sur la régulation reste une intervention sans succès dans l'historique.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

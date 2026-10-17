@@ -1,4 +1,4 @@
-"""Essai réel du LLM local : python -m scripts.validate_local."""
+"""Essai réel de la sélection locale de passages : python -m scripts.validate_local."""
 
 import json
 from pathlib import Path
@@ -27,7 +27,7 @@ def main():
     output.parent.mkdir(exist_ok=True)
     output.write_text(json.dumps(results, ensure_ascii=False, indent=2), encoding="utf-8")
     if not all(item["generated"] for item in results):
-        print("Une synthèse au moins a été remplacée par les extraits. Relire les notices et les sources : une réponse écartée n'est pas une validation de la qualité du LLM.")
+        print("Une sélection au moins a été remplacée par le mode de lecture des sources. Relire les notices et les passages ; ce test ne valide pas toute leur pertinence.")
 
 
 if __name__ == "__main__":

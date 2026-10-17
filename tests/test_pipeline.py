@@ -124,7 +124,7 @@ def test_no_evidence_never_calls_model(monkeypatch):
 
 def test_local_model_receives_only_selected_sources(index, monkeypatch):
     hits = index.search("INC07")
-    chat = Mock(return_value="La résolution reste inconnue. [S1]")
+    chat = Mock(return_value='{"sources": ["S1"]}')
     monkeypatch.setattr("memoire.answers.chat_local", chat)
     monkeypatch.setenv("OPENAI_API_KEY", "ancienne-cle-inutilisee")
     answer = generate_answer("INC07 résolu ?", hits, local=True)

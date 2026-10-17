@@ -1,0 +1,28 @@
+RAPPORT DE MAINTENANCE — Fuite au raccord de sortie de la pompe
+Atelier des Rives — DOCUMENT ENTIÈREMENT FICTIF POUR ESSAI
+
+Rapport : RAP504
+Incident : INC504
+Équipement : P22
+Date : 2026-09-05
+Composant : Joint du raccord de refoulement
+Symptômes : Goutte-à-goutte au raccord de sortie
+Diagnostic : Joint du raccord détérioré
+Statut du diagnostic : Confirmé au démontage
+Intervention : Remplacement du joint du raccord de refoulement
+Durée : 65 minutes
+Résultat : Résolu
+Constat de contrôle : Aucune fuite observée pendant deux heures de fonctionnement après remontage
+
+Désignation de l'équipement : Pompe de retour du bac de lavage
+
+Constat au poste
+Un goutte-à-goutte est localisé au raccord de refoulement de la pompe de retour. Le corps de pompe et les autres raccords contrôlés ne présentent pas de fuite visible pendant la visite.
+
+Travail effectué
+Au démontage du raccord concerné, le joint présente une déchirure visible. Le joint a été remplacé et le raccord remonté. Le temps total d'intervention consigné est de 65 minutes. Le rapport ne donne ni référence fournisseur, ni coût de la pièce, ni coût de main-d'œuvre.
+
+Contrôle après intervention
+Le raccord est resté sec pendant deux heures de fonctionnement observées après remontage. L'incident est déclaré résolu dans ce rapport. La déchirure est confirmée pour le joint déposé ; aucune analyse de la raison de cette dégradation n'a été réalisée.
+
+Document créé pour tester une maquette. Les constats, valeurs et interventions sont inventés ; ils ne constituent pas des consignes de maintenance.

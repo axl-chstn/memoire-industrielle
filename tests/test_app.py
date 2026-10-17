@@ -47,10 +47,10 @@ def test_empty_personal_workspace_does_not_reload_demo():
 
 def test_ready_local_model_is_used_without_key(monkeypatch):
     monkeypatch.setattr("memoire.local_llm.model_status", lambda: (True, "Modèle local prêt"))
-    monkeypatch.setattr("memoire.answers.chat_local", lambda messages: "Une lubrification a été effectuée. [S1]")
+    monkeypatch.setattr("memoire.answers.chat_local", lambda messages: '{"sources": ["S1"]}')
     app = AppTest.from_file(str(APP), default_timeout=20).run()
     open_page(app, "Questions")
-    app.chat_input[0].set_value("Quelle intervention pour INC103 ?").run()
+    app.chat_input[0].set_value("Quels passages décrivent INC103 ?").run()
     assert not app.exception
     assert app.session_state.history[0][1].generated
 
@@ -64,7 +64,7 @@ def test_local_failure_keeps_sources_available(monkeypatch):
     monkeypatch.setattr("memoire.answers.chat_local", failed_chat)
     app = AppTest.from_file(str(APP), default_timeout=20).run()
     open_page(app, "Questions")
-    app.chat_input[0].set_value("Quelle intervention pour INC103 ?").run()
+    app.chat_input[0].set_value("Quels passages décrivent INC103 ?").run()
     assert not app.exception
     answer = app.session_state.history[0][1]
     assert not answer.generated
