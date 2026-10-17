@@ -1,12 +1,29 @@
-# Après la V2
+# Suite du projet
 
-La V2 fournit un parcours complet sur un atelier fictif : fiches équipements, incidents et suivis, cas similaires, questions sourcées et bibliothèque avec corrections et validation humaine. Les relations inspirées de l'ontologie sont utilisées pour organiser et rapprocher les cas, sans exécuter le raisonneur OWL.
+## État actuel
 
-1. Réunir 5 à 10 rapports indépendants du scénario, autorisés et anonymisés.
-2. Écrire 20 questions et leurs preuves avant de régler le moteur ; inclure synonymes, négations, suivis, résultats inconnus et questions sans réponse.
-3. Évaluer séparément extraction, recherche, chronologie et pertinence des réponses et de la sélection locale de passages. Le succès sur les exemples fictifs n'est pas une validation industrielle.
-4. Adapter les rubriques et alias aux vrais documents. Mesurer l'apport des relations structurées par rapport au RAG documentaire.
-5. Faire essayer la tâche « retrouver un précédent, ses actions et son résultat » à quelques techniciens ou PME.
-6. Si l'utilité est confirmée : journal des validations, OCR, puis hébergement et authentification adaptés pour un usage partagé.
+Le projet est un assistant local de consultation de rapports : import de documents, validation humaine, fiches d'équipements, suivis d'incidents, recherche hybride facultative et réponses sourcées. La démonstration, l'installation verrouillée et les résultats de tests permettent de le présenter comme projet personnel sur un CV.
 
-La sauvegarde locale des textes extraits, corrections et validations est désormais automatique. Chaque espace dispose d'un export JSON et d'une restauration par fusion sans écrasement. Les modèles, les PDF originaux et l'historique des questions ne font pas partie de cette sauvegarde. La prochaine étape métier reste l'essai sur 5 à 10 rapports indépendants, autorisés et anonymisés.
+Les essais reposent sur des corpus fictifs. Le raisonneur OWL, l'OCR, la reconnaissance vocale, la connexion GMAO et l'usage partagé ne sont pas implémentés.
+
+## Prochaine évolution envisagée : les rapports oraux
+
+L'idée est de faciliter l'ajout d'informations après une intervention, en permettant au technicien de raconter ce qu'il a observé et réalisé.
+
+```mermaid
+flowchart LR
+    A[Compte rendu oral] --> B[Transcription]
+    B --> C[Brouillon de rapport modifiable]
+    C --> D[Vérification et validation humaine]
+    D --> E[Ajout aux documents et à la recherche]
+```
+
+Un premier périmètre pourrait accepter un fichier audio, produire sa transcription puis proposer les rubriques déjà utilisées par l'application : équipement, incident, date, observation, diagnostic éventuel, action et résultat. Les champs absents resteraient inconnus. Le technicien corrigerait et validerait le rapport avant son ajout aux vues métier.
+
+La provenance devrait relier les informations au texte transcrit et, si possible, à un repère temporel dans l'audio. Il faudrait distinguer la date annoncée de l'intervention, la date d'enregistrement et la date d'import. Les négations, références machines, bruits d'atelier et diagnostics seulement supposés seraient des cas d'essai prioritaires.
+
+**Cette chaîne est une piste future. Aucun enregistrement, stockage audio, moteur de transcription ou extraction depuis la voix n'a été ajouté à cette version.** Le choix du moteur et son fonctionnement local restent à étudier en conservant l'objectif d'absence de frais d'API.
+
+## Évaluation B2B reportée
+
+Aucun travail de validation commerciale n'est engagé à cette étape. Pour une reprise ultérieure, le [protocole](VALIDATION.md) propose de partir de rapports autorisés et de questions écrites avant le réglage du moteur. Il faudra évaluer la tâche réelle avec des utilisateurs, puis traiter les exigences d'accès, de confidentialité et d'intégration propres au contexte retenu.

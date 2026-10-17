@@ -1,120 +1,93 @@
 # Mémoire industrielle
 
-Ce dépôt contient la maquette du projet Mémoire industrielle. L'objectif est de retrouver ce qui a déjà été observé et tenté sur un équipement à partir des rapports de maintenance.
+**Assistant de consultation de rapports de maintenance.** Recherche hybride, modèle local et réponses sourcées.
 
-Par exemple, lorsqu'une pompe vibre, on peut consulter les incidents précédents, voir les interventions réalisées et vérifier si elles ont résolu le problème. Chaque réponse renvoie aux passages des rapports utilisés.
+[![Vérifications](https://github.com/axl-chstn/memoire-industrielle/actions/workflows/checks.yml/badge.svg)](https://github.com/axl-chstn/memoire-industrielle/actions/workflows/checks.yml)
 
-L'application fonctionne en local avec Python et Streamlit. La recherche et le modèle de langage tournent sur l'ordinateur, sans clé API ni frais d'API.
+[Voir la démo](docs/DEMO.md) · [Installer](docs/INSTALLATION.md) · [Résultats des tests](docs/RESULTATS.md) · [Architecture](docs/ARCHITECTURE.md) · [Présentation CV](docs/PORTFOLIO.md)
 
-## Ce que contient la maquette
+![Vue de l'application sur l'atelier fictif](docs/assets/01-atelier.png)
 
-Un atelier fictif sert de terrain d'essai : 10 équipements, 30 rapports et 22 incidents. Certains incidents ont plusieurs rapports de suivi, ce qui permet de distinguer une première intervention sans succès d'une résolution plus tardive.
+## Le problème
 
-Les écrans permettent de consulter les équipements, suivre les incidents, chercher des cas similaires et poser des questions aux rapports. La bibliothèque donne accès aux textes et aux informations extraites, que l'on peut corriger et valider.
+Lorsqu'une panne revient, les informations utiles sont souvent dispersées entre plusieurs rapports. Il faut retrouver ce qui a été observé, ce qui a été tenté et le résultat obtenu. Une intervention enregistrée ne signifie pas forcément que la panne est résolue.
 
-L'espace **Mes documents** permet d'ajouter ses propres rapports, séparément du scénario fictif. Les données de démonstration ne sont pas des données industrielles réelles.
+Ce projet rassemble ces informations autour des équipements et des incidents. On peut suivre un historique, consulter des cas proches et interroger les rapports en gardant accès aux passages utilisés. Il s'agit d'un prototype personnel testé sur des données fictives, pas d'un logiciel déployé chez un industriel.
 
-## Installation et lancement
+## Un exemple en deux minutes
 
-Sur Mac, utiliser Python 3.12 et prévoir plusieurs Go de disque disponibles. Le modèle choisi, `qwen3:4b-instruct`, occupe environ 2,5 Go. La maquette a été testée sur un Mac Apple Silicon avec 8 Go de mémoire.
+Dans **Atelier fictif → Incidents**, ouvrir **INC114 · P04**. Le rapport du 12 février décrit une lubrification sans résolution. Le suivi du 20 mars décrit un réalignement, avec un résultat résolu. Les deux étapes restent visibles.
 
-Depuis le dossier du projet :
+Dans **Questions**, demander : **« Quelles interventions sont documentées pour INC114 ? »** Les actions, dates et résultats doivent être accompagnés de leurs sources. Puis demander **« L'incident INC117 est-il résolu ? »** : le résultat reste inconnu, car le rapport ne permet pas de conclure.
 
-```bash
-chmod +x Lancer.command
-./Lancer.command
-```
+Le [parcours de démonstration](docs/DEMO.md) donne les résultats attendus et les captures de l'application. Le scénario contient **30 rapports, 10 équipements et 22 incidents**, entièrement fictifs.
 
-Le premier lancement télécharge les dépendances, Ollama et le modèle. Il faut donc une connexion Internet et un peu de temps. Les téléchargements sont conservés pour les lancements suivants.
+## Essayer le projet
 
-L'application est ensuite accessible sur [http://127.0.0.1:8501](http://127.0.0.1:8501). Cette adresse correspond à l'application qui tourne sur l'ordinateur ; GitHub héberge uniquement le code.
-
-Pour lancer les étapes manuellement :
+Avec **Python 3.12**, depuis le dossier du dépôt :
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
-python -m scripts.local_runtime
-python -m streamlit run app.py --server.address 127.0.0.1
+git clone https://github.com/axl-chstn/memoire-industrielle.git
+cd memoire-industrielle
+python3.12 -m scripts.bootstrap --run
 ```
 
-Sur Windows, la commande d'activation est `.venv\Scripts\activate`. Sur Windows et Linux, installer d'abord [Ollama](https://ollama.com/download). Le téléchargement automatique du moteur est prévu pour macOS.
+Sur Windows, remplacer `python3.12` par `py -3.12`. L'adresse [http://127.0.0.1:8501](http://127.0.0.1:8501) ouvre l'application exécutée sur l'ordinateur. L'accès au code d'un dépôt privé nécessite un compte autorisé.
 
-Si le modèle n'est pas disponible, la recherche et la consultation des extraits restent utilisables.
-
-## Quelques essais
-
-Dans **Incidents**, ouvrir **INC114** : une lubrification n'a pas résolu les vibrations, puis un réalignement a permis de résoudre le problème. Les deux étapes doivent rester visibles.
-
-Dans **Questions**, essayer :
-
-- « L'incident INC104 est-il résolu ? »
-- « Qu'a-t-on essayé pour les vibrations sur C03 ? »
-- « Quels rapports parlent de la pompe d'alimentation ? »
-
-Pour comparer des cas, partir d'**INC116** dans **Cas similaires**, puis sélectionner **Vibration** et **Roulement**. Les résultats indiquent les points communs entre incidents. Cela ne suffit pas à conclure qu'ils ont la même cause.
-
-## Ajouter ses rapports
-
-Dans **Mes documents**, importer des PDF contenant du texte, des fichiers TXT ou Markdown. Les PDF scannés nécessitent un OCR préalable, qui n'est pas inclus.
-
-L'application repère les identifiants et les rubriques explicites, comme l'incident, l'équipement, la date, les symptômes, le diagnostic, l'intervention et le résultat. Un rapport rédigé librement peut demander davantage de corrections manuelles.
-
-Les fiches importées sont à vérifier dans **Documents** avant d'apparaître dans les vues d'incidents. Pour corriger une information, fournir la valeur et l'extrait du rapport qui la justifie, puis valider la fiche. Une nouvelle correction annule la validation précédente.
-
-Les limites actuelles sont de 10 Mo et 100 pages par PDF, 30 fichiers et 30 Mo par import, puis 100 documents et 100 Mo sauvegardés par espace.
-
-## Sauvegarde et données locales
-
-Les textes extraits, les corrections et les validations sont enregistrés automatiquement dans `data/private/espaces.sqlite3`. Ils restent disponibles après un redémarrage. Ce dossier est exclu de Git et les rapports ne sont pas envoyés sur GitHub. Les PDF originaux sont à conserver séparément ; l'historique des questions reste dans la session.
-
-Le menu **Sauvegarde de cet espace**, dans la colonne de gauche, permet de télécharger un export JSON et de le restaurer sur une autre installation. La restauration ajoute les documents absents et conserve ceux qui sont déjà présents, avec leurs fiches. Les fiches ajoutées doivent être vérifiées à nouveau.
-
-Les exports contiennent le texte des rapports. Le stockage local n'est pas chiffré par l'application et les espaces ne sont pas conçus pour séparer plusieurs utilisateurs.
-
-## Recherche et modèle local
-
-Les rapports sont découpés en passages en conservant leur document et leur page d'origine. La recherche utilise BM25 pour retrouver les termes et les références demandés. Elle peut être complétée par des embeddings multilingues calculés localement :
+Ce premier parcours utilise les fiches et la recherche par mots-clés. Il ne télécharge aucun modèle. Pour ajouter la recherche hybride et le modèle local :
 
 ```bash
-python -m pip install -r requirements-semantic.txt
+python3.12 -m scripts.bootstrap --semantic --model --run
 ```
 
-Activer ensuite **Chercher aussi par le sens** dans les réglages. Le premier usage télécharge le modèle `intfloat/multilingual-e5-small` depuis Hugging Face. Cette option concerne la recherche dans **Questions**.
+L'option sémantique se coche ensuite dans **Recherche et vérification → Chercher aussi par le sens**. Le premier usage télécharge E5 ; Qwen occupe environ 2,5 Go. Le moteur Ollama est préparé automatiquement sur Mac ; sous Windows/Linux, il faut d'abord l'installer. Voir [l'installation détaillée](docs/INSTALLATION.md).
 
-Les réponses sur les dates, les interventions, les diagnostics et les résultats sont composées à partir des fiches vérifiées. Un rapport sans date reste à part de la chronologie ; une intervention non renseignée reste une information inconnue.
+Aucune clé API ni API payante n'est utilisée. Les téléchargements initiaux demandent Internet ; le calcul utilise ensuite les ressources de l'ordinateur.
 
-Ollama tourne sur `127.0.0.1:11435`, avec les fonctions cloud désactivées. Pour les questions libres, il sélectionne des passages que l'application recopie sans reformulation. Le modèle ne rédige plus de conclusions libres. Cela limite les affirmations ajoutées, mais la pertinence des passages choisis et leur contexte restent à vérifier. Si la sélection est inexploitable, les fiches et les sources restent accessibles.
+## Comment les réponses sont obtenues
 
-Les modèles sont conservés dans `.cache/` et le moteur dans `.local/`, tous deux exclus de Git. Les détails de fonctionnement sont décrits dans [l'architecture](docs/ARCHITECTURE.md).
+| Choix | Rôle dans le projet |
+|---|---|
+| Python et Streamlit | Interface locale : documents, équipements, incidents et questions |
+| Extraction PDF texte, TXT, Markdown | Découpage en passages, avec document et page d'origine |
+| Fiches avec preuves | Incident, date, symptôme, diagnostic, intervention et résultat ; vérification humaine des imports |
+| BM25 + E5 multilingue, fusion RRF | Recherche par mots-clés et, en option, par le sens ; calcul local |
+| Qwen 4B via Ollama | Sélection de passages pour les questions libres, sous un format JSON contrôlé |
+| SQLite | Sauvegarde locale des textes, corrections et validations |
 
-## Tests
+Les questions sur les dates, les actions et les statuts reçoivent une réponse composée à partir des **fiches vérifiées**. Pour les questions libres, le modèle choisit des passages que l'application recopie avec leur référence. Il ne rédige pas de conclusion libre : ce choix a été retenu après des erreurs de chronologie et d'interprétation de données manquantes.
 
-```bash
-python -m pip install -r requirements-dev.txt
-ruff check .
-pytest -q
-python -m scripts.evaluate
-python -m scripts.evaluate_workshop
-python -m scripts.evaluate_rives
+Le RAG est donc ici structuré et extractif. Les concepts de l'ontologie organisent les relations entre équipements, composants et incidents. Le raisonneur OWL n'est pas intégré. Les **cas similaires** utilisent des critères structurés et lexicaux ; l'option embeddings concerne l'écran **Questions**.
+
+```mermaid
+flowchart LR
+    A[Rapports] --> B[Passages avec provenance]
+    A --> C[Fiches à vérifier]
+    C --> D[Validation humaine]
+    D --> E[Historique des incidents]
+    B --> F[Recherche BM25 + E5 facultatif]
+    F --> G[Réponse avec sources]
+    D --> G
+    F --> H[Modèle local : sélection de passages]
+    H --> G
 ```
 
-Après installation des embeddings, les deux scripts d'évaluation acceptent l'option `--semantic`. Pour tester le modèle de langage installé :
+## Vérifications
 
-```bash
-python -m scripts.validate_local
-python -m scripts.evaluate_rives --local
-```
+Relevé du 17 octobre 2026 : **108 tests réussis**, recherche historique **14/14**, atelier Horizon **13/13** en BM25 et en hybride, régressions des Rives **20/20**. Les résultats et les commandes sont regroupés dans [Résultats des tests](docs/RESULTATS.md). Les tests couvrent notamment les suivis d'incidents, les dates absentes, les négations, la provenance des faits et la sauvegarde. La recherche hybride et le modèle ont aussi été vérifiés localement.
 
-Les vingt questions de l’atelier des Rives sont conservées comme tests de régression après correction des erreurs observées. Elles ne constituent donc plus un jeu d’essai indépendant.
+Ces essais utilisent des exemples préparés. Le corpus des Rives, corrigé après analyse de ses erreurs, est désormais un **jeu de régression connu**. Un bon résultat sur ce corpus ne mesure pas la fiabilité sur de nouveaux rapports industriels.
 
-Les résultats obtenus et la portée des essais sont détaillés dans [les vérifications](docs/VERIFICATION.md). Les 12 fiches historiques du TD sont conservées pour vérifier que les évolutions ne cassent pas les premiers exemples.
+## Limites et données
 
-## Ce qu'il reste à faire
+- Les rapports sans rubriques explicites demandent des corrections manuelles. Les PDF scannés nécessitent un OCR externe.
+- Une source peut être mal sélectionnée, un rapport peut être faux et une validation humaine peut comporter une erreur. Les citations permettent de vérifier la réponse, sans garantir toute son interprétation.
+- Un cas similaire ne prouve pas une cause commune. L'application ne prescrit pas d'intervention et ne réalise pas de diagnostic automatique.
+- Le stockage est local, sans chiffrement applicatif ni gestion des accès pour plusieurs utilisateurs. Pas de connexion GMAO ni de déploiement de production.
+- L'exécution du modèle dépend de la mémoire disponible. Les versions des dépendances Python sont verrouillées ; les téléchargements des modèles et du moteur ont leurs propres versions.
 
-La maquette permet de tester le parcours sur des exemples préparés. Il reste à l'évaluer sur des rapports indépendants et à la faire essayer par des personnes du métier. Le modèle peut sélectionner un passage peu pertinent, et une fiche vérifiée peut encore contenir une erreur humaine. Les références permettent de revenir aux rapports ; elles ne suffisent pas à établir toutes les conclusions.
+Les données importées restent dans `data/private/`, exclu de Git. Les modèles et caches le sont également. Les PDF originaux sont à conserver séparément ; les questions restent dans la session. Le menu **Sauvegarde de cet espace** permet un export JSON et une restauration par ajout, sans écrasement des fiches existantes. Les exports contiennent le texte des rapports.
 
-Les concepts de l'ontologie servent à organiser les équipements, composants, incidents et interventions. Le raisonneur OWL n'est pas intégré. La maquette ne comporte pas non plus de connexion à une GMAO ni d'authentification pour un usage partagé.
+## Suite envisagée
 
-La prochaine étape prévue est de réunir 5 à 10 rapports autorisés et anonymisés, puis de préparer des questions avec les réponses attendues. Voir le [protocole d'essai](docs/VALIDATION.md) et la [suite du projet](docs/ROADMAP.md).
+La prochaine évolution envisagée est l'ajout de **rapports oraux** : transcription, brouillon modifiable, validation humaine, puis ajout aux documents consultables. Elle est décrite dans la [feuille de route](docs/ROADMAP.md) et **n'est pas implémentée**. L'évaluation de l'intérêt B2B est reportée.

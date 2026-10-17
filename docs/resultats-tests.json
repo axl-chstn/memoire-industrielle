@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-17",
+  "environment": {
+    "system": "macOS Apple Silicon",
+    "memory": "8 Go",
+    "python": "3.12.14",
+    "streamlit": "1.66.0",
+    "numpy": "2.5.4",
+    "pypdf": "6.21.1",
+    "pytest": "9.1.1",
+    "ruff": "0.17.1"
+  },
+  "installation": {
+    "fresh_environment": true,
+    "command": "python3.12 -m scripts.bootstrap --dev --venv .cache/installation-verifiee",
+    "exit_code": 0,
+    "hash_verification": true,
+    "pip_check": "No broken requirements found."
+  },
+  "checks": [
+    {
+      "command": "python -m ruff check .",
+      "result": "All checks passed!",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m pytest -q",
+      "passed": 108,
+      "failed": 0,
+      "seconds": 9.72,
+      "exit_code": 0
+    },
+    {
+      "command": "python -m scripts.evaluate",
+      "passed": 14,
+      "total": 14,
+      "scope": "sources historiques fictives",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m scripts.evaluate_workshop",
+      "passed": 13,
+      "total": 13,
+      "scope": "sources et statuts fictifs Horizon, BM25",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m scripts.evaluate_rives",
+      "passed": 20,
+      "total": 20,
+      "scope": "régression connue, repères et sources ; sans appel LLM",
+      "exit_code": 0
+    },
+    {
+      "command": "HF_HUB_OFFLINE=1 python -m scripts.evaluate_workshop --semantic",
+      "passed": 13,
+      "total": 13,
+      "scope": "recherche hybride E5 réellement chargé, environnement local existant",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m scripts.validate_local",
+      "selected_literal_passages": 3,
+      "total": 3,
+      "scope": "trois sélections par le vrai modèle Qwen local ; ne mesure pas une précision générale",
+      "exit_code": 0
+    },
+    {
+      "command": "python -m scripts.evaluate_rives --local",
+      "passed": 20,
+      "total": 20,
+      "scope": "mode local activé, mais les cas empruntent les chemins structurés ou bornés ; aucune sélection LLM libre dans ce run",
+      "exit_code": 0
+    }
+  ],
+  "locks_sha256": {
+    "requirements-dev.lock": "620d6deff8d3ad6bdba8135cdf35f0c09c9a29c0b03aa141a4be3e836edd772b",
+    "requirements-semantic.lock": "1618197f668996ac906ff18834bda5c98a2a2c380965834c134b804b5a74805f",
+    "requirements.lock": "bc69b69a80c538898cf6b4da40002ed40eb448ca732fe7df95620992817e9ecb"
+  },
+  "limitations": [
+    "Corpus fictifs connus, aucune validation industrielle indépendante.",
+    "Installation neuve de base et outils de test sur macOS ; le verrou sémantique a été résolu à blanc, ses modèles vérifiés dans l’environnement local existant.",
+    "Les résultats ne constituent pas un score de justesse général, une mesure de ROI ni une mesure de performance.",
+    "Le workflow GitHub est configuré ; son exécution distante doit être consultée dans Actions."
+  ]
+}
