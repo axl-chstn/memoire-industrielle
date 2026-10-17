@@ -1,0 +1,391 @@
+{
+  "checks": [
+    {
+      "name": "Conformite OWL 2 DL",
+      "passed": true,
+      "details": "OWL 2 DL Profile Report: [Ontology and imports closure in profile]\n"
+    },
+    {
+      "name": "Coherence de la base",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Toutes les classes nommees sont satisfiables",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Q1 Quels équipements contiennent un roulement, même indirectement ?",
+      "passed": true,
+      "details": "C01, C02, M01, M02, P01, P02"
+    },
+    {
+      "name": "Q2 Quels équipements ont au moins deux roulements directs distincts ?",
+      "passed": true,
+      "details": "C01, C02, M01, M02, P01"
+    },
+    {
+      "name": "Q3 Quels incidents de roulement affectent une pompe ?",
+      "passed": true,
+      "details": "INC01, INC10"
+    },
+    {
+      "name": "Q4 Quels incidents critiques ont une résolution confirmée ?",
+      "passed": true,
+      "details": "INC01, INC05, INC06, INC08"
+    },
+    {
+      "name": "Q5 Quels rapports documentent un incident critique ?",
+      "passed": true,
+      "details": "RAP01, RAP05, RAP06, RAP08"
+    },
+    {
+      "name": "Q6 Quels incidents ont exclusivement des vibrations ou des bruits ?",
+      "passed": true,
+      "details": "INC01, INC03, INC04, INC07, INC08, INC09, INC11"
+    },
+    {
+      "name": "Q7 Quels incidents ont exclusivement des vibrations ?",
+      "passed": true,
+      "details": "INC04, INC07, INC11"
+    },
+    {
+      "name": "Q8 Quels incidents sont explicitement non résolus ?",
+      "passed": true,
+      "details": "INC04, INC11"
+    },
+    {
+      "name": "Q9 Quelles interventions ont résolu un incident de roulement ?",
+      "passed": true,
+      "details": "INT01, INT03, INT05, INT09"
+    },
+    {
+      "name": "Q10 Quels techniciens possèdent la compétence mécanique ?",
+      "passed": true,
+      "details": "Alex, Sam"
+    },
+    {
+      "name": "Q11 Quels objets sont affectés par INC10, via les inverses et la composition ?",
+      "passed": true,
+      "details": "P02, P02_PALIER, P02_RA"
+    },
+    {
+      "name": "Q12 Quels incidents de roulement sont résolus par un remplacement ?",
+      "passed": true,
+      "details": "INC01, INC05"
+    },
+    {
+      "name": "Inclusion de classes vibroacoustiques deduite",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Inclusion cardinalite vers existence deduite",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Restriction imbriquee portant sur le meme roulement",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Transitivite composition P02",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Composition inverse",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Chaine incident vers pompe",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Le palier intermediaire ne devient pas un equipement",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Pas de fausse composition directe",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Monde ouvert : INC10 pas exclusivement vibration",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Monde ouvert : INC10 ni resolu ni non resolu",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Pas de diagnostic automatique a partir de vibration",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Inspection seule ne prouve pas resolution",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Symptomes distincts et differents roulements explicites",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Universelle seule sans existence est satisfiable",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Erreur detectee : une pompe typee aussi roulement",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Erreur detectee : deux criticites differentes",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Erreur detectee : resolution et non-resolution",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Erreur detectee : symptome incompatible avec fermeture",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "INC10 peut recevoir une resolution sans contradiction",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "INC10 peut etre declare non resolu sans contradiction",
+      "passed": true,
+      "details": ""
+    },
+    {
+      "name": "Reouverture RDF/XML : coherence et memes axiomes logiques",
+      "passed": true,
+      "details": ""
+    }
+  ],
+  "queries": [
+    {
+      "id": "Q1",
+      "expression": "EquipementAvecRoulement",
+      "expected": [
+        "C01",
+        "C02",
+        "M01",
+        "M02",
+        "P01",
+        "P02"
+      ],
+      "actual": [
+        "C01",
+        "C02",
+        "M01",
+        "M02",
+        "P01",
+        "P02"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q2",
+      "expression": "EquipementDeuxRoulementsDirects",
+      "expected": [
+        "C01",
+        "C02",
+        "M01",
+        "M02",
+        "P01"
+      ],
+      "actual": [
+        "C01",
+        "C02",
+        "M01",
+        "M02",
+        "P01"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q3",
+      "expression": "IncidentRoulement and IncidentPompe",
+      "expected": [
+        "INC01",
+        "INC10"
+      ],
+      "actual": [
+        "INC01",
+        "INC10"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q4",
+      "expression": "IncidentCritique and IncidentResolu",
+      "expected": [
+        "INC01",
+        "INC05",
+        "INC06",
+        "INC08"
+      ],
+      "actual": [
+        "INC01",
+        "INC05",
+        "INC06",
+        "INC08"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q5",
+      "expression": "RapportCritique",
+      "expected": [
+        "RAP01",
+        "RAP05",
+        "RAP06",
+        "RAP08"
+      ],
+      "actual": [
+        "RAP01",
+        "RAP05",
+        "RAP06",
+        "RAP08"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q6",
+      "expression": "IncidentSymptomesVibroAcoustiques",
+      "expected": [
+        "INC01",
+        "INC03",
+        "INC04",
+        "INC07",
+        "INC08",
+        "INC09",
+        "INC11"
+      ],
+      "actual": [
+        "INC01",
+        "INC03",
+        "INC04",
+        "INC07",
+        "INC08",
+        "INC09",
+        "INC11"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q7",
+      "expression": "IncidentVibrationSeule",
+      "expected": [
+        "INC04",
+        "INC07",
+        "INC11"
+      ],
+      "actual": [
+        "INC04",
+        "INC07",
+        "INC11"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q8",
+      "expression": "IncidentNonResolu",
+      "expected": [
+        "INC04",
+        "INC11"
+      ],
+      "actual": [
+        "INC04",
+        "INC11"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q9",
+      "expression": "Intervention and (resout some IncidentRoulement)",
+      "expected": [
+        "INT01",
+        "INT03",
+        "INT05",
+        "INT09"
+      ],
+      "actual": [
+        "INT01",
+        "INT03",
+        "INT05",
+        "INT09"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q10",
+      "expression": "Technicien and (possedeCompetence value Mecanique)",
+      "expected": [
+        "Alex",
+        "Sam"
+      ],
+      "actual": [
+        "Alex",
+        "Sam"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q11",
+      "expression": "ObjetMateriel and (subitIncident value INC10)",
+      "expected": [
+        "P02",
+        "P02_PALIER",
+        "P02_RA"
+      ],
+      "actual": [
+        "P02",
+        "P02_PALIER",
+        "P02_RA"
+      ],
+      "passed": true
+    },
+    {
+      "id": "Q12",
+      "expression": "IncidentRoulement and (estResoluPar some Remplacement)",
+      "expected": [
+        "INC01",
+        "INC05"
+      ],
+      "actual": [
+        "INC01",
+        "INC05"
+      ],
+      "passed": true
+    }
+  ],
+  "counts": {
+    "classes": 39,
+    "individuals": 103,
+    "objectProperties": 24,
+    "dataProperties": 3,
+    "axioms": 923
+  },
+  "reasoner": "HermiT 1.4.1.432",
+  "assertions_inferred_separately": true
+}

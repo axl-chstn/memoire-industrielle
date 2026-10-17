@@ -1,0 +1,1845 @@
+{
+  "namespace": "https://example.org/td-maintenance#",
+  "classes": {
+    "ObjetMateriel": {
+      "parent": null,
+      "description": "Objet physique identifié, à distinguer des événements, observations, personnes et documents."
+    },
+    "Equipement": {
+      "parent": "ObjetMateriel",
+      "description": "Unité de maintenance du parc étudié. Le TD distingue pompe, moteur et compresseur comme unités séparées."
+    },
+    "Pompe": {
+      "parent": "Equipement",
+      "description": "Unité de pompage du parc fictif ; ne désigne pas un groupe motopompe complet."
+    },
+    "Moteur": {
+      "parent": "Equipement",
+      "description": "Moteur électrique suivi comme une unité séparée."
+    },
+    "Compresseur": {
+      "parent": "Equipement",
+      "description": "Unité de compression du parc fictif."
+    },
+    "Composant": {
+      "parent": "ObjetMateriel",
+      "description": "Pièce ou sous-ensemble physique appartenant à une unité de maintenance dans cet instantané."
+    },
+    "Roulement": {
+      "parent": "Composant",
+      "description": "Roulement physique identifié. Deux machines ont des roulements distincts."
+    },
+    "Rotor": {
+      "parent": "Composant",
+      "description": "Rotor physique identifié."
+    },
+    "Joint": {
+      "parent": "Composant",
+      "description": "Joint physique identifié."
+    },
+    "Capteur": {
+      "parent": "Composant",
+      "description": "Capteur physique identifié."
+    },
+    "SousEnsemble": {
+      "parent": "Composant",
+      "description": "Assemblage physique permettant de représenter un niveau intermédiaire de composition."
+    },
+    "Incident": {
+      "parent": null,
+      "description": "Épisode de maintenance documenté dans un instantané daté ; ce n’est ni une machine ni une intervention."
+    },
+    "Symptome": {
+      "parent": null,
+      "description": "Observation particulière enregistrée pendant un incident, pas une preuve automatique de sa cause."
+    },
+    "Vibration": {
+      "parent": "Symptome",
+      "description": "Observation de vibrations signalées comme anormales."
+    },
+    "Bruit": {
+      "parent": "Symptome",
+      "description": "Observation d’un bruit signalé comme anormal."
+    },
+    "Surchauffe": {
+      "parent": "Symptome",
+      "description": "Observation d’un échauffement signalé comme anormal."
+    },
+    "Fuite": {
+      "parent": "Symptome",
+      "description": "Observation d’une fuite."
+    },
+    "ModeDefaillance": {
+      "parent": null,
+      "description": "Occurrence de défaillance retenue dans le scénario, distincte de son symptôme."
+    },
+    "Usure": {
+      "parent": "ModeDefaillance",
+      "description": "Occurrence d’usure retenue après examen dans le scénario."
+    },
+    "Desalignement": {
+      "parent": "ModeDefaillance",
+      "description": "Occurrence de désalignement retenue après examen dans le scénario."
+    },
+    "Rupture": {
+      "parent": "ModeDefaillance",
+      "description": "Occurrence de rupture retenue après examen dans le scénario."
+    },
+    "Intervention": {
+      "parent": null,
+      "description": "Action élémentaire effectuée. Une inspection n’implique pas une résolution."
+    },
+    "Inspection": {
+      "parent": "Intervention",
+      "description": "Action élémentaire d’examen ou de diagnostic."
+    },
+    "Remplacement": {
+      "parent": "Intervention",
+      "description": "Action élémentaire de remplacement ; porte sur la pièce déposée de l’instantané."
+    },
+    "Lubrification": {
+      "parent": "Intervention",
+      "description": "Action élémentaire de lubrification."
+    },
+    "RapportMaintenance": {
+      "parent": null,
+      "description": "Document fictif relatant un incident et les actions effectuées."
+    },
+    "Technicien": {
+      "parent": null,
+      "description": "Personne fictive ayant effectué une action."
+    },
+    "Competence": {
+      "parent": null,
+      "description": "Qualification nommée et partageable entre plusieurs techniciens et actions."
+    },
+    "NiveauCriticite": {
+      "parent": null,
+      "description": "Valeur d’évaluation déclarée dans ce TD ; aucun calcul automatique de risque."
+    },
+    "EquipementAvecRoulement": {
+      "parent": null,
+      "description": "Équipement contenant au moins un roulement, directement ou indirectement.",
+      "expression": "Equipement and (contient some Roulement)",
+      "functional": "ObjectIntersectionOf(:Equipement ObjectSomeValuesFrom(:contient :Roulement))"
+    },
+    "EquipementDeuxRoulementsDirects": {
+      "parent": null,
+      "description": "Équipement ayant au moins deux roulements directs distincts.",
+      "expression": "Equipement and (contientDirectement min 2 Roulement)",
+      "functional": "ObjectIntersectionOf(:Equipement ObjectMinCardinality(2 :contientDirectement :Roulement))"
+    },
+    "IncidentRoulement": {
+      "parent": null,
+      "description": "Incident dont le composant principal est un roulement.",
+      "expression": "Incident and (concerneComposantPrincipal some Roulement)",
+      "functional": "ObjectIntersectionOf(:Incident ObjectSomeValuesFrom(:concerneComposantPrincipal :Roulement))"
+    },
+    "IncidentPompe": {
+      "parent": null,
+      "description": "Incident affectant une pompe, y compris par inférence de composition.",
+      "expression": "Incident and (affecteObjet some Pompe)",
+      "functional": "ObjectIntersectionOf(:Incident ObjectSomeValuesFrom(:affecteObjet :Pompe))"
+    },
+    "IncidentCritique": {
+      "parent": null,
+      "description": "Incident avec criticité déclarée Critique.",
+      "expression": "Incident and (aCriticite value Critique)",
+      "functional": "ObjectIntersectionOf(:Incident ObjectHasValue(:aCriticite :Critique))"
+    },
+    "IncidentResolu": {
+      "parent": null,
+      "description": "Incident pour lequel une intervention ayant résolu l’épisode est connue ou logiquement impliquée.",
+      "expression": "Incident and (estResoluPar some Intervention)",
+      "functional": "ObjectIntersectionOf(:Incident ObjectSomeValuesFrom(:estResoluPar :Intervention))"
+    },
+    "IncidentNonResolu": {
+      "parent": null,
+      "description": "Incident explicitement sans intervention résolutive dans cet instantané ; absence de lien seule insuffisante.",
+      "expression": "Incident and not (estResoluPar some Intervention)",
+      "functional": "ObjectIntersectionOf(:Incident ObjectComplementOf(ObjectSomeValuesFrom(:estResoluPar :Intervention)))"
+    },
+    "IncidentSymptomesVibroAcoustiques": {
+      "parent": null,
+      "description": "Incident ayant au moins un symptôme et uniquement des vibrations ou des bruits. Ne définit pas sa cause.",
+      "expression": "Incident and (aSymptome some Symptome) and (aSymptome only (Vibration or Bruit))",
+      "functional": "ObjectIntersectionOf(:Incident ObjectSomeValuesFrom(:aSymptome :Symptome) ObjectAllValuesFrom(:aSymptome ObjectUnionOf(:Vibration :Bruit)))"
+    },
+    "IncidentVibrationSeule": {
+      "parent": null,
+      "description": "Incident dont les symptômes sont exclusivement des vibrations, avec au moins une observation.",
+      "expression": "Incident and (aSymptome some Vibration) and (aSymptome only Vibration)",
+      "functional": "ObjectIntersectionOf(:Incident ObjectSomeValuesFrom(:aSymptome :Vibration) ObjectAllValuesFrom(:aSymptome :Vibration))"
+    },
+    "RapportCritique": {
+      "parent": null,
+      "description": "Rapport relatant au moins un incident critique.",
+      "expression": "RapportMaintenance and (documente some IncidentCritique)",
+      "functional": "ObjectIntersectionOf(:RapportMaintenance ObjectSomeValuesFrom(:documente :IncidentCritique))"
+    }
+  },
+  "properties": {
+    "contientDirectement": {
+      "domain": "ObjetMateriel",
+      "range": "ObjetMateriel",
+      "inverse": "faitDirectementPartieDe",
+      "description": "Composition immédiate dans l’instantané. Relation simple, sans transitivité."
+    },
+    "faitDirectementPartieDe": {
+      "domain": "ObjetMateriel",
+      "range": "ObjetMateriel",
+      "inverse": "contientDirectement",
+      "description": "Relation inverse de contientDirectement"
+    },
+    "contient": {
+      "domain": "ObjetMateriel",
+      "range": "ObjetMateriel",
+      "inverse": "faitPartieDe",
+      "description": "Composition physique directe ou indirecte, transitive."
+    },
+    "faitPartieDe": {
+      "domain": "ObjetMateriel",
+      "range": "ObjetMateriel",
+      "inverse": "contient",
+      "description": "Relation inverse de contient"
+    },
+    "concerneComposantPrincipal": {
+      "domain": "Incident",
+      "range": "Composant",
+      "inverse": "estComposantPrincipalDe",
+      "description": "Un seul composant principal par fiche incident ; périmètre choisi pour le TD."
+    },
+    "estComposantPrincipalDe": {
+      "domain": "Composant",
+      "range": "Incident",
+      "inverse": "concerneComposantPrincipal",
+      "description": "Relation inverse de concerneComposantPrincipal"
+    },
+    "affecteObjet": {
+      "domain": "Incident",
+      "range": "ObjetMateriel",
+      "inverse": "subitIncident",
+      "description": "Objet physiquement concerné par l’incident, composant ou assemblage parent ; ne signifie pas panne de tous ses composants."
+    },
+    "subitIncident": {
+      "domain": "ObjetMateriel",
+      "range": "Incident",
+      "inverse": "affecteObjet",
+      "description": "Relation inverse de affecteObjet"
+    },
+    "aSymptome": {
+      "domain": "Incident",
+      "range": "Symptome",
+      "inverse": "estSymptomeDe",
+      "description": "Observation associée à l’incident."
+    },
+    "estSymptomeDe": {
+      "domain": "Symptome",
+      "range": "Incident",
+      "inverse": "aSymptome",
+      "description": "Relation inverse de aSymptome"
+    },
+    "aModeDefaillance": {
+      "domain": "Incident",
+      "range": "ModeDefaillance",
+      "inverse": "estModeDe",
+      "description": "Défaillance retenue après examen ; n’est pas déduite automatiquement d’un symptôme."
+    },
+    "estModeDe": {
+      "domain": "ModeDefaillance",
+      "range": "Incident",
+      "inverse": "aModeDefaillance",
+      "description": "Relation inverse de aModeDefaillance"
+    },
+    "aCriticite": {
+      "domain": "Incident",
+      "range": "NiveauCriticite",
+      "inverse": null,
+      "description": "Niveau explicitement attribué dans le scénario fictif."
+    },
+    "concerneIncident": {
+      "domain": "Intervention",
+      "range": "Incident",
+      "inverse": "recoitIntervention",
+      "description": "Lien d’une action réalisée vers l’incident concerné."
+    },
+    "recoitIntervention": {
+      "domain": "Incident",
+      "range": "Intervention",
+      "inverse": "concerneIncident",
+      "description": "Relation inverse de concerneIncident"
+    },
+    "resout": {
+      "domain": "Intervention",
+      "range": "Incident",
+      "inverse": "estResoluPar",
+      "description": "Résolution déclarée et confirmée dans le scénario ; sous-relation de concerneIncident."
+    },
+    "estResoluPar": {
+      "domain": "Incident",
+      "range": "Intervention",
+      "inverse": "resout",
+      "description": "Relation inverse de resout"
+    },
+    "documente": {
+      "domain": "RapportMaintenance",
+      "range": "Incident",
+      "inverse": "estDocumentePar",
+      "description": "Incident décrit par un document."
+    },
+    "estDocumentePar": {
+      "domain": "Incident",
+      "range": "RapportMaintenance",
+      "inverse": "documente",
+      "description": "Relation inverse de documente"
+    },
+    "effectueePar": {
+      "domain": "Intervention",
+      "range": "Technicien",
+      "inverse": "effectue",
+      "description": "Exécutant de l’action effectuée."
+    },
+    "effectue": {
+      "domain": "Technicien",
+      "range": "Intervention",
+      "inverse": "effectueePar",
+      "description": "Relation inverse de effectueePar"
+    },
+    "porteSur": {
+      "domain": "Intervention",
+      "range": "Composant",
+      "inverse": null,
+      "description": "Composant objet de l’action effectuée."
+    },
+    "requiertCompetence": {
+      "domain": "Intervention",
+      "range": "Competence",
+      "inverse": null,
+      "description": "Compétence requise dans le scénario."
+    },
+    "possedeCompetence": {
+      "domain": "Technicien",
+      "range": "Competence",
+      "inverse": null,
+      "description": "Compétence déclarée d’un technicien."
+    }
+  },
+  "individuals": {
+    "Faible": {
+      "type": "NiveauCriticite",
+      "description": "Niveau Faible : étiquette pédagogique, pas une échelle industrielle normalisée."
+    },
+    "Elevee": {
+      "type": "NiveauCriticite",
+      "description": "Niveau Elevee : étiquette pédagogique, pas une échelle industrielle normalisée."
+    },
+    "Critique": {
+      "type": "NiveauCriticite",
+      "description": "Niveau Critique : étiquette pédagogique, pas une échelle industrielle normalisée."
+    },
+    "P01": {
+      "type": "Pompe",
+      "description": "Unité P01 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur."
+    },
+    "P01_RA": {
+      "type": "Roulement",
+      "description": "Roulement identifié de P01"
+    },
+    "P01_RB": {
+      "type": "Roulement",
+      "description": "Roulement identifié de P01"
+    },
+    "P01_ROT": {
+      "type": "Rotor",
+      "description": "Rotor identifié de P01"
+    },
+    "P01_J": {
+      "type": "Joint",
+      "description": "Joint identifié de P01"
+    },
+    "P01_CAP": {
+      "type": "Capteur",
+      "description": "Capteur identifié de P01"
+    },
+    "P02": {
+      "type": "Pompe",
+      "description": "Unité P02 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur."
+    },
+    "P02_RA": {
+      "type": "Roulement",
+      "description": "Roulement identifié de P02"
+    },
+    "P02_RB": {
+      "type": "Roulement",
+      "description": "Roulement identifié de P02"
+    },
+    "P02_ROT": {
+      "type": "Rotor",
+      "description": "Rotor identifié de P02"
+    },
+    "P02_J": {
+      "type": "Joint",
+      "description": "Joint identifié de P02"
+    },
+    "P02_CAP": {
+      "type": "Capteur",
+      "description": "Capteur identifié de P02"
+    },
+    "P02_PALIER": {
+      "type": "SousEnsemble",
+      "description": "Sous-ensemble palier de P02, contient P02_RA."
+    },
+    "M01": {
+      "type": "Moteur",
+      "description": "Unité M01 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur."
+    },
+    "M01_RA": {
+      "type": "Roulement",
+      "description": "Roulement identifié de M01"
+    },
+    "M01_RB": {
+      "type": "Roulement",
+      "description": "Roulement identifié de M01"
+    },
+    "M01_ROT": {
+      "type": "Rotor",
+      "description": "Rotor identifié de M01"
+    },
+    "M01_J": {
+      "type": "Joint",
+      "description": "Joint identifié de M01"
+    },
+    "M01_CAP": {
+      "type": "Capteur",
+      "description": "Capteur identifié de M01"
+    },
+    "M02": {
+      "type": "Moteur",
+      "description": "Unité M02 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur."
+    },
+    "M02_RA": {
+      "type": "Roulement",
+      "description": "Roulement identifié de M02"
+    },
+    "M02_RB": {
+      "type": "Roulement",
+      "description": "Roulement identifié de M02"
+    },
+    "M02_ROT": {
+      "type": "Rotor",
+      "description": "Rotor identifié de M02"
+    },
+    "M02_J": {
+      "type": "Joint",
+      "description": "Joint identifié de M02"
+    },
+    "M02_CAP": {
+      "type": "Capteur",
+      "description": "Capteur identifié de M02"
+    },
+    "C01": {
+      "type": "Compresseur",
+      "description": "Unité C01 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur."
+    },
+    "C01_RA": {
+      "type": "Roulement",
+      "description": "Roulement identifié de C01"
+    },
+    "C01_RB": {
+      "type": "Roulement",
+      "description": "Roulement identifié de C01"
+    },
+    "C01_ROT": {
+      "type": "Rotor",
+      "description": "Rotor identifié de C01"
+    },
+    "C01_J": {
+      "type": "Joint",
+      "description": "Joint identifié de C01"
+    },
+    "C01_CAP": {
+      "type": "Capteur",
+      "description": "Capteur identifié de C01"
+    },
+    "C02": {
+      "type": "Compresseur",
+      "description": "Unité C02 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur."
+    },
+    "C02_RA": {
+      "type": "Roulement",
+      "description": "Roulement identifié de C02"
+    },
+    "C02_RB": {
+      "type": "Roulement",
+      "description": "Roulement identifié de C02"
+    },
+    "C02_ROT": {
+      "type": "Rotor",
+      "description": "Rotor identifié de C02"
+    },
+    "C02_J": {
+      "type": "Joint",
+      "description": "Joint identifié de C02"
+    },
+    "C02_CAP": {
+      "type": "Capteur",
+      "description": "Capteur identifié de C02"
+    },
+    "Mecanique": {
+      "type": "Competence",
+      "description": "Compétence Mecanique du scénario pédagogique."
+    },
+    "Electricite": {
+      "type": "Competence",
+      "description": "Compétence Electricite du scénario pédagogique."
+    },
+    "Diagnostic": {
+      "type": "Competence",
+      "description": "Compétence Diagnostic du scénario pédagogique."
+    },
+    "Alex": {
+      "type": "Technicien",
+      "description": "Technicien fictif, sans lien avec une personne réelle."
+    },
+    "Sam": {
+      "type": "Technicien",
+      "description": "Technicien fictif, sans lien avec une personne réelle."
+    },
+    "Noor": {
+      "type": "Technicien",
+      "description": "Technicien fictif, sans lien avec une personne réelle."
+    },
+    "INC01": {
+      "type": "Incident",
+      "description": "Incident fictif INC01, constaté le 01/09/2026"
+    },
+    "OBS01_1": {
+      "type": "Vibration",
+      "description": "Observation Vibration de INC01"
+    },
+    "OBS01_2": {
+      "type": "Bruit",
+      "description": "Observation Bruit de INC01"
+    },
+    "DEF01": {
+      "type": "Usure",
+      "description": "Défaillance Usure retenue dans le scénario INC01"
+    },
+    "INT01": {
+      "type": "Remplacement",
+      "description": "Action élémentaire Remplacement effectuée sur P01_RA"
+    },
+    "RAP01": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC01. Sur P01_RA, observations : Vibration, Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 95 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC02": {
+      "type": "Incident",
+      "description": "Incident fictif INC02, constaté le 02/09/2026"
+    },
+    "OBS02_1": {
+      "type": "Fuite",
+      "description": "Observation Fuite de INC02"
+    },
+    "DEF02": {
+      "type": "Usure",
+      "description": "Défaillance Usure retenue dans le scénario INC02"
+    },
+    "INT02": {
+      "type": "Remplacement",
+      "description": "Action élémentaire Remplacement effectuée sur P02_J"
+    },
+    "RAP02": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC02. Sur P02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Elevee. Remplacement par Sam, durée 55 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC03": {
+      "type": "Incident",
+      "description": "Incident fictif INC03, constaté le 03/09/2026"
+    },
+    "OBS03_1": {
+      "type": "Bruit",
+      "description": "Observation Bruit de INC03"
+    },
+    "INT03": {
+      "type": "Lubrification",
+      "description": "Action élémentaire Lubrification effectuée sur M01_RA"
+    },
+    "RAP03": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC03. Sur M01_RA, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 20 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC04": {
+      "type": "Incident",
+      "description": "Incident fictif INC04, constaté le 04/09/2026"
+    },
+    "OBS04_1": {
+      "type": "Vibration",
+      "description": "Observation Vibration de INC04"
+    },
+    "DEF04": {
+      "type": "Desalignement",
+      "description": "Défaillance Desalignement retenue dans le scénario INC04"
+    },
+    "INT04": {
+      "type": "Inspection",
+      "description": "Action élémentaire Inspection effectuée sur M02_ROT"
+    },
+    "RAP04": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC04. Sur M02_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 40 minutes. Épisode explicitement non résolu à la date de l’instantané."
+    },
+    "INC05": {
+      "type": "Incident",
+      "description": "Incident fictif INC05, constaté le 05/09/2026"
+    },
+    "OBS05_1": {
+      "type": "Vibration",
+      "description": "Observation Vibration de INC05"
+    },
+    "OBS05_2": {
+      "type": "Surchauffe",
+      "description": "Observation Surchauffe de INC05"
+    },
+    "DEF05": {
+      "type": "Usure",
+      "description": "Défaillance Usure retenue dans le scénario INC05"
+    },
+    "INT05": {
+      "type": "Remplacement",
+      "description": "Action élémentaire Remplacement effectuée sur C01_RA"
+    },
+    "RAP05": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC05. Sur C01_RA, observations : Vibration, Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 120 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC06": {
+      "type": "Incident",
+      "description": "Incident fictif INC06, constaté le 06/09/2026"
+    },
+    "OBS06_1": {
+      "type": "Fuite",
+      "description": "Observation Fuite de INC06"
+    },
+    "DEF06": {
+      "type": "Rupture",
+      "description": "Défaillance Rupture retenue dans le scénario INC06"
+    },
+    "INT06": {
+      "type": "Remplacement",
+      "description": "Action élémentaire Remplacement effectuée sur C02_J"
+    },
+    "RAP06": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC06. Sur C02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Sam, durée 65 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC07": {
+      "type": "Incident",
+      "description": "Incident fictif INC07, constaté le 07/09/2026"
+    },
+    "OBS07_1": {
+      "type": "Vibration",
+      "description": "Observation Vibration de INC07"
+    },
+    "DEF07": {
+      "type": "Desalignement",
+      "description": "Défaillance Desalignement retenue dans le scénario INC07"
+    },
+    "INT07": {
+      "type": "Inspection",
+      "description": "Action élémentaire Inspection effectuée sur P01_ROT"
+    },
+    "RAP07": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC07. Sur P01_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 35 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution."
+    },
+    "INC08": {
+      "type": "Incident",
+      "description": "Incident fictif INC08, constaté le 08/09/2026"
+    },
+    "OBS08_1": {
+      "type": "Bruit",
+      "description": "Observation Bruit de INC08"
+    },
+    "DEF08": {
+      "type": "Rupture",
+      "description": "Défaillance Rupture retenue dans le scénario INC08"
+    },
+    "INT08": {
+      "type": "Remplacement",
+      "description": "Action élémentaire Remplacement effectuée sur M01_ROT"
+    },
+    "RAP08": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC08. Sur M01_ROT, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Alex, durée 110 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC09": {
+      "type": "Incident",
+      "description": "Incident fictif INC09, constaté le 09/09/2026"
+    },
+    "OBS09_1": {
+      "type": "Bruit",
+      "description": "Observation Bruit de INC09"
+    },
+    "INT09": {
+      "type": "Lubrification",
+      "description": "Action élémentaire Lubrification effectuée sur C01_RB"
+    },
+    "RAP09": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC09. Sur C01_RB, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 25 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    "INC10": {
+      "type": "Incident",
+      "description": "Incident fictif INC10, constaté le 10/09/2026"
+    },
+    "OBS10_1": {
+      "type": "Vibration",
+      "description": "Observation Vibration de INC10"
+    },
+    "INT10": {
+      "type": "Inspection",
+      "description": "Action élémentaire Inspection effectuée sur P02_RA"
+    },
+    "RAP10": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC10. Sur P02_RA, observations : Vibration. Liste des symptômes non déclarée exhaustive. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 30 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution."
+    },
+    "INC11": {
+      "type": "Incident",
+      "description": "Incident fictif INC11, constaté le 11/09/2026"
+    },
+    "OBS11_1": {
+      "type": "Vibration",
+      "description": "Observation Vibration de INC11"
+    },
+    "INT11": {
+      "type": "Inspection",
+      "description": "Action élémentaire Inspection effectuée sur M02_RA"
+    },
+    "RAP11": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC11. Sur M02_RA, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 25 minutes. Épisode explicitement non résolu à la date de l’instantané."
+    },
+    "INC12": {
+      "type": "Incident",
+      "description": "Incident fictif INC12, constaté le 12/09/2026"
+    },
+    "OBS12_1": {
+      "type": "Surchauffe",
+      "description": "Observation Surchauffe de INC12"
+    },
+    "INT12": {
+      "type": "Inspection",
+      "description": "Action élémentaire Inspection effectuée sur C02_CAP"
+    },
+    "RAP12": {
+      "type": "RapportMaintenance",
+      "description": "DONNÉES FICTIVES - INC12. Sur C02_CAP, observations : Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Elevee. Inspection par Noor, durée 45 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution."
+    }
+  },
+  "relations": [
+    [
+      "P01",
+      "contientDirectement",
+      "P01_RA"
+    ],
+    [
+      "P01",
+      "contientDirectement",
+      "P01_RB"
+    ],
+    [
+      "P01",
+      "contientDirectement",
+      "P01_ROT"
+    ],
+    [
+      "P01",
+      "contientDirectement",
+      "P01_J"
+    ],
+    [
+      "P01",
+      "contientDirectement",
+      "P01_CAP"
+    ],
+    [
+      "P02",
+      "contientDirectement",
+      "P02_RB"
+    ],
+    [
+      "P02",
+      "contientDirectement",
+      "P02_ROT"
+    ],
+    [
+      "P02",
+      "contientDirectement",
+      "P02_J"
+    ],
+    [
+      "P02",
+      "contientDirectement",
+      "P02_CAP"
+    ],
+    [
+      "P02",
+      "contientDirectement",
+      "P02_PALIER"
+    ],
+    [
+      "P02_PALIER",
+      "contientDirectement",
+      "P02_RA"
+    ],
+    [
+      "M01",
+      "contientDirectement",
+      "M01_RA"
+    ],
+    [
+      "M01",
+      "contientDirectement",
+      "M01_RB"
+    ],
+    [
+      "M01",
+      "contientDirectement",
+      "M01_ROT"
+    ],
+    [
+      "M01",
+      "contientDirectement",
+      "M01_J"
+    ],
+    [
+      "M01",
+      "contientDirectement",
+      "M01_CAP"
+    ],
+    [
+      "M02",
+      "contientDirectement",
+      "M02_RA"
+    ],
+    [
+      "M02",
+      "contientDirectement",
+      "M02_RB"
+    ],
+    [
+      "M02",
+      "contientDirectement",
+      "M02_ROT"
+    ],
+    [
+      "M02",
+      "contientDirectement",
+      "M02_J"
+    ],
+    [
+      "M02",
+      "contientDirectement",
+      "M02_CAP"
+    ],
+    [
+      "C01",
+      "contientDirectement",
+      "C01_RA"
+    ],
+    [
+      "C01",
+      "contientDirectement",
+      "C01_RB"
+    ],
+    [
+      "C01",
+      "contientDirectement",
+      "C01_ROT"
+    ],
+    [
+      "C01",
+      "contientDirectement",
+      "C01_J"
+    ],
+    [
+      "C01",
+      "contientDirectement",
+      "C01_CAP"
+    ],
+    [
+      "C02",
+      "contientDirectement",
+      "C02_RA"
+    ],
+    [
+      "C02",
+      "contientDirectement",
+      "C02_RB"
+    ],
+    [
+      "C02",
+      "contientDirectement",
+      "C02_ROT"
+    ],
+    [
+      "C02",
+      "contientDirectement",
+      "C02_J"
+    ],
+    [
+      "C02",
+      "contientDirectement",
+      "C02_CAP"
+    ],
+    [
+      "Alex",
+      "possedeCompetence",
+      "Mecanique"
+    ],
+    [
+      "Alex",
+      "possedeCompetence",
+      "Diagnostic"
+    ],
+    [
+      "Sam",
+      "possedeCompetence",
+      "Mecanique"
+    ],
+    [
+      "Noor",
+      "possedeCompetence",
+      "Electricite"
+    ],
+    [
+      "Noor",
+      "possedeCompetence",
+      "Diagnostic"
+    ],
+    [
+      "INC01",
+      "concerneComposantPrincipal",
+      "P01_RA"
+    ],
+    [
+      "INC01",
+      "aCriticite",
+      "Critique"
+    ],
+    [
+      "INC01",
+      "aSymptome",
+      "OBS01_1"
+    ],
+    [
+      "INC01",
+      "aSymptome",
+      "OBS01_2"
+    ],
+    [
+      "INC01",
+      "aModeDefaillance",
+      "DEF01"
+    ],
+    [
+      "INT01",
+      "concerneIncident",
+      "INC01"
+    ],
+    [
+      "INT01",
+      "porteSur",
+      "P01_RA"
+    ],
+    [
+      "INT01",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT01",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT01",
+      "resout",
+      "INC01"
+    ],
+    [
+      "RAP01",
+      "documente",
+      "INC01"
+    ],
+    [
+      "INC02",
+      "concerneComposantPrincipal",
+      "P02_J"
+    ],
+    [
+      "INC02",
+      "aCriticite",
+      "Elevee"
+    ],
+    [
+      "INC02",
+      "aSymptome",
+      "OBS02_1"
+    ],
+    [
+      "INC02",
+      "aModeDefaillance",
+      "DEF02"
+    ],
+    [
+      "INT02",
+      "concerneIncident",
+      "INC02"
+    ],
+    [
+      "INT02",
+      "porteSur",
+      "P02_J"
+    ],
+    [
+      "INT02",
+      "effectueePar",
+      "Sam"
+    ],
+    [
+      "INT02",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT02",
+      "resout",
+      "INC02"
+    ],
+    [
+      "RAP02",
+      "documente",
+      "INC02"
+    ],
+    [
+      "INC03",
+      "concerneComposantPrincipal",
+      "M01_RA"
+    ],
+    [
+      "INC03",
+      "aCriticite",
+      "Faible"
+    ],
+    [
+      "INC03",
+      "aSymptome",
+      "OBS03_1"
+    ],
+    [
+      "INT03",
+      "concerneIncident",
+      "INC03"
+    ],
+    [
+      "INT03",
+      "porteSur",
+      "M01_RA"
+    ],
+    [
+      "INT03",
+      "effectueePar",
+      "Sam"
+    ],
+    [
+      "INT03",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT03",
+      "resout",
+      "INC03"
+    ],
+    [
+      "RAP03",
+      "documente",
+      "INC03"
+    ],
+    [
+      "INC04",
+      "concerneComposantPrincipal",
+      "M02_ROT"
+    ],
+    [
+      "INC04",
+      "aCriticite",
+      "Elevee"
+    ],
+    [
+      "INC04",
+      "aSymptome",
+      "OBS04_1"
+    ],
+    [
+      "INC04",
+      "aModeDefaillance",
+      "DEF04"
+    ],
+    [
+      "INT04",
+      "concerneIncident",
+      "INC04"
+    ],
+    [
+      "INT04",
+      "porteSur",
+      "M02_ROT"
+    ],
+    [
+      "INT04",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT04",
+      "requiertCompetence",
+      "Diagnostic"
+    ],
+    [
+      "RAP04",
+      "documente",
+      "INC04"
+    ],
+    [
+      "INC05",
+      "concerneComposantPrincipal",
+      "C01_RA"
+    ],
+    [
+      "INC05",
+      "aCriticite",
+      "Critique"
+    ],
+    [
+      "INC05",
+      "aSymptome",
+      "OBS05_1"
+    ],
+    [
+      "INC05",
+      "aSymptome",
+      "OBS05_2"
+    ],
+    [
+      "INC05",
+      "aModeDefaillance",
+      "DEF05"
+    ],
+    [
+      "INT05",
+      "concerneIncident",
+      "INC05"
+    ],
+    [
+      "INT05",
+      "porteSur",
+      "C01_RA"
+    ],
+    [
+      "INT05",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT05",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT05",
+      "resout",
+      "INC05"
+    ],
+    [
+      "RAP05",
+      "documente",
+      "INC05"
+    ],
+    [
+      "INC06",
+      "concerneComposantPrincipal",
+      "C02_J"
+    ],
+    [
+      "INC06",
+      "aCriticite",
+      "Critique"
+    ],
+    [
+      "INC06",
+      "aSymptome",
+      "OBS06_1"
+    ],
+    [
+      "INC06",
+      "aModeDefaillance",
+      "DEF06"
+    ],
+    [
+      "INT06",
+      "concerneIncident",
+      "INC06"
+    ],
+    [
+      "INT06",
+      "porteSur",
+      "C02_J"
+    ],
+    [
+      "INT06",
+      "effectueePar",
+      "Sam"
+    ],
+    [
+      "INT06",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT06",
+      "resout",
+      "INC06"
+    ],
+    [
+      "RAP06",
+      "documente",
+      "INC06"
+    ],
+    [
+      "INC07",
+      "concerneComposantPrincipal",
+      "P01_ROT"
+    ],
+    [
+      "INC07",
+      "aCriticite",
+      "Elevee"
+    ],
+    [
+      "INC07",
+      "aSymptome",
+      "OBS07_1"
+    ],
+    [
+      "INC07",
+      "aModeDefaillance",
+      "DEF07"
+    ],
+    [
+      "INT07",
+      "concerneIncident",
+      "INC07"
+    ],
+    [
+      "INT07",
+      "porteSur",
+      "P01_ROT"
+    ],
+    [
+      "INT07",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT07",
+      "requiertCompetence",
+      "Diagnostic"
+    ],
+    [
+      "RAP07",
+      "documente",
+      "INC07"
+    ],
+    [
+      "INC08",
+      "concerneComposantPrincipal",
+      "M01_ROT"
+    ],
+    [
+      "INC08",
+      "aCriticite",
+      "Critique"
+    ],
+    [
+      "INC08",
+      "aSymptome",
+      "OBS08_1"
+    ],
+    [
+      "INC08",
+      "aModeDefaillance",
+      "DEF08"
+    ],
+    [
+      "INT08",
+      "concerneIncident",
+      "INC08"
+    ],
+    [
+      "INT08",
+      "porteSur",
+      "M01_ROT"
+    ],
+    [
+      "INT08",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT08",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT08",
+      "resout",
+      "INC08"
+    ],
+    [
+      "RAP08",
+      "documente",
+      "INC08"
+    ],
+    [
+      "INC09",
+      "concerneComposantPrincipal",
+      "C01_RB"
+    ],
+    [
+      "INC09",
+      "aCriticite",
+      "Faible"
+    ],
+    [
+      "INC09",
+      "aSymptome",
+      "OBS09_1"
+    ],
+    [
+      "INT09",
+      "concerneIncident",
+      "INC09"
+    ],
+    [
+      "INT09",
+      "porteSur",
+      "C01_RB"
+    ],
+    [
+      "INT09",
+      "effectueePar",
+      "Sam"
+    ],
+    [
+      "INT09",
+      "requiertCompetence",
+      "Mecanique"
+    ],
+    [
+      "INT09",
+      "resout",
+      "INC09"
+    ],
+    [
+      "RAP09",
+      "documente",
+      "INC09"
+    ],
+    [
+      "INC10",
+      "concerneComposantPrincipal",
+      "P02_RA"
+    ],
+    [
+      "INC10",
+      "aCriticite",
+      "Faible"
+    ],
+    [
+      "INC10",
+      "aSymptome",
+      "OBS10_1"
+    ],
+    [
+      "INT10",
+      "concerneIncident",
+      "INC10"
+    ],
+    [
+      "INT10",
+      "porteSur",
+      "P02_RA"
+    ],
+    [
+      "INT10",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT10",
+      "requiertCompetence",
+      "Diagnostic"
+    ],
+    [
+      "RAP10",
+      "documente",
+      "INC10"
+    ],
+    [
+      "INC11",
+      "concerneComposantPrincipal",
+      "M02_RA"
+    ],
+    [
+      "INC11",
+      "aCriticite",
+      "Faible"
+    ],
+    [
+      "INC11",
+      "aSymptome",
+      "OBS11_1"
+    ],
+    [
+      "INT11",
+      "concerneIncident",
+      "INC11"
+    ],
+    [
+      "INT11",
+      "porteSur",
+      "M02_RA"
+    ],
+    [
+      "INT11",
+      "effectueePar",
+      "Alex"
+    ],
+    [
+      "INT11",
+      "requiertCompetence",
+      "Diagnostic"
+    ],
+    [
+      "RAP11",
+      "documente",
+      "INC11"
+    ],
+    [
+      "INC12",
+      "concerneComposantPrincipal",
+      "C02_CAP"
+    ],
+    [
+      "INC12",
+      "aCriticite",
+      "Elevee"
+    ],
+    [
+      "INC12",
+      "aSymptome",
+      "OBS12_1"
+    ],
+    [
+      "INT12",
+      "concerneIncident",
+      "INC12"
+    ],
+    [
+      "INT12",
+      "porteSur",
+      "C02_CAP"
+    ],
+    [
+      "INT12",
+      "effectueePar",
+      "Noor"
+    ],
+    [
+      "INT12",
+      "requiertCompetence",
+      "Electricite"
+    ],
+    [
+      "RAP12",
+      "documente",
+      "INC12"
+    ]
+  ],
+  "records": [
+    {
+      "incident": "INC01",
+      "intervention": "INT01",
+      "rapport": "RAP01",
+      "equipement": "P01",
+      "composant": "P01_RA",
+      "symptomes": [
+        "Vibration",
+        "Bruit"
+      ],
+      "mode": "Usure",
+      "criticite": "Critique",
+      "action": "Remplacement",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Alex",
+      "competence": "Mecanique",
+      "minutes": 95,
+      "texte": "DONNÉES FICTIVES - INC01. Sur P01_RA, observations : Vibration, Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 95 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC02",
+      "intervention": "INT02",
+      "rapport": "RAP02",
+      "equipement": "P02",
+      "composant": "P02_J",
+      "symptomes": [
+        "Fuite"
+      ],
+      "mode": "Usure",
+      "criticite": "Elevee",
+      "action": "Remplacement",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Sam",
+      "competence": "Mecanique",
+      "minutes": 55,
+      "texte": "DONNÉES FICTIVES - INC02. Sur P02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Elevee. Remplacement par Sam, durée 55 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC03",
+      "intervention": "INT03",
+      "rapport": "RAP03",
+      "equipement": "M01",
+      "composant": "M01_RA",
+      "symptomes": [
+        "Bruit"
+      ],
+      "mode": null,
+      "criticite": "Faible",
+      "action": "Lubrification",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Sam",
+      "competence": "Mecanique",
+      "minutes": 20,
+      "texte": "DONNÉES FICTIVES - INC03. Sur M01_RA, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 20 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC04",
+      "intervention": "INT04",
+      "rapport": "RAP04",
+      "equipement": "M02",
+      "composant": "M02_ROT",
+      "symptomes": [
+        "Vibration"
+      ],
+      "mode": "Desalignement",
+      "criticite": "Elevee",
+      "action": "Inspection",
+      "resolution": "non_resolu",
+      "symptomes_exhaustifs": true,
+      "technicien": "Alex",
+      "competence": "Diagnostic",
+      "minutes": 40,
+      "texte": "DONNÉES FICTIVES - INC04. Sur M02_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 40 minutes. Épisode explicitement non résolu à la date de l’instantané."
+    },
+    {
+      "incident": "INC05",
+      "intervention": "INT05",
+      "rapport": "RAP05",
+      "equipement": "C01",
+      "composant": "C01_RA",
+      "symptomes": [
+        "Vibration",
+        "Surchauffe"
+      ],
+      "mode": "Usure",
+      "criticite": "Critique",
+      "action": "Remplacement",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Alex",
+      "competence": "Mecanique",
+      "minutes": 120,
+      "texte": "DONNÉES FICTIVES - INC05. Sur C01_RA, observations : Vibration, Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 120 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC06",
+      "intervention": "INT06",
+      "rapport": "RAP06",
+      "equipement": "C02",
+      "composant": "C02_J",
+      "symptomes": [
+        "Fuite"
+      ],
+      "mode": "Rupture",
+      "criticite": "Critique",
+      "action": "Remplacement",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Sam",
+      "competence": "Mecanique",
+      "minutes": 65,
+      "texte": "DONNÉES FICTIVES - INC06. Sur C02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Sam, durée 65 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC07",
+      "intervention": "INT07",
+      "rapport": "RAP07",
+      "equipement": "P01",
+      "composant": "P01_ROT",
+      "symptomes": [
+        "Vibration"
+      ],
+      "mode": "Desalignement",
+      "criticite": "Elevee",
+      "action": "Inspection",
+      "resolution": "inconnue",
+      "symptomes_exhaustifs": true,
+      "technicien": "Alex",
+      "competence": "Diagnostic",
+      "minutes": 35,
+      "texte": "DONNÉES FICTIVES - INC07. Sur P01_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 35 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution."
+    },
+    {
+      "incident": "INC08",
+      "intervention": "INT08",
+      "rapport": "RAP08",
+      "equipement": "M01",
+      "composant": "M01_ROT",
+      "symptomes": [
+        "Bruit"
+      ],
+      "mode": "Rupture",
+      "criticite": "Critique",
+      "action": "Remplacement",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Alex",
+      "competence": "Mecanique",
+      "minutes": 110,
+      "texte": "DONNÉES FICTIVES - INC08. Sur M01_ROT, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Alex, durée 110 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC09",
+      "intervention": "INT09",
+      "rapport": "RAP09",
+      "equipement": "C01",
+      "composant": "C01_RB",
+      "symptomes": [
+        "Bruit"
+      ],
+      "mode": null,
+      "criticite": "Faible",
+      "action": "Lubrification",
+      "resolution": "confirmee",
+      "symptomes_exhaustifs": true,
+      "technicien": "Sam",
+      "competence": "Mecanique",
+      "minutes": 25,
+      "texte": "DONNÉES FICTIVES - INC09. Sur C01_RB, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 25 minutes. Résolution confirmée après contrôle dans ce scénario."
+    },
+    {
+      "incident": "INC10",
+      "intervention": "INT10",
+      "rapport": "RAP10",
+      "equipement": "P02",
+      "composant": "P02_RA",
+      "symptomes": [
+        "Vibration"
+      ],
+      "mode": null,
+      "criticite": "Faible",
+      "action": "Inspection",
+      "resolution": "inconnue",
+      "symptomes_exhaustifs": false,
+      "technicien": "Alex",
+      "competence": "Diagnostic",
+      "minutes": 30,
+      "texte": "DONNÉES FICTIVES - INC10. Sur P02_RA, observations : Vibration. Liste des symptômes non déclarée exhaustive. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 30 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution."
+    },
+    {
+      "incident": "INC11",
+      "intervention": "INT11",
+      "rapport": "RAP11",
+      "equipement": "M02",
+      "composant": "M02_RA",
+      "symptomes": [
+        "Vibration"
+      ],
+      "mode": null,
+      "criticite": "Faible",
+      "action": "Inspection",
+      "resolution": "non_resolu",
+      "symptomes_exhaustifs": true,
+      "technicien": "Alex",
+      "competence": "Diagnostic",
+      "minutes": 25,
+      "texte": "DONNÉES FICTIVES - INC11. Sur M02_RA, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 25 minutes. Épisode explicitement non résolu à la date de l’instantané."
+    },
+    {
+      "incident": "INC12",
+      "intervention": "INT12",
+      "rapport": "RAP12",
+      "equipement": "C02",
+      "composant": "C02_CAP",
+      "symptomes": [
+        "Surchauffe"
+      ],
+      "mode": null,
+      "criticite": "Elevee",
+      "action": "Inspection",
+      "resolution": "inconnue",
+      "symptomes_exhaustifs": true,
+      "technicien": "Noor",
+      "competence": "Electricite",
+      "minutes": 45,
+      "texte": "DONNÉES FICTIVES - INC12. Sur C02_CAP, observations : Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Elevee. Inspection par Noor, durée 45 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution."
+    }
+  ],
+  "queries": [
+    {
+      "id": "Q1",
+      "question": "Quels équipements contiennent un roulement, même indirectement ?",
+      "expression": "EquipementAvecRoulement",
+      "expected": [
+        "C01",
+        "C02",
+        "M01",
+        "M02",
+        "P01",
+        "P02"
+      ]
+    },
+    {
+      "id": "Q2",
+      "question": "Quels équipements ont au moins deux roulements directs distincts ?",
+      "expression": "EquipementDeuxRoulementsDirects",
+      "expected": [
+        "C01",
+        "C02",
+        "M01",
+        "M02",
+        "P01"
+      ]
+    },
+    {
+      "id": "Q3",
+      "question": "Quels incidents de roulement affectent une pompe ?",
+      "expression": "IncidentRoulement and IncidentPompe",
+      "expected": [
+        "INC01",
+        "INC10"
+      ]
+    },
+    {
+      "id": "Q4",
+      "question": "Quels incidents critiques ont une résolution confirmée ?",
+      "expression": "IncidentCritique and IncidentResolu",
+      "expected": [
+        "INC01",
+        "INC05",
+        "INC06",
+        "INC08"
+      ]
+    },
+    {
+      "id": "Q5",
+      "question": "Quels rapports documentent un incident critique ?",
+      "expression": "RapportCritique",
+      "expected": [
+        "RAP01",
+        "RAP05",
+        "RAP06",
+        "RAP08"
+      ]
+    },
+    {
+      "id": "Q6",
+      "question": "Quels incidents ont exclusivement des vibrations ou des bruits ?",
+      "expression": "IncidentSymptomesVibroAcoustiques",
+      "expected": [
+        "INC01",
+        "INC03",
+        "INC04",
+        "INC07",
+        "INC08",
+        "INC09",
+        "INC11"
+      ]
+    },
+    {
+      "id": "Q7",
+      "question": "Quels incidents ont exclusivement des vibrations ?",
+      "expression": "IncidentVibrationSeule",
+      "expected": [
+        "INC04",
+        "INC07",
+        "INC11"
+      ]
+    },
+    {
+      "id": "Q8",
+      "question": "Quels incidents sont explicitement non résolus ?",
+      "expression": "IncidentNonResolu",
+      "expected": [
+        "INC04",
+        "INC11"
+      ]
+    },
+    {
+      "id": "Q9",
+      "question": "Quelles interventions ont résolu un incident de roulement ?",
+      "expression": "Intervention and (resout some IncidentRoulement)",
+      "expected": [
+        "INT01",
+        "INT03",
+        "INT05",
+        "INT09"
+      ]
+    },
+    {
+      "id": "Q10",
+      "question": "Quels techniciens possèdent la compétence mécanique ?",
+      "expression": "Technicien and (possedeCompetence value Mecanique)",
+      "expected": [
+        "Alex",
+        "Sam"
+      ]
+    },
+    {
+      "id": "Q11",
+      "question": "Quels objets sont affectés par INC10, via les inverses et la composition ?",
+      "expression": "ObjetMateriel and (subitIncident value INC10)",
+      "expected": [
+        "P02",
+        "P02_PALIER",
+        "P02_RA"
+      ]
+    },
+    {
+      "id": "Q12",
+      "question": "Quels incidents de roulement sont résolus par un remplacement ?",
+      "expression": "IncidentRoulement and (estResoluPar some Remplacement)",
+      "expected": [
+        "INC01",
+        "INC05"
+      ]
+    }
+  ]
+}

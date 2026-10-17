@@ -4,7 +4,7 @@
 
 [![Vérifications](https://github.com/axl-chstn/memoire-industrielle/actions/workflows/checks.yml/badge.svg)](https://github.com/axl-chstn/memoire-industrielle/actions/workflows/checks.yml)
 
-[Voir la démo](docs/DEMO.md) · [Installer](docs/INSTALLATION.md) · [Résultats des tests](docs/RESULTATS.md) · [Architecture](docs/ARCHITECTURE.md) · [Présentation CV](docs/PORTFOLIO.md)
+[Voir la démo](docs/DEMO.md) · [Installer](docs/INSTALLATION.md) · [Résultats des tests](docs/RESULTATS.md) · [Architecture](docs/ARCHITECTURE.md) · [Présentation du projet](docs/PORTFOLIO.md) · [Ontologie](docs/ontologie/README.md)
 
 ![Vue de l'application sur l'atelier fictif](docs/assets/01-atelier.png)
 
@@ -13,6 +13,14 @@
 Lorsqu'une panne revient, les informations utiles sont souvent dispersées entre plusieurs rapports. Il faut retrouver ce qui a été observé, ce qui a été tenté et le résultat obtenu. Une intervention enregistrée ne signifie pas forcément que la panne est résolue.
 
 Ce projet rassemble ces informations autour des équipements et des incidents. On peut suivre un historique, consulter des cas proches et interroger les rapports en gardant accès aux passages utilisés. Il s'agit d'un prototype personnel testé sur des données fictives, pas d'un logiciel déployé chez un industriel.
+
+## Auteur, apprentissage et modélisation
+
+Projet initié et piloté par **Axel Chasteauneuf**, élève ingénieur à Mines Nancy : cadrage du besoin, formation au RAG, conduite du développement assisté par IA et examen des scénarios de fiabilité. Le code, les tests et la documentation ont été construits avec assistance IA.
+
+Le projet prolonge la formation IBM SkillsBuild **Retrieval-Augmented Generation for Enhanced AI Outputs**, avec badge obtenu en octobre 2026 et première mise en pratique sur Google Colab. Le justificatif personnel est consultable sur le [profil LinkedIn](https://www.linkedin.com/in/axel-chasteauneuf-910091388/).
+
+L’[ontologie de maintenance sous Protégé/OWL](docs/ontologie/README.md) est disponible avec son fichier, un schéma, des requêtes et les contrôles historiques. Ses concepts guident la structure des fiches ; **le fichier OWL et le raisonneur HermiT ne sont pas exécutés par l’application**. La [présentation de trois pages](docs/Memoire_industrielle_Presentation_LinkedIn_Axel_Chasteauneuf.pdf) permet de découvrir le projet sans installation.
 
 ## Un exemple en deux minutes
 

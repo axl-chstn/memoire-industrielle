@@ -1,41 +1,35 @@
-# Présenter le projet
+# Mémoire industrielle - présentation du projet
 
-## Intitulé
+**Axel Chasteauneuf** · Élève ingénieur à Mines Nancy · Data, IA et aide à la décision.
 
-**Mémoire industrielle — assistant local de consultation de rapports de maintenance**
+## Le problème et la solution
 
-Python · Streamlit · SQLite · RAG · BM25 · Embeddings multilingues · Ollama
+Lorsqu’une panne revient, retrouver ce qui a déjà été tenté demande de reconstituer plusieurs rapports. Le prototype organise les documents autour des équipements et incidents, distingue les interventions de leurs résultats et relie les réponses aux passages sources.
 
-## Pour un CV
+## Contribution et méthode
 
-Développement d'un assistant local de consultation de rapports de maintenance : recherche hybride BM25/embeddings, suivi des incidents et réponses sourcées. Mise en place d'une validation humaine des informations extraites, d'une sauvegarde SQLite et de tests de régression sur des corpus fictifs. Utilisation d'un modèle local via Ollama, sans API payante.
+Le projet est initié et piloté par Axel Chasteauneuf : cadrage du besoin, formation au RAG, conduite du développement assisté par IA, examen des réponses et évolution des règles de fiabilité. Le code, les tests et la documentation ont été construits avec assistance IA ; cette présentation ne revendique pas une écriture manuelle et individuelle de tout le code.
 
-Lien : https://github.com/axl-chstn/memoire-industrielle
+## Apprentissage
 
-Version courte : **Assistant documentaire de maintenance en Python : recherche hybride, modèle local, chronologies d'incidents et réponses traçables jusqu'aux rapports.**
+Formation IBM SkillsBuild **Retrieval-Augmented Generation for Enhanced AI Outputs**, avec badge obtenu en octobre 2026, et mise en pratique initiale sur Google Colab. La [description du badge IBM](https://www.credly.com/org/ibm/badge/retrieval-augmented-generation-for-enhanced-ai-outp) présente le programme ; le justificatif personnel figure sur le [profil LinkedIn](https://www.linkedin.com/in/axel-chasteauneuf-910091388/).
 
-## English version
+## Démonstration et compétences
 
-Built a local maintenance-report assistant with hybrid BM25/embedding retrieval, incident timelines and source-linked answers. Added human review of extracted facts, SQLite persistence and regression tests on fictional datasets. A local Ollama model selects supporting passages; factual answers are assembled from verified records.
+- [Un incident, deux interventions et leurs sources](DEMO.md).
+- Python, Streamlit, SQLite, recherche BM25 et embeddings E5, modèle local via Ollama.
+- [Ontologie pédagogique de maintenance](ontologie/README.md) sous Protégé/OWL, avec exemples de requêtes et inférences. Le raisonneur OWL reste séparé de l’application.
+- [108 tests automatisés dans le relevé du 17 octobre 2026](RESULTATS.md). Les données sont fictives ; les résultats connus ne mesurent pas une précision générale.
 
-## En entretien · 45 secondes
+## Consulter les supports
 
-« Je suis parti d'un problème de maintenance : retrouver ce qui a déjà été essayé quand une panne revient. J'ai construit une application qui organise les rapports autour des équipements et des incidents, avec une recherche par mots-clés et par le sens.
+- [Présentation PDF de trois pages pour les recruteurs](Memoire_industrielle_Presentation_LinkedIn_Axel_Chasteauneuf.pdf).
+- [Présentation HTML autonome](presentation-projet.html).
+- [Architecture](ARCHITECTURE.md), [installation](INSTALLATION.md) et [limites des résultats](RESULTATS.md) pour approfondir.
+- [Textes personnels pour le CV et l’entretien](CV_ET_ENTRETIEN.md).
 
-Le point qui m'a le plus intéressé est la fiabilité. Une première version pouvait mal ordonner un rapport sans date ou transformer une information manquante en conclusion. J'ai donc conservé des faits vérifiés, leur preuve et des règles explicites pour les chronologies. Le modèle local sélectionne des passages plutôt que de rédiger librement.
+Le PDF peut être joint directement à une fiche Projet LinkedIn et se lit sans installation. Le lien GitHub permet d’approfondir le code et les choix techniques lorsque le dépôt est public. Aucun document industriel privé ne figure dans la présentation.
 
-Aujourd'hui, le parcours fonctionne sur des rapports fictifs et dispose de tests. La suite envisagée serait d'ajouter des comptes rendus oraux, transcrits puis validés avant leur entrée dans la base. »
+## Perspectives
 
-## Points à savoir expliquer
-
-- Pourquoi BM25 reste utile pour les identifiants et pourquoi E5 complète la recherche.
-- Pourquoi une intervention et une résolution sont deux informations différentes.
-- Comment une valeur conserve sa preuve et sa page d'origine.
-- Pourquoi les scores des jeux connus ne prédisent pas la qualité sur de nouveaux rapports.
-- Ce qui a été réalisé avec une assistance IA : pouvoir expliquer les décisions et les limites compte davantage que revendiquer tout le code comme écrit seul.
-
-## Partager le projet
-
-Le dépôt est actuellement **privé**. Un recruteur sans accès ne pourra pas consulter son README ou son code. Le dossier de présentation et ses captures peuvent être montrés séparément. Une éventuelle publication d'une version de démonstration fera l'objet d'une décision distincte ; ne pas y inclure de rapports privés, de base SQLite, d'exports ou de clés.
-
-Cette présentation porte sur le dépôt du projet. Elle ne prétend pas modifier les épingles ou le profil personnel GitHub.
+Comptes rendus oraux : transcription, brouillon modifiable puis validation humaine. Cette chaîne n’est pas implémentée. L’usage B2B en PME est une hypothèse à confronter aux utilisateurs ; aucun gain de temps métier ni déploiement industriel n’est revendiqué.

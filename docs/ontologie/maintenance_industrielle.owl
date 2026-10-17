@@ -1,0 +1,2452 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://example.org/td-maintenance#"
+     xml:base="https://example.org/td-maintenance"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:td-maintenance="https://example.org/td-maintenance#">
+    <owl:Ontology rdf:about="https://example.org/td-maintenance">
+        <rdfs:comment xml:lang="fr">Projet pédagogique. Parc et événements entièrement fictifs. Instantané au 23/09/2026. Modèle OWL 2 DL sans imports distants. Les définitions et limites sont documentées dans le dossier associé.</rdfs:comment>
+    </owl:Ontology>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://example.org/td-maintenance#aCriticite -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#aCriticite">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#FunctionalProperty"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#NiveauCriticite"/>
+        <rdfs:comment xml:lang="fr">Niveau explicitement attribué dans le scénario fictif.</rdfs:comment>
+        <rdfs:label>aCriticite</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#aModeDefaillance -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#aModeDefaillance">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#estModeDe"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#ModeDefaillance"/>
+        <rdfs:comment xml:lang="fr">Défaillance retenue après examen ; n’est pas déduite automatiquement d’un symptôme.</rdfs:comment>
+        <rdfs:label>aModeDefaillance</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#aSymptome -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#aSymptome">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#estSymptomeDe"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Symptome"/>
+        <rdfs:comment xml:lang="fr">Observation associée à l’incident.</rdfs:comment>
+        <rdfs:label>aSymptome</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#affecteObjet -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#affecteObjet">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#subitIncident"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <owl:propertyChainAxiom rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#concerneComposantPrincipal"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#faitPartieDe"/>
+        </owl:propertyChainAxiom>
+        <rdfs:comment xml:lang="fr">Objet physiquement concerné par l’incident, composant ou assemblage parent ; ne signifie pas panne de tous ses composants.</rdfs:comment>
+        <rdfs:label>affecteObjet</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#concerneComposantPrincipal -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#concerneComposantPrincipal">
+        <rdfs:subPropertyOf rdf:resource="https://example.org/td-maintenance#affecteObjet"/>
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#estComposantPrincipalDe"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Un seul composant principal par fiche incident ; périmètre choisi pour le TD.</rdfs:comment>
+        <rdfs:label>concerneComposantPrincipal</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#concerneIncident -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#concerneIncident">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#recoitIntervention"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Lien d’une action réalisée vers l’incident concerné.</rdfs:comment>
+        <rdfs:label>concerneIncident</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#contient -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#contient">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#faitPartieDe"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:comment xml:lang="fr">Composition physique directe ou indirecte, transitive.</rdfs:comment>
+        <rdfs:label>contient</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#contientDirectement -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#contientDirectement">
+        <rdfs:subPropertyOf rdf:resource="https://example.org/td-maintenance#contient"/>
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#faitDirectementPartieDe"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AsymmetricProperty"/>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#IrreflexiveProperty"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:comment xml:lang="fr">Composition immédiate dans l’instantané. Relation simple, sans transitivité.</rdfs:comment>
+        <rdfs:label>contientDirectement</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#documente -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#documente">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#estDocumentePar"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Incident décrit par un document.</rdfs:comment>
+        <rdfs:label>documente</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#effectue -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#effectue">
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#effectueePar"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Technicien"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de effectueePar</rdfs:comment>
+        <rdfs:label>effectue</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#effectueePar -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#effectueePar">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Technicien"/>
+        <rdfs:comment xml:lang="fr">Exécutant de l’action effectuée.</rdfs:comment>
+        <rdfs:label>effectueePar</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#estComposantPrincipalDe -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#estComposantPrincipalDe">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de concerneComposantPrincipal</rdfs:comment>
+        <rdfs:label>estComposantPrincipalDe</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#estDocumentePar -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#estDocumentePar">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de documente</rdfs:comment>
+        <rdfs:label>estDocumentePar</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#estModeDe -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#estModeDe">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#ModeDefaillance"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de aModeDefaillance</rdfs:comment>
+        <rdfs:label>estModeDe</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#estResoluPar -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#estResoluPar">
+        <rdfs:subPropertyOf rdf:resource="https://example.org/td-maintenance#recoitIntervention"/>
+        <owl:inverseOf rdf:resource="https://example.org/td-maintenance#resout"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de resout</rdfs:comment>
+        <rdfs:label>estResoluPar</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#estSymptomeDe -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#estSymptomeDe">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Symptome"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de aSymptome</rdfs:comment>
+        <rdfs:label>estSymptomeDe</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#faitDirectementPartieDe -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#faitDirectementPartieDe">
+        <rdfs:subPropertyOf rdf:resource="https://example.org/td-maintenance#faitPartieDe"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de contientDirectement</rdfs:comment>
+        <rdfs:label>faitDirectementPartieDe</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#faitPartieDe -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#faitPartieDe">
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#TransitiveProperty"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de contient</rdfs:comment>
+        <rdfs:label>faitPartieDe</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#porteSur -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#porteSur">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Composant objet de l’action effectuée.</rdfs:comment>
+        <rdfs:label>porteSur</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#possedeCompetence -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#possedeCompetence">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Technicien"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Competence"/>
+        <rdfs:comment xml:lang="fr">Compétence déclarée d’un technicien.</rdfs:comment>
+        <rdfs:label>possedeCompetence</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#recoitIntervention -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#recoitIntervention">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de concerneIncident</rdfs:comment>
+        <rdfs:label>recoitIntervention</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#requiertCompetence -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#requiertCompetence">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Competence"/>
+        <rdfs:comment xml:lang="fr">Compétence requise dans le scénario.</rdfs:comment>
+        <rdfs:label>requiertCompetence</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#resout -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#resout">
+        <rdfs:subPropertyOf rdf:resource="https://example.org/td-maintenance#concerneIncident"/>
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Résolution déclarée et confirmée dans le scénario ; sous-relation de concerneIncident.</rdfs:comment>
+        <rdfs:label>resout</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#subitIncident -->
+
+    <owl:ObjectProperty rdf:about="https://example.org/td-maintenance#subitIncident">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:range rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:comment xml:lang="fr">Relation inverse de affecteObjet</rdfs:comment>
+        <rdfs:label>subitIncident</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://example.org/td-maintenance#dateConstat -->
+
+    <owl:DatatypeProperty rdf:about="https://example.org/td-maintenance#dateConstat">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+        <rdfs:comment xml:lang="fr">Date du constat, scénario fictif de septembre 2026.</rdfs:comment>
+        <rdfs:label>dateConstat</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#dureeMinutes -->
+
+    <owl:DatatypeProperty rdf:about="https://example.org/td-maintenance#dureeMinutes">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#nonNegativeInteger"/>
+        <rdfs:comment xml:lang="fr">Durée de l’action fictive, en minutes.</rdfs:comment>
+        <rdfs:label>dureeMinutes</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://example.org/td-maintenance#resumeRapport -->
+
+    <owl:DatatypeProperty rdf:about="https://example.org/td-maintenance#resumeRapport">
+        <rdfs:domain rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment xml:lang="fr">Texte source synthétique, créé pour le TD.</rdfs:comment>
+        <rdfs:label>resumeRapport</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://example.org/td-maintenance#Bruit -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Bruit">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Symptome"/>
+        <rdfs:comment xml:lang="fr">Observation d’un bruit signalé comme anormal.</rdfs:comment>
+        <rdfs:label>Bruit</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Capteur -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Capteur">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Capteur physique identifié.</rdfs:comment>
+        <rdfs:label>Capteur</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Competence -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Competence">
+        <rdfs:comment xml:lang="fr">Qualification nommée et partageable entre plusieurs techniciens et actions.</rdfs:comment>
+        <rdfs:label>Competence</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Composant -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Composant">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <owl:disjointWith rdf:resource="https://example.org/td-maintenance#Equipement"/>
+        <rdfs:comment xml:lang="fr">Pièce ou sous-ensemble physique appartenant à une unité de maintenance dans cet instantané.</rdfs:comment>
+        <rdfs:label>Composant</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Compresseur -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Compresseur">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Equipement"/>
+        <rdfs:comment xml:lang="fr">Unité de compression du parc fictif.</rdfs:comment>
+        <rdfs:label>Compresseur</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Desalignement -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Desalignement">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#ModeDefaillance"/>
+        <rdfs:comment xml:lang="fr">Occurrence de désalignement retenue après examen dans le scénario.</rdfs:comment>
+        <rdfs:label>Desalignement</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Equipement -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Equipement">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#ObjetMateriel"/>
+        <rdfs:comment xml:lang="fr">Unité de maintenance du parc étudié. Le TD distingue pompe, moteur et compresseur comme unités séparées.</rdfs:comment>
+        <rdfs:label>Equipement</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#EquipementAvecRoulement -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#EquipementAvecRoulement">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Equipement"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#contient"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Roulement"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Équipement contenant au moins un roulement, directement ou indirectement.</rdfs:comment>
+        <rdfs:label>EquipementAvecRoulement</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#EquipementDeuxRoulementsDirects -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#EquipementDeuxRoulementsDirects">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Equipement"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#contientDirectement"/>
+                        <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:minQualifiedCardinality>
+                        <owl:onClass rdf:resource="https://example.org/td-maintenance#Roulement"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Équipement ayant au moins deux roulements directs distincts.</rdfs:comment>
+        <rdfs:label>EquipementDeuxRoulementsDirects</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Fuite -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Fuite">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Symptome"/>
+        <rdfs:comment xml:lang="fr">Observation d’une fuite.</rdfs:comment>
+        <rdfs:label>Fuite</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Incident -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Incident">
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aCriticite"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://example.org/td-maintenance#NiveauCriticite"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#concerneComposantPrincipal"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://example.org/td-maintenance#Composant"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:comment xml:lang="fr">Épisode de maintenance documenté dans un instantané daté ; ce n’est ni une machine ni une intervention.</rdfs:comment>
+        <rdfs:label>Incident</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentCritique -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentCritique">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#aCriticite"/>
+                        <owl:hasValue rdf:resource="https://example.org/td-maintenance#Critique"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident avec criticité déclarée Critique.</rdfs:comment>
+        <rdfs:label>IncidentCritique</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentNonResolu -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentNonResolu">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Class>
+                        <owl:complementOf>
+                            <owl:Restriction>
+                                <owl:onProperty rdf:resource="https://example.org/td-maintenance#estResoluPar"/>
+                                <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Intervention"/>
+                            </owl:Restriction>
+                        </owl:complementOf>
+                    </owl:Class>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident explicitement sans intervention résolutive dans cet instantané ; absence de lien seule insuffisante.</rdfs:comment>
+        <rdfs:label>IncidentNonResolu</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentPompe -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentPompe">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#affecteObjet"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Pompe"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident affectant une pompe, y compris par inférence de composition.</rdfs:comment>
+        <rdfs:label>IncidentPompe</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentResolu -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentResolu">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#estResoluPar"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Intervention"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident pour lequel une intervention ayant résolu l’épisode est connue ou logiquement impliquée.</rdfs:comment>
+        <rdfs:label>IncidentResolu</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentRoulement -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentRoulement">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#concerneComposantPrincipal"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Roulement"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident dont le composant principal est un roulement.</rdfs:comment>
+        <rdfs:label>IncidentRoulement</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentSymptomesVibroAcoustiques -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentSymptomesVibroAcoustiques">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Symptome"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                        <owl:allValuesFrom>
+                            <owl:Class>
+                                <owl:unionOf rdf:parseType="Collection">
+                                    <rdf:Description rdf:about="https://example.org/td-maintenance#Bruit"/>
+                                    <rdf:Description rdf:about="https://example.org/td-maintenance#Vibration"/>
+                                </owl:unionOf>
+                            </owl:Class>
+                        </owl:allValuesFrom>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident ayant au moins un symptôme et uniquement des vibrations ou des bruits. Ne définit pas sa cause.</rdfs:comment>
+        <rdfs:label>IncidentSymptomesVibroAcoustiques</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#IncidentVibrationSeule -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#IncidentVibrationSeule">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Vibration"/>
+                    </owl:Restriction>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                        <owl:allValuesFrom rdf:resource="https://example.org/td-maintenance#Vibration"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Incident dont les symptômes sont exclusivement des vibrations, avec au moins une observation.</rdfs:comment>
+        <rdfs:label>IncidentVibrationSeule</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Inspection -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Inspection">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:comment xml:lang="fr">Action élémentaire d’examen ou de diagnostic.</rdfs:comment>
+        <rdfs:label>Inspection</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Intervention -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Intervention">
+        <rdfs:comment xml:lang="fr">Action élémentaire effectuée. Une inspection n’implique pas une résolution.</rdfs:comment>
+        <rdfs:label>Intervention</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Joint -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Joint">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Joint physique identifié.</rdfs:comment>
+        <rdfs:label>Joint</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Lubrification -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Lubrification">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:comment xml:lang="fr">Action élémentaire de lubrification.</rdfs:comment>
+        <rdfs:label>Lubrification</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#ModeDefaillance -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#ModeDefaillance">
+        <rdfs:comment xml:lang="fr">Occurrence de défaillance retenue dans le scénario, distincte de son symptôme.</rdfs:comment>
+        <rdfs:label>ModeDefaillance</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Moteur -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Moteur">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Equipement"/>
+        <rdfs:comment xml:lang="fr">Moteur électrique suivi comme une unité séparée.</rdfs:comment>
+        <rdfs:label>Moteur</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#NiveauCriticite -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#NiveauCriticite">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:oneOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Critique"/>
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Elevee"/>
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#Faible"/>
+                </owl:oneOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Valeur d’évaluation déclarée dans ce TD ; aucun calcul automatique de risque.</rdfs:comment>
+        <rdfs:label>NiveauCriticite</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#ObjetMateriel -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#ObjetMateriel">
+        <rdfs:comment xml:lang="fr">Objet physique identifié, à distinguer des événements, observations, personnes et documents.</rdfs:comment>
+        <rdfs:label>ObjetMateriel</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Pompe -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Pompe">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Equipement"/>
+        <rdfs:comment xml:lang="fr">Unité de pompage du parc fictif ; ne désigne pas un groupe motopompe complet.</rdfs:comment>
+        <rdfs:label>Pompe</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#RapportCritique -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#RapportCritique">
+        <owl:equivalentClass>
+            <owl:Class>
+                <owl:intersectionOf rdf:parseType="Collection">
+                    <rdf:Description rdf:about="https://example.org/td-maintenance#RapportMaintenance"/>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#documente"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#IncidentCritique"/>
+                    </owl:Restriction>
+                </owl:intersectionOf>
+            </owl:Class>
+        </owl:equivalentClass>
+        <rdfs:comment xml:lang="fr">Rapport relatant au moins un incident critique.</rdfs:comment>
+        <rdfs:label>RapportCritique</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#RapportMaintenance -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#RapportMaintenance">
+        <rdfs:comment xml:lang="fr">Document fictif relatant un incident et les actions effectuées.</rdfs:comment>
+        <rdfs:label>RapportMaintenance</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Remplacement -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Remplacement">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Intervention"/>
+        <rdfs:comment xml:lang="fr">Action élémentaire de remplacement ; porte sur la pièce déposée de l’instantané.</rdfs:comment>
+        <rdfs:label>Remplacement</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Rotor -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Rotor">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Rotor physique identifié.</rdfs:comment>
+        <rdfs:label>Rotor</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Roulement -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Roulement">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Roulement physique identifié. Deux machines ont des roulements distincts.</rdfs:comment>
+        <rdfs:label>Roulement</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Rupture -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Rupture">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#ModeDefaillance"/>
+        <rdfs:comment xml:lang="fr">Occurrence de rupture retenue après examen dans le scénario.</rdfs:comment>
+        <rdfs:label>Rupture</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#SousEnsemble -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#SousEnsemble">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Composant"/>
+        <rdfs:comment xml:lang="fr">Assemblage physique permettant de représenter un niveau intermédiaire de composition.</rdfs:comment>
+        <rdfs:label>SousEnsemble</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Surchauffe -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Surchauffe">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Symptome"/>
+        <rdfs:comment xml:lang="fr">Observation d’un échauffement signalé comme anormal.</rdfs:comment>
+        <rdfs:label>Surchauffe</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Symptome -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Symptome">
+        <rdfs:comment xml:lang="fr">Observation particulière enregistrée pendant un incident, pas une preuve automatique de sa cause.</rdfs:comment>
+        <rdfs:label>Symptome</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Technicien -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Technicien">
+        <rdfs:comment xml:lang="fr">Personne fictive ayant effectué une action.</rdfs:comment>
+        <rdfs:label>Technicien</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Usure -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Usure">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#ModeDefaillance"/>
+        <rdfs:comment xml:lang="fr">Occurrence d’usure retenue après examen dans le scénario.</rdfs:comment>
+        <rdfs:label>Usure</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- https://example.org/td-maintenance#Vibration -->
+
+    <owl:Class rdf:about="https://example.org/td-maintenance#Vibration">
+        <rdfs:subClassOf rdf:resource="https://example.org/td-maintenance#Symptome"/>
+        <rdfs:comment xml:lang="fr">Observation de vibrations signalées comme anormales.</rdfs:comment>
+        <rdfs:label>Vibration</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Individuals
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- https://example.org/td-maintenance#Alex -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Alex">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Technicien"/>
+        <possedeCompetence rdf:resource="https://example.org/td-maintenance#Diagnostic"/>
+        <possedeCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <rdfs:comment xml:lang="fr">Technicien fictif, sans lien avec une personne réelle.</rdfs:comment>
+        <rdfs:label>Alex</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Compresseur"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C01_CAP"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C01_J"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C01_RA"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C01_RB"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C01_ROT"/>
+        <rdfs:comment xml:lang="fr">Unité C01 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur.</rdfs:comment>
+        <rdfs:label>C01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C01_CAP -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C01_CAP">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Capteur"/>
+        <rdfs:comment xml:lang="fr">Capteur identifié de C01</rdfs:comment>
+        <rdfs:label>C01_CAP</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C01_J -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C01_J">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Joint"/>
+        <rdfs:comment xml:lang="fr">Joint identifié de C01</rdfs:comment>
+        <rdfs:label>C01_J</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C01_RA -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C01_RA">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de C01</rdfs:comment>
+        <rdfs:label>C01_RA</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C01_RB -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C01_RB">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de C01</rdfs:comment>
+        <rdfs:label>C01_RB</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C01_ROT -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C01_ROT">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rotor"/>
+        <rdfs:comment xml:lang="fr">Rotor identifié de C01</rdfs:comment>
+        <rdfs:label>C01_ROT</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Compresseur"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C02_CAP"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C02_J"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C02_RA"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C02_RB"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#C02_ROT"/>
+        <rdfs:comment xml:lang="fr">Unité C02 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur.</rdfs:comment>
+        <rdfs:label>C02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C02_CAP -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C02_CAP">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Capteur"/>
+        <rdfs:comment xml:lang="fr">Capteur identifié de C02</rdfs:comment>
+        <rdfs:label>C02_CAP</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C02_J -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C02_J">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Joint"/>
+        <rdfs:comment xml:lang="fr">Joint identifié de C02</rdfs:comment>
+        <rdfs:label>C02_J</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C02_RA -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C02_RA">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de C02</rdfs:comment>
+        <rdfs:label>C02_RA</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C02_RB -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C02_RB">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de C02</rdfs:comment>
+        <rdfs:label>C02_RB</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#C02_ROT -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#C02_ROT">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rotor"/>
+        <rdfs:comment xml:lang="fr">Rotor identifié de C02</rdfs:comment>
+        <rdfs:label>C02_ROT</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Critique -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Critique">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#NiveauCriticite"/>
+        <rdfs:comment xml:lang="fr">Niveau Critique : étiquette pédagogique, pas une échelle industrielle normalisée.</rdfs:comment>
+        <rdfs:label>Critique</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Usure"/>
+        <rdfs:comment xml:lang="fr">Défaillance Usure retenue dans le scénario INC01</rdfs:comment>
+        <rdfs:label>DEF01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Usure"/>
+        <rdfs:comment xml:lang="fr">Défaillance Usure retenue dans le scénario INC02</rdfs:comment>
+        <rdfs:label>DEF02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF04 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF04">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Desalignement"/>
+        <rdfs:comment xml:lang="fr">Défaillance Desalignement retenue dans le scénario INC04</rdfs:comment>
+        <rdfs:label>DEF04</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF05 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF05">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Usure"/>
+        <rdfs:comment xml:lang="fr">Défaillance Usure retenue dans le scénario INC05</rdfs:comment>
+        <rdfs:label>DEF05</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF06 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF06">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rupture"/>
+        <rdfs:comment xml:lang="fr">Défaillance Rupture retenue dans le scénario INC06</rdfs:comment>
+        <rdfs:label>DEF06</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF07 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF07">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Desalignement"/>
+        <rdfs:comment xml:lang="fr">Défaillance Desalignement retenue dans le scénario INC07</rdfs:comment>
+        <rdfs:label>DEF07</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#DEF08 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#DEF08">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rupture"/>
+        <rdfs:comment xml:lang="fr">Défaillance Rupture retenue dans le scénario INC08</rdfs:comment>
+        <rdfs:label>DEF08</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Diagnostic -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Diagnostic">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Competence"/>
+        <rdfs:comment xml:lang="fr">Compétence Diagnostic du scénario pédagogique.</rdfs:comment>
+        <rdfs:label>Diagnostic</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Electricite -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Electricite">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Competence"/>
+        <rdfs:comment xml:lang="fr">Compétence Electricite du scénario pédagogique.</rdfs:comment>
+        <rdfs:label>Electricite</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Elevee -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Elevee">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#NiveauCriticite"/>
+        <rdfs:comment xml:lang="fr">Niveau Elevee : étiquette pédagogique, pas une échelle industrielle normalisée.</rdfs:comment>
+        <rdfs:label>Elevee</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Faible -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Faible">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#NiveauCriticite"/>
+        <rdfs:comment xml:lang="fr">Niveau Faible : étiquette pédagogique, pas une échelle industrielle normalisée.</rdfs:comment>
+        <rdfs:label>Faible</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS01_1"/>
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS01_2"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Critique"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF01"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS01_1"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS01_2"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#P01_RA"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-01T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC01, constaté le 01/09/2026</rdfs:comment>
+        <rdfs:label>INC01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS02_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Elevee"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF02"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS02_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#P02_J"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-02T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC02, constaté le 02/09/2026</rdfs:comment>
+        <rdfs:label>INC02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC03 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC03">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS03_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Faible"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS03_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#M01_RA"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-03T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC03, constaté le 03/09/2026</rdfs:comment>
+        <rdfs:label>INC03</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC04 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC04">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Class>
+                <owl:complementOf>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#estResoluPar"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Intervention"/>
+                    </owl:Restriction>
+                </owl:complementOf>
+            </owl:Class>
+        </rdf:type>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS04_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Elevee"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF04"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS04_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#M02_ROT"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-04T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC04, constaté le 04/09/2026</rdfs:comment>
+        <rdfs:label>INC04</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC05 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC05">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS05_1"/>
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS05_2"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Critique"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF05"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS05_1"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS05_2"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#C01_RA"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-05T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC05, constaté le 05/09/2026</rdfs:comment>
+        <rdfs:label>INC05</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC06 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC06">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS06_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Critique"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF06"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS06_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#C02_J"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-06T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC06, constaté le 06/09/2026</rdfs:comment>
+        <rdfs:label>INC06</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC07 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC07">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS07_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Elevee"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF07"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS07_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#P01_ROT"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-07T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC07, constaté le 07/09/2026</rdfs:comment>
+        <rdfs:label>INC07</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC08 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC08">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS08_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Critique"/>
+        <aModeDefaillance rdf:resource="https://example.org/td-maintenance#DEF08"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS08_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#M01_ROT"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-08T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC08, constaté le 08/09/2026</rdfs:comment>
+        <rdfs:label>INC08</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC09 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC09">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS09_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Faible"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS09_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#C01_RB"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-09T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC09, constaté le 09/09/2026</rdfs:comment>
+        <rdfs:label>INC09</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC10 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC10">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Faible"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS10_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#P02_RA"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-10T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC10, constaté le 10/09/2026</rdfs:comment>
+        <rdfs:label>INC10</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC11 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC11">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Class>
+                <owl:complementOf>
+                    <owl:Restriction>
+                        <owl:onProperty rdf:resource="https://example.org/td-maintenance#estResoluPar"/>
+                        <owl:someValuesFrom rdf:resource="https://example.org/td-maintenance#Intervention"/>
+                    </owl:Restriction>
+                </owl:complementOf>
+            </owl:Class>
+        </rdf:type>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS11_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Faible"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS11_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#M02_RA"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-11T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC11, constaté le 11/09/2026</rdfs:comment>
+        <rdfs:label>INC11</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INC12 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INC12">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Incident"/>
+        <rdf:type>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://example.org/td-maintenance#aSymptome"/>
+                <owl:allValuesFrom>
+                    <owl:Class>
+                        <owl:oneOf rdf:parseType="Collection">
+                            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS12_1"/>
+                        </owl:oneOf>
+                    </owl:Class>
+                </owl:allValuesFrom>
+            </owl:Restriction>
+        </rdf:type>
+        <aCriticite rdf:resource="https://example.org/td-maintenance#Elevee"/>
+        <aSymptome rdf:resource="https://example.org/td-maintenance#OBS12_1"/>
+        <concerneComposantPrincipal rdf:resource="https://example.org/td-maintenance#C02_CAP"/>
+        <dateConstat rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2026-09-12T08:00:00</dateConstat>
+        <rdfs:comment xml:lang="fr">Incident fictif INC12, constaté le 12/09/2026</rdfs:comment>
+        <rdfs:label>INC12</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Remplacement"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC01"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#P01_RA"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC01"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">95</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Remplacement effectuée sur P01_RA</rdfs:comment>
+        <rdfs:label>INT01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Remplacement"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC02"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Sam"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#P02_J"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC02"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">55</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Remplacement effectuée sur P02_J</rdfs:comment>
+        <rdfs:label>INT02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT03 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT03">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Lubrification"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC03"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Sam"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#M01_RA"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC03"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">20</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Lubrification effectuée sur M01_RA</rdfs:comment>
+        <rdfs:label>INT03</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT04 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT04">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Inspection"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC04"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#M02_ROT"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Diagnostic"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">40</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Inspection effectuée sur M02_ROT</rdfs:comment>
+        <rdfs:label>INT04</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT05 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT05">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Remplacement"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC05"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#C01_RA"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC05"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">120</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Remplacement effectuée sur C01_RA</rdfs:comment>
+        <rdfs:label>INT05</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT06 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT06">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Remplacement"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC06"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Sam"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#C02_J"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC06"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">65</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Remplacement effectuée sur C02_J</rdfs:comment>
+        <rdfs:label>INT06</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT07 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT07">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Inspection"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC07"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#P01_ROT"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Diagnostic"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">35</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Inspection effectuée sur P01_ROT</rdfs:comment>
+        <rdfs:label>INT07</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT08 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT08">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Remplacement"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC08"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#M01_ROT"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC08"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">110</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Remplacement effectuée sur M01_ROT</rdfs:comment>
+        <rdfs:label>INT08</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT09 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT09">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Lubrification"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC09"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Sam"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#C01_RB"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <resout rdf:resource="https://example.org/td-maintenance#INC09"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">25</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Lubrification effectuée sur C01_RB</rdfs:comment>
+        <rdfs:label>INT09</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT10 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT10">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Inspection"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC10"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#P02_RA"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Diagnostic"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">30</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Inspection effectuée sur P02_RA</rdfs:comment>
+        <rdfs:label>INT10</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT11 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT11">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Inspection"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC11"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Alex"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#M02_RA"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Diagnostic"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">25</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Inspection effectuée sur M02_RA</rdfs:comment>
+        <rdfs:label>INT11</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#INT12 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#INT12">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Inspection"/>
+        <concerneIncident rdf:resource="https://example.org/td-maintenance#INC12"/>
+        <effectueePar rdf:resource="https://example.org/td-maintenance#Noor"/>
+        <porteSur rdf:resource="https://example.org/td-maintenance#C02_CAP"/>
+        <requiertCompetence rdf:resource="https://example.org/td-maintenance#Electricite"/>
+        <dureeMinutes rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">45</dureeMinutes>
+        <rdfs:comment xml:lang="fr">Action élémentaire Inspection effectuée sur C02_CAP</rdfs:comment>
+        <rdfs:label>INT12</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Moteur"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M01_CAP"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M01_J"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M01_RA"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M01_RB"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M01_ROT"/>
+        <rdfs:comment xml:lang="fr">Unité M01 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur.</rdfs:comment>
+        <rdfs:label>M01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M01_CAP -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M01_CAP">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Capteur"/>
+        <rdfs:comment xml:lang="fr">Capteur identifié de M01</rdfs:comment>
+        <rdfs:label>M01_CAP</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M01_J -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M01_J">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Joint"/>
+        <rdfs:comment xml:lang="fr">Joint identifié de M01</rdfs:comment>
+        <rdfs:label>M01_J</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M01_RA -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M01_RA">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de M01</rdfs:comment>
+        <rdfs:label>M01_RA</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M01_RB -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M01_RB">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de M01</rdfs:comment>
+        <rdfs:label>M01_RB</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M01_ROT -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M01_ROT">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rotor"/>
+        <rdfs:comment xml:lang="fr">Rotor identifié de M01</rdfs:comment>
+        <rdfs:label>M01_ROT</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Moteur"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M02_CAP"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M02_J"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M02_RA"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M02_RB"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#M02_ROT"/>
+        <rdfs:comment xml:lang="fr">Unité M02 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur.</rdfs:comment>
+        <rdfs:label>M02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M02_CAP -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M02_CAP">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Capteur"/>
+        <rdfs:comment xml:lang="fr">Capteur identifié de M02</rdfs:comment>
+        <rdfs:label>M02_CAP</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M02_J -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M02_J">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Joint"/>
+        <rdfs:comment xml:lang="fr">Joint identifié de M02</rdfs:comment>
+        <rdfs:label>M02_J</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M02_RA -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M02_RA">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de M02</rdfs:comment>
+        <rdfs:label>M02_RA</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M02_RB -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M02_RB">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de M02</rdfs:comment>
+        <rdfs:label>M02_RB</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#M02_ROT -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#M02_ROT">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rotor"/>
+        <rdfs:comment xml:lang="fr">Rotor identifié de M02</rdfs:comment>
+        <rdfs:label>M02_ROT</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Mecanique -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Mecanique">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Competence"/>
+        <rdfs:comment xml:lang="fr">Compétence Mecanique du scénario pédagogique.</rdfs:comment>
+        <rdfs:label>Mecanique</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Noor -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Noor">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Technicien"/>
+        <possedeCompetence rdf:resource="https://example.org/td-maintenance#Diagnostic"/>
+        <possedeCompetence rdf:resource="https://example.org/td-maintenance#Electricite"/>
+        <rdfs:comment xml:lang="fr">Technicien fictif, sans lien avec une personne réelle.</rdfs:comment>
+        <rdfs:label>Noor</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS01_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS01_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Vibration"/>
+        <rdfs:comment xml:lang="fr">Observation Vibration de INC01</rdfs:comment>
+        <rdfs:label>OBS01_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS01_2 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS01_2">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Bruit"/>
+        <rdfs:comment xml:lang="fr">Observation Bruit de INC01</rdfs:comment>
+        <rdfs:label>OBS01_2</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS02_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS02_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Fuite"/>
+        <rdfs:comment xml:lang="fr">Observation Fuite de INC02</rdfs:comment>
+        <rdfs:label>OBS02_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS03_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS03_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Bruit"/>
+        <rdfs:comment xml:lang="fr">Observation Bruit de INC03</rdfs:comment>
+        <rdfs:label>OBS03_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS04_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS04_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Vibration"/>
+        <rdfs:comment xml:lang="fr">Observation Vibration de INC04</rdfs:comment>
+        <rdfs:label>OBS04_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS05_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS05_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Vibration"/>
+        <rdfs:comment xml:lang="fr">Observation Vibration de INC05</rdfs:comment>
+        <rdfs:label>OBS05_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS05_2 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS05_2">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Surchauffe"/>
+        <rdfs:comment xml:lang="fr">Observation Surchauffe de INC05</rdfs:comment>
+        <rdfs:label>OBS05_2</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS06_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS06_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Fuite"/>
+        <rdfs:comment xml:lang="fr">Observation Fuite de INC06</rdfs:comment>
+        <rdfs:label>OBS06_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS07_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS07_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Vibration"/>
+        <rdfs:comment xml:lang="fr">Observation Vibration de INC07</rdfs:comment>
+        <rdfs:label>OBS07_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS08_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS08_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Bruit"/>
+        <rdfs:comment xml:lang="fr">Observation Bruit de INC08</rdfs:comment>
+        <rdfs:label>OBS08_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS09_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS09_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Bruit"/>
+        <rdfs:comment xml:lang="fr">Observation Bruit de INC09</rdfs:comment>
+        <rdfs:label>OBS09_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS10_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS10_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Vibration"/>
+        <rdfs:comment xml:lang="fr">Observation Vibration de INC10</rdfs:comment>
+        <rdfs:label>OBS10_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS11_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS11_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Vibration"/>
+        <rdfs:comment xml:lang="fr">Observation Vibration de INC11</rdfs:comment>
+        <rdfs:label>OBS11_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#OBS12_1 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#OBS12_1">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Surchauffe"/>
+        <rdfs:comment xml:lang="fr">Observation Surchauffe de INC12</rdfs:comment>
+        <rdfs:label>OBS12_1</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Pompe"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P01_CAP"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P01_J"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P01_RA"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P01_RB"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P01_ROT"/>
+        <rdfs:comment xml:lang="fr">Unité P01 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur.</rdfs:comment>
+        <rdfs:label>P01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P01_CAP -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P01_CAP">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Capteur"/>
+        <rdfs:comment xml:lang="fr">Capteur identifié de P01</rdfs:comment>
+        <rdfs:label>P01_CAP</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P01_J -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P01_J">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Joint"/>
+        <rdfs:comment xml:lang="fr">Joint identifié de P01</rdfs:comment>
+        <rdfs:label>P01_J</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P01_RA -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P01_RA">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de P01</rdfs:comment>
+        <rdfs:label>P01_RA</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P01_RB -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P01_RB">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de P01</rdfs:comment>
+        <rdfs:label>P01_RB</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P01_ROT -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P01_ROT">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rotor"/>
+        <rdfs:comment xml:lang="fr">Rotor identifié de P01</rdfs:comment>
+        <rdfs:label>P01_ROT</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Pompe"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P02_CAP"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P02_J"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P02_PALIER"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P02_RB"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P02_ROT"/>
+        <rdfs:comment xml:lang="fr">Unité P02 du parc fictif. Composition partiellement décrite, sans prétention à une nomenclature constructeur.</rdfs:comment>
+        <rdfs:label>P02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02_CAP -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02_CAP">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Capteur"/>
+        <rdfs:comment xml:lang="fr">Capteur identifié de P02</rdfs:comment>
+        <rdfs:label>P02_CAP</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02_J -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02_J">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Joint"/>
+        <rdfs:comment xml:lang="fr">Joint identifié de P02</rdfs:comment>
+        <rdfs:label>P02_J</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02_PALIER -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02_PALIER">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#SousEnsemble"/>
+        <contientDirectement rdf:resource="https://example.org/td-maintenance#P02_RA"/>
+        <rdfs:comment xml:lang="fr">Sous-ensemble palier de P02, contient P02_RA.</rdfs:comment>
+        <rdfs:label>P02_PALIER</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02_RA -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02_RA">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de P02</rdfs:comment>
+        <rdfs:label>P02_RA</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02_RB -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02_RB">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Roulement"/>
+        <rdfs:comment xml:lang="fr">Roulement identifié de P02</rdfs:comment>
+        <rdfs:label>P02_RB</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#P02_ROT -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#P02_ROT">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Rotor"/>
+        <rdfs:comment xml:lang="fr">Rotor identifié de P02</rdfs:comment>
+        <rdfs:label>P02_ROT</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP01 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP01">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC01"/>
+        <resumeRapport>DONNÉES FICTIVES - INC01. Sur P01_RA, observations : Vibration, Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 95 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC01. Sur P01_RA, observations : Vibration, Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 95 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP01</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP02 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP02">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC02"/>
+        <resumeRapport>DONNÉES FICTIVES - INC02. Sur P02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Elevee. Remplacement par Sam, durée 55 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC02. Sur P02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Elevee. Remplacement par Sam, durée 55 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP02</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP03 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP03">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC03"/>
+        <resumeRapport>DONNÉES FICTIVES - INC03. Sur M01_RA, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 20 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC03. Sur M01_RA, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 20 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP03</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP04 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP04">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC04"/>
+        <resumeRapport>DONNÉES FICTIVES - INC04. Sur M02_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 40 minutes. Épisode explicitement non résolu à la date de l’instantané.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC04. Sur M02_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 40 minutes. Épisode explicitement non résolu à la date de l’instantané.</rdfs:comment>
+        <rdfs:label>RAP04</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP05 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP05">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC05"/>
+        <resumeRapport>DONNÉES FICTIVES - INC05. Sur C01_RA, observations : Vibration, Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 120 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC05. Sur C01_RA, observations : Vibration, Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Usure. Criticité attribuée : Critique. Remplacement par Alex, durée 120 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP05</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP06 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP06">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC06"/>
+        <resumeRapport>DONNÉES FICTIVES - INC06. Sur C02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Sam, durée 65 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC06. Sur C02_J, observations : Fuite. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Sam, durée 65 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP06</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP07 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP07">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC07"/>
+        <resumeRapport>DONNÉES FICTIVES - INC07. Sur P01_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 35 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC07. Sur P01_ROT, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Desalignement. Criticité attribuée : Elevee. Inspection par Alex, durée 35 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.</rdfs:comment>
+        <rdfs:label>RAP07</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP08 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP08">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC08"/>
+        <resumeRapport>DONNÉES FICTIVES - INC08. Sur M01_ROT, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Alex, durée 110 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC08. Sur M01_ROT, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Après examen, le scénario retient : Rupture. Criticité attribuée : Critique. Remplacement par Alex, durée 110 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP08</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP09 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP09">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC09"/>
+        <resumeRapport>DONNÉES FICTIVES - INC09. Sur C01_RB, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 25 minutes. Résolution confirmée après contrôle dans ce scénario.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC09. Sur C01_RB, observations : Bruit. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Lubrification par Sam, durée 25 minutes. Résolution confirmée après contrôle dans ce scénario.</rdfs:comment>
+        <rdfs:label>RAP09</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP10 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP10">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC10"/>
+        <resumeRapport>DONNÉES FICTIVES - INC10. Sur P02_RA, observations : Vibration. Liste des symptômes non déclarée exhaustive. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 30 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC10. Sur P02_RA, observations : Vibration. Liste des symptômes non déclarée exhaustive. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 30 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.</rdfs:comment>
+        <rdfs:label>RAP10</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP11 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP11">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC11"/>
+        <resumeRapport>DONNÉES FICTIVES - INC11. Sur M02_RA, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 25 minutes. Épisode explicitement non résolu à la date de l’instantané.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC11. Sur M02_RA, observations : Vibration. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Faible. Inspection par Alex, durée 25 minutes. Épisode explicitement non résolu à la date de l’instantané.</rdfs:comment>
+        <rdfs:label>RAP11</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#RAP12 -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#RAP12">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#RapportMaintenance"/>
+        <documente rdf:resource="https://example.org/td-maintenance#INC12"/>
+        <resumeRapport>DONNÉES FICTIVES - INC12. Sur C02_CAP, observations : Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Elevee. Inspection par Noor, durée 45 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.</resumeRapport>
+        <rdfs:comment xml:lang="fr">DONNÉES FICTIVES - INC12. Sur C02_CAP, observations : Surchauffe. La liste des symptômes est déclarée complète pour cet épisode. Mode de défaillance non renseigné. Criticité attribuée : Elevee. Inspection par Noor, durée 45 minutes. Issue non renseignée ; aucune conclusion de résolution ou de non-résolution.</rdfs:comment>
+        <rdfs:label>RAP12</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- https://example.org/td-maintenance#Sam -->
+
+    <owl:NamedIndividual rdf:about="https://example.org/td-maintenance#Sam">
+        <rdf:type rdf:resource="https://example.org/td-maintenance#Technicien"/>
+        <possedeCompetence rdf:resource="https://example.org/td-maintenance#Mecanique"/>
+        <rdfs:comment xml:lang="fr">Technicien fictif, sans lien avec une personne réelle.</rdfs:comment>
+        <rdfs:label>Sam</rdfs:label>
+    </owl:NamedIndividual>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // General axioms
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Bruit"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Fuite"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Surchauffe"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Vibration"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Capteur"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Joint"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Rotor"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Roulement"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#SousEnsemble"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Competence"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Incident"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Intervention"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#ModeDefaillance"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#NiveauCriticite"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#ObjetMateriel"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RapportMaintenance"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Symptome"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Technicien"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Compresseur"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Moteur"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Pompe"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Desalignement"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Rupture"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Usure"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDisjointClasses"/>
+        <owl:members rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Inspection"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Lubrification"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Remplacement"/>
+        </owl:members>
+    </rdf:Description>
+    <rdf:Description>
+        <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AllDifferent"/>
+        <owl:distinctMembers rdf:parseType="Collection">
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Alex"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C01_CAP"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C01_J"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C01_RA"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C01_RB"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C01_ROT"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C02_CAP"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C02_J"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C02_RA"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C02_RB"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#C02_ROT"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Critique"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF04"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF05"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF06"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF07"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#DEF08"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Diagnostic"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Electricite"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Elevee"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Faible"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC03"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC04"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC05"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC06"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC07"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC08"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC09"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC10"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC11"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INC12"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT03"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT04"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT05"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT06"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT07"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT08"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT09"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT10"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT11"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#INT12"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M01_CAP"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M01_J"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M01_RA"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M01_RB"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M01_ROT"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M02_CAP"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M02_J"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M02_RA"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M02_RB"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#M02_ROT"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Mecanique"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Noor"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS01_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS01_2"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS02_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS03_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS04_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS05_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS05_2"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS06_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS07_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS08_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS09_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS10_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS11_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#OBS12_1"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P01_CAP"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P01_J"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P01_RA"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P01_RB"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P01_ROT"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02_CAP"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02_J"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02_PALIER"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02_RA"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02_RB"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#P02_ROT"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP01"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP02"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP03"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP04"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP05"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP06"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP07"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP08"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP09"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP10"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP11"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#RAP12"/>
+            <rdf:Description rdf:about="https://example.org/td-maintenance#Sam"/>
+        </owl:distinctMembers>
+    </rdf:Description>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi -->
+
