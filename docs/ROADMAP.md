@@ -1,10 +1,12 @@
-# Prochaines étapes
+# Après la V2
 
-1. Tester cette V1 avec quelques rapports indépendants du corpus fictif et 20 questions préparées à l'avance.
-2. Observer les erreurs : mauvais équipement, synonyme manqué, cause inventée, résultat d'intervention inconnu ou source incomplète.
-3. Ajouter les alias d'équipement et une segmentation adaptée aux rapports réels.
-4. Comparer le RAG de référence à une version utilisant les informations structurées de l'ontologie : équipement, composant, symptôme, diagnostic, action et résultat. Relier chaque fait à son passage source.
-5. Valider l'utilité auprès de techniciens et PME avant d'ajouter voix, agents ou connecteurs.
-6. Pour une utilisation partagée : authentification, séparation des espaces, stockage persistant, suppression des données et hébergement adaptés.
+La V2 fournit un parcours complet sur un atelier fictif : fiches équipements, incidents et suivis, cas similaires, questions sourcées et bibliothèque avec corrections et validation humaine. Les relations inspirées de l'ontologie sont utilisées pour organiser et rapprocher les cas, sans exécuter le raisonneur OWL.
 
-La maquette actuelle est la base de comparaison. L'ontologie doit être intégrée si elle améliore des tâches mesurées, notamment la recherche par composition d'équipement et la distinction entre intervention réalisée et résolution prouvée.
+1. Réunir 5 à 10 rapports indépendants du scénario, autorisés et anonymisés.
+2. Écrire 20 questions et leurs preuves avant de régler le moteur ; inclure synonymes, négations, suivis, résultats inconnus et questions sans réponse.
+3. Évaluer séparément extraction, recherche, chronologie et fidélité de la synthèse locale. Le succès sur les exemples fictifs n'est pas une validation industrielle.
+4. Adapter les rubriques et alias aux vrais documents. Mesurer l'apport des relations structurées par rapport au RAG documentaire.
+5. Faire essayer la tâche « retrouver un précédent, ses actions et son résultat » à quelques techniciens ou PME.
+6. Si l'utilité est confirmée : sauvegarde locale persistante des espaces, journal des validations, OCR, puis hébergement et authentification adaptés pour un usage partagé.
+
+Les documents et corrections sont actuellement conservés en mémoire dans la session. Les inventaires, textes extraits et résultats peuvent être exportés, mais il n'existe pas encore de sauvegarde complète ni de restauration de l'espace de travail.

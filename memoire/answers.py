@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
+from memoire.documents import references
+from memoire.knowledge import Record, incidents, normalized
 from memoire.local_llm import chat_local
 from memoire.retrieval import Hit
 
@@ -36,6 +38,82 @@ class Answer:
     text: str
     generated: bool = False
     notice: str = ""
+    sections: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    documented: bool = False
+
+
+def fact_citation(record: Record, key: str, hits: list[Hit]) -> str:
+    fact = record.facts.get(key)
+    if fact is None:
+        return ""
+    quote = " ".join(fact.quote.split()).casefold()
+    for i, hit in enumerate(hits, 1):
+        if hit.passage.document_id == record.document_id and quote in " ".join(hit.passage.text.split()).casefold():
+            return f"[S{i}]"
+    return ""
+
+
+def structured_sections(hits: list[Hit], records: list[Record]) -> tuple:
+    labels = {}
+    for i, hit in enumerate(hits, 1):
+        labels.setdefault(hit.passage.document_id, f"[S{i}]")
+    selected = [r for r in records if r.validated and r.document_id in labels]
+    groups = {"Faits observés": ("equipment", "component", "symptoms"),
+              "Diagnostic documenté": ("diagnosis", "diagnosis_status"),
+              "Actions réalisées": ("action", "duration"),
+              "Résultats et suivi": ("outcome", "control")}
+    sections = []
+    for title, fields in groups.items():
+        lines = []
+        for record in sorted(selected, key=lambda r: (r.event_date or "9999", r.report)):
+            values = [record.value(k) + " " + fact_citation(record, k, hits)
+                      for k in fields if fact_citation(record, k, hits)]
+            if values:
+                date_label = record.event_date if fact_citation(record, "date", hits) else ""
+                lines.append(f"{record.report}" + (f" · {date_label}" if date_label else "") + " : "
+                             + " · ".join(values))
+        if lines:
+            sections.append((title, tuple(lines)))
+    unknown = []
+    for record in selected:
+        for key, label in (("diagnosis", "Diagnostic"), ("date", "Date"), ("outcome", "Résultat")):
+            value = record.value(key)
+            citation = fact_citation(record, key, hits)
+            if citation and normalized(value) in {"inconnu", "non renseigne", "non renseignee"}:
+                unknown.append(f"{record.report} : {label.lower()} non renseigné dans cette fiche {citation}")
+    if unknown:
+        sections.append(("Informations manquantes", tuple(unknown)))
+    return tuple(sections)
+
+
+def documented_resolution(question: str, hits: list[Hit], records: list[Record]) -> Answer | None:
+    if not re.search(r"résolu|résolution|réparé", question, re.I) or not re.search(
+            r"est[- ](?:il|elle)|statut|état|est\s+résolu", question, re.I):
+        return None
+    requested = {ref for ref in references(question) if ref.startswith("INC")}
+    labels = {h.passage.document_id: f"[S{i}]" for i, h in enumerate(hits, 1)}
+    complete = [r for r in records if r.incident in requested]
+    if any(not r.validated or r.document_id not in labels for r in complete):
+        return Answer("Le statut ne peut pas être établi à partir d'un historique incomplet ou de fiches non vérifiées. Consulte les rapports et leurs dates.",
+                      documented=True, notice="Aucun statut actuel n'est déduit de cette sélection.")
+    selected = [r for r in records if r.document_id in labels]
+    matched = [item for item in incidents(selected) if item.reference in requested]
+    if not matched:
+        return None
+    lines = []
+    for item in matched:
+        if any(not fact_citation(r, "outcome", hits) or
+               (r.event_date and not fact_citation(r, "date", hits)) for r in item.latest):
+            return Answer("Les extraits sélectionnés ne contiennent pas toutes les preuves du résultat et de sa date. Consulte les rapports complets.",
+                          documented=True, notice="Aucun statut actuel n'est déduit de passages incomplets.")
+        sources = " ".join(labels[r.document_id] for r in item.latest)
+        if not item.chronology_complete:
+            lines.append(f"{item.reference} : statut actuel inconnu, car un rapport non daté empêche d'établir la chronologie complète. {sources}")
+        else:
+            latest_date = max(r.event_date for r in item.latest) or "date non renseignée"
+            lines.append(f"{item.reference} · {item.equipment} : {item.status.lower()} selon le dernier état documenté ({latest_date}). {sources}")
+    return Answer("\n".join(lines), documented=True,
+                  notice="Statut établi à partir des fiches vérifiées et de leurs dates ; il décrit l'historique documenté.")
 
 
 def source_extracts(hits: list[Hit]) -> str:
@@ -66,11 +144,16 @@ def contradicts_explicit_unknown(question: str, text: str, hits: list[Hit]) -> b
     return bool(re.search(claim, text, re.I))
 
 
-def generate_answer(question: str, hits: list[Hit], *, local: bool = False) -> Answer:
+def generate_answer(question: str, hits: list[Hit], *, local: bool = False,
+                    records: list[Record] | None = None) -> Answer:
     if not hits:
         return Answer(NO_EVIDENCE)
+    sections = structured_sections(hits, records or [])
+    direct = documented_resolution(question, hits, records or [])
+    if direct is not None:
+        return replace(direct, sections=sections)
     if not local:
-        return Answer(source_extracts(hits))
+        return Answer(source_extracts(hits), sections=sections)
     evidence = [{"id": f"S{i}", "document": h.passage.source,
                  "location": h.passage.location, "text": h.passage.text}
                 for i, h in enumerate(hits, 1)]
@@ -81,9 +164,9 @@ def generate_answer(question: str, hits: list[Hit], *, local: bool = False) -> A
     ])
     if not validate_citations(text, len(hits)):
         return Answer(source_extracts(hits), notice=(
-            "La synthèse ne contenait pas de références valides. Les extraits sont affichés à sa place."))
+            "La synthèse ne contenait pas de références valides. Les extraits sont affichés à sa place."), sections=sections)
     if contradicts_explicit_unknown(question, text, hits):
         return Answer(source_extracts(hits), notice=(
-            "La synthèse affirmait un statut alors que le rapport le laisse inconnu. Consulte les extraits à la place."))
+            "La synthèse affirmait un statut alors que le rapport le laisse inconnu. Consulte les extraits à la place."), sections=sections)
     return Answer(text, generated=True,
-                  notice="Les références existent dans les extraits. Leur présence ne garantit pas l'exactitude de chaque affirmation.")
+                  notice="Les références existent dans les extraits. Leur présence ne garantit pas l'exactitude de chaque affirmation.", sections=sections)

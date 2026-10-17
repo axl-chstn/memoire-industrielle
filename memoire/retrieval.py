@@ -68,10 +68,16 @@ class SearchIndex:
             return []
         candidates = [i for i, p in enumerate(self.passages)
                       if equipment is None or equipment in p.equipment]
-        # Une référence demandée est une contrainte, jamais une simple préférence.
+        # Comparaisons : OU entre références de même nature, ET entre catégories.
+        groups: dict[str, list[str]] = {}
         for reference in references(question):
-            candidates = [i for i in candidates if has_reference(
-                self.passages[i].text + " " + self.passages[i].source, reference)]
+            kind = ("incident" if reference.startswith("INC") else
+                    "rapport" if reference.startswith("RAP") else
+                    "composant" if "_" in reference else "équipement")
+            groups.setdefault(kind, []).append(reference)
+        for group in groups.values():
+            candidates = [i for i in candidates if any(has_reference(
+                self.passages[i].text + " " + self.passages[i].source, ref) for ref in group)]
         if not candidates:
             return []
         lexical: dict[int, float] = {}

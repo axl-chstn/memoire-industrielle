@@ -1,0 +1,15 @@
+[
+  {"question":"L'incident INC104 est-il résolu ?","expected_sources":["RAP104","RAP121"],"expected_status":"Résolu","expected_date":"2026-03-08"},
+  {"question":"L'incident INC116 est-il résolu ?","expected_sources":["RAP116","RAP128"],"expected_status":"Non résolu","expected_date":"2026-03-22"},
+  {"question":"L'incident INC110 est-il résolu ?","expected_sources":["RAP110","RAP123"],"expected_status":"Inconnu","expected_date":"2026-03-12"},
+  {"question":"L'incident INC107 est-il résolu ?","expected_sources":["RAP107","RAP122"],"expected_status":"Résolu","expected_date":"2026-03-10"},
+  {"question":"Quel est l'état de résolution d'INC117 ?","expected_sources":["RAP117"],"expected_status":"Inconnu","expected_date":""},
+  {"question":"Comparer INC104 et INC116","expected_sources":["RAP104","RAP121","RAP116","RAP128"]},
+  {"question":"Quelle intervention pour INC103 ?","expected_sources":["RAP103"]},
+  {"question":"Quelle intervention pour INC115 ?","expected_sources":["RAP115"]},
+  {"question":"Quel résultat pour INC118 ?","expected_sources":["RAP118"]},
+  {"question":"Quels rapports parlent de la pompe d'alimentation ?","expected_equipment":"P01"},
+  {"question":"Quels rapports parlent du moteur du convoyeur ?","expected_equipment":"M01"},
+  {"question":"Quelle panne sur P999 ?","expected_sources":[]},
+  {"question":"Quel est le budget publicitaire annuel ?","expected_sources":[]}
+]

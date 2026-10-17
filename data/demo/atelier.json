@@ -1,0 +1,397 @@
+{
+  "name": "Atelier Horizon",
+  "fictitious": true,
+  "equipment": [
+    {
+      "id": "P01",
+      "name": "Pompe d'alimentation",
+      "type": "Pompe",
+      "zone": "Ligne A",
+      "aliases": [
+        "pompe alimentation",
+        "pompe amont"
+      ],
+      "components": [
+        {
+          "id": "P01_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "P01_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "P01_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "P01_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "P01_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "name": "Pompe de refroidissement",
+      "type": "Pompe",
+      "zone": "Utilités",
+      "aliases": [
+        "pompe refroidissement"
+      ],
+      "components": [
+        {
+          "id": "P02_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "P02_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "P02_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "P02_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "P02_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        }
+      ]
+    },
+    {
+      "id": "P03",
+      "name": "Pompe de transfert",
+      "type": "Pompe",
+      "zone": "Ligne B",
+      "aliases": [
+        "pompe transfert"
+      ],
+      "components": [
+        {
+          "id": "P03_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "P03_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "P03_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "P03_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "P03_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        }
+      ]
+    },
+    {
+      "id": "P04",
+      "name": "Pompe de circulation",
+      "type": "Pompe",
+      "zone": "Ligne B",
+      "aliases": [
+        "pompe circulation"
+      ],
+      "components": [
+        {
+          "id": "P04_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "P04_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "P04_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "P04_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "P04_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        }
+      ]
+    },
+    {
+      "id": "M01",
+      "name": "Moteur du convoyeur",
+      "type": "Moteur",
+      "zone": "Ligne A",
+      "aliases": [
+        "moteur convoyeur"
+      ],
+      "components": [
+        {
+          "id": "M01_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "M01_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "M01_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "M01_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "M01_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        },
+        {
+          "id": "M01_VENT",
+          "name": "Ventilation",
+          "type": "Ventilation"
+        }
+      ]
+    },
+    {
+      "id": "M02",
+      "name": "Moteur du mélangeur",
+      "type": "Moteur",
+      "zone": "Ligne B",
+      "aliases": [
+        "moteur mélangeur"
+      ],
+      "components": [
+        {
+          "id": "M02_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "M02_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "M02_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "M02_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "M02_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        },
+        {
+          "id": "M02_VENT",
+          "name": "Ventilation",
+          "type": "Ventilation"
+        }
+      ]
+    },
+    {
+      "id": "M03",
+      "name": "Moteur du ventilateur",
+      "type": "Moteur",
+      "zone": "Utilités",
+      "aliases": [
+        "moteur ventilateur"
+      ],
+      "components": [
+        {
+          "id": "M03_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "M03_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "M03_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "M03_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "M03_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        },
+        {
+          "id": "M03_VENT",
+          "name": "Ventilation",
+          "type": "Ventilation"
+        }
+      ]
+    },
+    {
+      "id": "C01",
+      "name": "Compresseur principal",
+      "type": "Compresseur",
+      "zone": "Air comprimé",
+      "aliases": [
+        "compresseur principal"
+      ],
+      "components": [
+        {
+          "id": "C01_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "C01_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "C01_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "C01_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "C01_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        },
+        {
+          "id": "C01_VENT",
+          "name": "Ventilation",
+          "type": "Ventilation"
+        }
+      ]
+    },
+    {
+      "id": "C02",
+      "name": "Compresseur de secours",
+      "type": "Compresseur",
+      "zone": "Air comprimé",
+      "aliases": [
+        "compresseur secours"
+      ],
+      "components": [
+        {
+          "id": "C02_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "C02_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "C02_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "C02_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "C02_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        },
+        {
+          "id": "C02_VENT",
+          "name": "Ventilation",
+          "type": "Ventilation"
+        }
+      ]
+    },
+    {
+      "id": "C03",
+      "name": "Compresseur de ligne",
+      "type": "Compresseur",
+      "zone": "Ligne B",
+      "aliases": [
+        "compresseur de ligne"
+      ],
+      "components": [
+        {
+          "id": "C03_RA",
+          "name": "Roulement A",
+          "type": "Roulement"
+        },
+        {
+          "id": "C03_RB",
+          "name": "Roulement B",
+          "type": "Roulement"
+        },
+        {
+          "id": "C03_ROT",
+          "name": "Rotor",
+          "type": "Rotor"
+        },
+        {
+          "id": "C03_J",
+          "name": "Joint",
+          "type": "Joint"
+        },
+        {
+          "id": "C03_CAP",
+          "name": "Capteur",
+          "type": "Capteur"
+        },
+        {
+          "id": "C03_VENT",
+          "name": "Ventilation",
+          "type": "Ventilation"
+        }
+      ]
+    }
+  ]
+}

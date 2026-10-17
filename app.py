@@ -1,4 +1,4 @@
-"""Interface de la maquette : python -m streamlit run app.py."""
+"""Mémoire Industrielle V2 : atelier, incidents, cas similaires et RAG local."""
 
 from __future__ import annotations
 
@@ -9,55 +9,72 @@ from pathlib import Path
 import streamlit as st
 
 from memoire.answers import Answer, generate_answer, source_extracts
-from memoire.demo import load_demo
+from memoire.demo import load_workshop, workshop_catalog
 from memoire.documents import chunk_document, read_document
-from memoire.local_llm import LOCAL_MODEL, model_status
+from memoire.knowledge import extract_record, incidents
+from memoire.local_llm import model_status
+from memoire.qa import expand_aliases, search_reports
 from memoire.retrieval import MODEL_NAME, SearchIndex
+from memoire.views import (
+    ROUTES,
+    equipment_view,
+    incidents_view,
+    library_view,
+    overview,
+    similar_view,
+)
 
 ROOT = Path(__file__).resolve().parent
 os.environ.setdefault("HF_HOME", str(ROOT / ".cache" / "huggingface"))
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
-
-st.set_page_config(page_title="Mémoire Industrielle", page_icon="⚙️", layout="wide")
+st.set_page_config(page_title="Mémoire Industrielle · Atelier", page_icon="⚙️", layout="wide")
 st.markdown("""<style>
-.block-container {max-width:1180px;padding-top:2.4rem;padding-bottom:3rem;}
-h1 {letter-spacing:-1.7px;line-height:1.08 !important;font-weight:750 !important;}
-h2,h3 {letter-spacing:-.5px;}
-[data-testid="stMetric"] {background:white;border:1px solid #e1e8e9;border-radius:14px;padding:16px 20px;}
+.block-container {max-width:1250px;padding-top:2rem;padding-bottom:3rem;}
+h1 {letter-spacing:-1.5px;font-weight:750 !important;}
+h2,h3 {letter-spacing:-.4px;}
+[data-testid="stMetric"] {background:white;border:1px solid #dce7e7;border-radius:14px;padding:14px 18px;}
 [data-testid="stSidebar"] {border-right:1px solid #dee6e7;}
 [data-testid="stChatMessage"] {background:white;border:1px solid #e1e8e9;border-radius:14px;}
-.eyebrow {color:#087f75;font-size:.75rem;letter-spacing:.15em;font-weight:700;margin-bottom:14px;}
-.hero-copy {color:#60747c;font-size:1.1rem;max-width:680px;line-height:1.6;}
-.brand {font-size:1.1rem;font-weight:750;color:#142b34;margin-bottom:3px;}
-.brand-sub {color:#60747c;font-size:.8rem;margin-bottom:24px;}
+.eyebrow {color:#087f75;font-size:.75rem;letter-spacing:.14em;font-weight:700;}
+.brand {font-size:1.1rem;font-weight:750;color:#142b34;}
+.brand-sub {color:#60747c;font-size:.8rem;margin-bottom:18px;}
 div.stButton > button {border-radius:9px;}
+@media (max-width:700px) {
+  [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) {display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  [data-testid="stHorizontalBlock"]:has([data-testid="stMetric"]) > [data-testid="stColumn"] {width:100% !important;min-width:0 !important;}
+  [data-testid="stMetric"] {padding:10px 14px;}
+}
 </style>""", unsafe_allow_html=True)
 
 
 @st.cache_resource(show_spinner=False)
 def load_encoder():
-    # Seul le modèle public est partagé ; aucun corpus ni embedding utilisateur n'est mis en cache global.
     from sentence_transformers import SentenceTransformer
 
     return SentenceTransformer(MODEL_NAME, device="cpu", trust_remote_code=False)
 
 
 def invalidate():
-    st.session_state.pop("search_index", None)
-    st.session_state.pop("index_signature", None)
-    st.session_state["history"] = []
+    for key in ("search_index", "index_signature", "similar_result"):
+        st.session_state.pop(key, None)
+    st.session_state.history = []
 
 
-def export_exchange(question, answer, hits, engine) -> str:
+def personal_workspace():
+    st.session_state.workspace = "Mes documents"
+    st.session_state.route = "Documents"
+
+
+def export_exchange(question, answer, hits, engine):
     lines = ["# Mémoire Industrielle — résultat documentaire", "", f"Question : {question}",
-             f"Recherche : {engine}",
-             f"Réponse : {'synthèse LLM' if answer.generated else 'lecture des sources'}", "",
-             answer.text, "", "## Passages sources"]
+             f"Recherche : {engine}", "", answer.text]
+    for title, entries in answer.sections:
+        lines.extend(["", "## " + title, *entries])
+    lines.extend(["", "## Passages sources"])
     for i, hit in enumerate(hits, 1):
         p = hit.passage
         lines.extend(["", f"### [S{i}] {p.source} — {p.location}", "", p.text])
-    if answer.notice:
-        lines.extend(["", answer.notice])
+    lines.extend(["", answer.notice])
     return "\n".join(lines)
 
 
@@ -66,181 +83,176 @@ def render_exchange(exchange, position):
     with st.chat_message("user"):
         st.text(question)
     with st.chat_message("assistant"):
-        st.caption(f"{'Synthèse avec sources' if answer.generated else 'Lecture des sources'} · {engine}")
-        if answer.generated or not hits:
-            # Le texte généré ne peut pas charger d'images ou de liens externes.
+        mode = "Réponse documentée" if answer.documented else "Synthèse locale" if answer.generated else "Lecture des sources"
+        st.caption(f"{mode} · {engine}")
+        if answer.generated or answer.documented or not hits:
             st.text(answer.text)
-        else:
+        elif not answer.sections:
             st.write("Voici les passages retrouvés. Ouvre les sources pour consulter les faits exacts.")
+        for title, entries in answer.sections:
+            st.markdown("**" + title + "**")
+            for entry in entries:
+                st.text(entry)
         if answer.notice:
             st.caption(answer.notice)
         for i, hit in enumerate(hits, 1):
             p = hit.passage
-            with st.expander(f"[S{i}] {p.source} · {p.location}", expanded=(i == 1)):
+            with st.expander(f"[S{i}] {p.source} · {p.location}", expanded=i == 1):
                 st.code(p.text, language=None, wrap_lines=True)
         st.download_button("Exporter ce résultat", export_exchange(question, answer, hits, engine),
-                           file_name="recherche-maintenance.md", mime="text/markdown",
-                           key=f"export_{position}")
+                           "recherche-maintenance.md", "text/markdown", key=f"export_{position}")
 
 
-if "documents" not in st.session_state:
-    st.session_state.documents = {d.id: d for d in load_demo()}
+if "workspaces" not in st.session_state:
+    # Une éventuelle session V1 est conservée dans l'espace personnel.
+    previous = st.session_state.get("documents", {})
+    personal = {key: doc for key, doc in previous.items() if not doc.demo}
+    st.session_state.workspaces = {
+        "Atelier fictif": {d.id: d for d in load_workshop()}, "Mes documents": personal}
+    st.session_state.overrides = {"Atelier fictif": {}, "Mes documents": {}}
     st.session_state.history = []
+    st.session_state.route = "Vue d'ensemble"
 
 with st.sidebar:
     st.markdown('<div class="brand">◈ Mémoire Industrielle</div>'
-                '<div class="brand-sub">Votre expérience, accessible.</div>', unsafe_allow_html=True)
-    st.subheader("Votre base documentaire")
-    st.caption("PDF avec texte, TXT ou Markdown · 10 Mo par fichier")
-    uploads = st.file_uploader("Ajouter des rapports", type=["pdf", "txt", "md"],
-                               accept_multiple_files=True)
-    if st.button("Importer les fichiers", type="primary", disabled=not uploads,
-                 width="stretch"):
-        if len(uploads) > 30 or sum(f.size for f in uploads) > 30 * 1024 * 1024:
-            st.error("Importe au maximum 30 fichiers et 30 Mo à la fois.")
-        else:
-            count = 0
-            for upload in uploads:
-                try:
-                    document = read_document(upload.name, upload.getvalue())
-                    if document.id not in st.session_state.documents:
-                        if len(st.session_state.documents) >= 50:
-                            st.warning("Limite de la maquette : 50 documents. Retire des documents avant de poursuivre.")
-                            break
-                        st.session_state.documents[document.id] = document
-                        count += 1
-                    for warning in document.warnings:
-                        st.warning(f"{document.name} : {warning}")
-                except ValueError as exc:
-                    st.error(f"{upload.name} : {exc}")
-            if count:
-                invalidate()
-                st.success(f"{count} document(s) ajouté(s).")
+                '<div class="brand-sub">Atelier · Version 2</div>', unsafe_allow_html=True)
+    workspace = st.selectbox("Espace de travail", ["Atelier fictif", "Mes documents"], key="workspace")
+    if st.session_state.get("previous_workspace") != workspace:
+        invalidate()
+        st.session_state.previous_workspace = workspace
+    documents = st.session_state.workspaces[workspace]
+    overrides = st.session_state.overrides[workspace]
+    st.session_state.documents = documents
+    if workspace == "Atelier fictif":
+        st.caption("Atelier Horizon · données entièrement fictives. Tes documents personnels restent dans un espace séparé.")
+        st.button("Importer mes rapports", on_click=personal_workspace, width="stretch")
+    else:
+        st.caption("PDF avec texte, TXT ou Markdown · 10 Mo par fichier")
+        uploads = st.file_uploader("Ajouter des rapports", type=["pdf", "txt", "md"], accept_multiple_files=True)
+        if st.button("Importer les fichiers", type="primary", disabled=not uploads, width="stretch"):
+            if len(uploads) > 30 or sum(f.size for f in uploads) > 30 * 1024 * 1024:
+                st.error("Limite : 30 fichiers et 30 Mo par import.")
             else:
-                st.info("Aucun nouveau document ajouté ; les doublons sont ignorés.")
-
+                added = 0
+                for upload in uploads:
+                    try:
+                        doc = read_document(upload.name, upload.getvalue())
+                        if doc.id not in documents:
+                            if len(documents) >= 100:
+                                st.warning("Limite : 100 documents par espace.")
+                                break
+                            documents[doc.id] = doc
+                            added += 1
+                        for warning in doc.warnings:
+                            st.warning(f"{doc.name} : {warning}")
+                    except ValueError as exc:
+                        st.error(f"{upload.name} : {exc}")
+                if added:
+                    invalidate()
+                    st.success(f"{added} document(s) ajouté(s). Les fiches extraites sont à vérifier dans Documents.")
+                else:
+                    st.info("Aucun nouveau document ajouté ; les doublons sont ignorés.")
     st.divider()
-    with st.expander("IA locale · sans frais d'API", expanded=True):
-        local_ready, local_notice = model_status()
+    local_ready, local_notice = model_status()
+    with st.expander("IA locale · sans frais d'API"):
         if local_ready:
             st.success(local_notice)
         else:
             st.info(local_notice)
-        llm_enabled = st.checkbox("Rédiger les réponses sur cet ordinateur",
-            value=local_ready, disabled=not local_ready, key="local_summaries_enabled")
-        st.caption(f"{LOCAL_MODEL} · aucune clé nécessaire. La question et les extraits restent sur la machine qui exécute la maquette.")
-    with st.expander("Réglages de recherche"):
+        llm_enabled = st.checkbox("Rédiger les réponses sur cet ordinateur", value=local_ready,
+                                 disabled=not local_ready, key="local_summaries_enabled")
+        st.caption("Aucune clé nécessaire. La question et les extraits restent sur la machine qui exécute la maquette.")
+    with st.expander("Recherche et vérification"):
         semantic_enabled = st.checkbox("Chercher aussi par le sens", value=False,
-            help="Nécessite requirements-semantic.txt. Le modèle public est téléchargé au premier usage ; les rapports restent sur la machine qui exécute l'application.")
-        top_k = st.slider("Nombre de passages à consulter", 1, 8, 4)
-        st.caption("Les références d'équipement présentes dans la question sont respectées comme filtres exacts.")
-    st.caption("Les documents importés restent en mémoire pendant cette session. Ils ne sont pas envoyés sur GitHub.")
+            help="Utilise le modèle d'embeddings local. Le premier chargement peut nécessiter un téléchargement public.")
+        top_k = st.slider("Passages pour une réponse", 1, 8, 4)
+        include_drafts = st.checkbox("Inclure les fiches à vérifier dans les vues métier", value=False)
+    st.caption("Documents, corrections et validations restent dans cette session. Les modèles publics sont conservés sur le Mac.")
 
-documents = list(st.session_state.documents.values())
-equipment_options = sorted({e for d in documents for e in d.equipment})
-passages = [p for d in documents for p in chunk_document(d)]
-demo_count = sum(d.demo for d in documents)
+records = [overrides.get(doc.id) or extract_record(doc) for doc in documents.values()]
+items = incidents(records, include_drafts=include_drafts)
+catalog = {e["id"]: e for e in workshop_catalog()["equipment"]} if workspace == "Atelier fictif" else {}
+equipment_codes = sorted({code for d in documents.values() for code in d.equipment})
+passages = [p for document in documents.values() for p in chunk_document(document)]
 
 st.markdown('<div class="eyebrow">CAPITALISER · RETROUVER · TRANSMETTRE</div>', unsafe_allow_html=True)
-st.markdown("<h1>Les bons rapports.<br>Au bon moment.</h1>", unsafe_allow_html=True)
-st.markdown('<p class="hero-copy">Retrouvez ce qui a déjà été observé, tenté et résolu sur vos équipements. Chaque recherche vous ramène aux documents.</p>', unsafe_allow_html=True)
-cols = st.columns(3)
-cols[0].metric("Rapports disponibles", len(documents))
-cols[1].metric("Équipements repérés", len(equipment_options))
-cols[2].metric("Passages consultables", len(passages))
-if demo_count:
-    st.caption(f"Démonstration : {demo_count} rapport(s) fictif(s) du TD sont présents dans la base.")
+st.title("La mémoire de votre atelier")
+st.caption("Atelier Horizon · scénario fictif de janvier à mars 2026" if workspace == "Atelier fictif"
+           else "Votre espace personnel · informations extraites à vérifier")
+cols = st.columns(4)
+cols[0].metric("Rapports", len(documents))
+cols[1].metric("Équipements", len(equipment_codes))
+cols[2].metric("Incidents suivis", len(items))
+cols[3].metric("À suivre", sum(item.status != "Résolu" for item in items))
+route = st.radio("Explorer la mémoire", ROUTES, horizontal=True, key="route", label_visibility="collapsed")
+if st.session_state.get("flash"):
+    st.success(st.session_state.pop("flash"))
 
-search_tab, documents_tab, guide_tab = st.tabs(["Interroger la mémoire", "Documents", "Prise en main"])
-with documents_tab:
-    st.subheader("Les documents de votre session")
-    if documents:
-        st.dataframe([{"Document": d.name, "Origine": "Fictif · TD" if d.demo else "Importé",
-                       "Équipements": ", ".join(d.equipment) or "Non repérés",
-                       "Pages ou textes": len(d.pages)} for d in documents],
-                      width="stretch", hide_index=True)
-        selected_to_remove = st.multiselect("Documents à retirer", options=[d.id for d in documents],
-            format_func=lambda document_id: st.session_state.documents[document_id].name)
-        if st.button("Retirer la sélection", disabled=not selected_to_remove):
-            for document_id in selected_to_remove:
-                st.session_state.documents.pop(document_id, None)
+if route == "Vue d'ensemble":
+    overview(documents, records, items, catalog)
+elif route == "Équipements":
+    equipment_view(documents, records, items, catalog)
+elif route == "Incidents":
+    incidents_view(documents, records, items, catalog)
+elif route == "Cas similaires":
+    similar_view(documents, records, items, catalog)
+elif route == "Documents":
+    library_view(documents, records, overrides, invalidate)
+    if workspace == "Atelier fictif" and len(documents) < 30:
+        if st.button("Restaurer les 30 rapports fictifs"):
+            documents.update({d.id: d for d in load_workshop()})
             invalidate()
             st.rerun()
-    else:
-        st.info("Ajoute tes rapports ou charge les exemples pour commencer.")
-    if st.button("Charger les 12 rapports de démonstration"):
-        demo_documents = load_demo()
-        new_demo_count = sum(d.id not in st.session_state.documents for d in demo_documents)
-        if len(st.session_state.documents) + new_demo_count > 50:
-            st.warning("Retire quelques documents pour respecter la limite de 50.")
-        else:
-            st.session_state.documents.update({d.id: d for d in demo_documents})
-            invalidate()
-            st.rerun()
-    st.caption("Les imports et les résultats ne sont pas conservés après la fin de la session. Les réglages de recherche n'altèrent jamais les fichiers d'origine.")
-
-with guide_tab:
-    st.subheader("Un premier essai en trois étapes")
-    st.write("1. Utilise les exemples ou ajoute tes rapports dans la colonne de gauche.")
-    st.write("2. Pose une question précise : équipement, symptôme, intervention ou résultat.")
-    st.write("3. Ouvre les sources, vérifie les faits et exporte le résultat si nécessaire.")
-    st.info("Le modèle installé sur ton ordinateur rédige les réponses sans frais d'API. Tu peux désactiver la rédaction pour consulter uniquement les extraits.")
-    st.write("Une intervention réalisée ne prouve pas qu'une panne est résolue. Une information absente reste inconnue.")
-    st.caption("Maquette documentaire : pas d'OCR, de connexion à une GMAO ni de diagnostic automatique. Les questions sont indépendantes : reformule l'équipement à chaque fois.")
-
-with search_tab:
-    st.subheader("Que cherchez-vous dans l'historique ?")
-    equipment = st.selectbox("Limiter à un équipement", ["Tous les équipements"] + equipment_options)
-    suggested = ["Qu'a-t-on fait pour les vibrations du compresseur C01 ?",
-                 "L'incident INC07 sur la pompe P01 est-il résolu ?",
-                 "Quelle intervention a été réalisée sur M01_RA ?"]
+else:
+    st.subheader("Interroger les rapports et leurs suivis")
+    st.caption("Les réponses structurées utilisent les fiches vérifiées. La synthèse locale reste à contrôler dans les sources.")
+    equipment = st.selectbox("Limiter à un équipement", ["Tous"] + equipment_codes)
     if not st.session_state.history:
-        st.caption("Essaie une de ces questions :")
-        for n, label in enumerate(suggested):
-            if st.button(label, key=f"suggestion_{n}"):
-                st.session_state.pending_question = label
+        examples = ["L'incident INC104 est-il résolu ?", "Qu'a-t-on essayé pour les vibrations sur C03 ?",
+                    "Quels rapports parlent de la pompe d'alimentation ?"] if workspace == "Atelier fictif" else []
+        for i, example in enumerate(examples):
+            if st.button(example, key=f"suggestion_{i}"):
+                st.session_state.pending_question = example
     for position, exchange in enumerate(st.session_state.history):
         render_exchange(exchange, position)
-    question = st.chat_input("Ex. : qu'a-t-on essayé pour les vibrations sur C01 ?",
+    question = st.chat_input("Ex. : qu'a-t-on essayé et quel résultat a été constaté ?",
                              disabled=not documents, max_chars=2000)
     question = question or st.session_state.pop("pending_question", None)
     if question:
         engine = "Mots-clés"
-        signature = hashlib.sha256(("|".join(sorted(d.id for d in documents))
+        signature = hashlib.sha256((workspace + "|" + "|".join(sorted(documents))
                                     + str(semantic_enabled)).encode()).hexdigest()
         if st.session_state.get("index_signature") != signature:
             encoder = None
             if semantic_enabled:
                 try:
-                    with st.spinner("Préparation de la recherche par le sens. Le premier chargement peut prendre quelques minutes…"):
+                    with st.spinner("Chargement de la recherche par le sens…"):
                         encoder = load_encoder()
                 except Exception:
-                    st.warning("La recherche par le sens est indisponible. La recherche par mots-clés reste active. Consulte le guide d'installation pour activer les embeddings.")
-            with st.spinner("Préparation des documents…"):
-                try:
-                    index = SearchIndex(passages, encoder)
-                except Exception:
-                    st.warning("Le calcul des embeddings a échoué. Recherche par mots-clés utilisée.")
-                    index = SearchIndex(passages)
+                    st.warning("Recherche par le sens indisponible. Les mots-clés restent actifs.")
+            try:
+                index = SearchIndex(passages, encoder)
+            except Exception:
+                st.warning("Calcul des embeddings indisponible. Les mots-clés sont utilisés.")
+                index = SearchIndex(passages)
             st.session_state.search_index = index
             st.session_state.index_signature = signature
         index = st.session_state.search_index
         if index.encoder is not None:
             engine = "Sens + mots-clés"
+        query = expand_aliases(question, catalog)
+        eq = None if equipment == "Tous" else equipment
         try:
-            hits = index.search(question, top_k=top_k,
-                equipment=None if equipment == "Tous les équipements" else equipment)
+            hits = search_reports(index, query, records, top_k=top_k, equipment=eq)
         except Exception:
-            st.warning("La recherche par le sens a échoué. Recherche par mots-clés utilisée pour cette question.")
-            hits = SearchIndex(passages).search(question, top_k=top_k,
-                equipment=None if equipment == "Tous les équipements" else equipment)
+            st.warning("Recherche par le sens indisponible pour cette question ; mots-clés utilisés.")
+            hits = search_reports(SearchIndex(passages), query, records, top_k=top_k, equipment=eq)
             engine = "Mots-clés"
-        with st.spinner("Lecture des passages…"):
+        with st.spinner("Lecture des rapports et de leurs suivis…"):
             try:
-                answer = generate_answer(question, hits, local=llm_enabled and local_ready)
+                answer = generate_answer(question, hits, local=llm_enabled and local_ready, records=records)
             except Exception:
-                answer = Answer(source_extracts(hits), notice=(
-                    "La synthèse locale est indisponible. Relance Lancer.command pour démarrer le modèle. Les sources restent consultables ; aucun service payant n'est utilisé."))
+                answer = Answer(source_extracts(hits), notice="La synthèse locale est indisponible. Les sources restent consultables ; aucun service payant n'est utilisé.")
         exchange = (question, answer, hits, engine)
         st.session_state.history.append(exchange)
         st.session_state.history = st.session_state.history[-10:]
